@@ -3050,12 +3050,83 @@ body.offcanvas #colorlib-aside {
 
 /* Mobile (max-width: 768px) */
 @media screen and (max-width: 768px) {
+  /* Sidebar Mobile Fix */
+  #colorlib-aside {
+    width: 280px !important;
+    padding: 1em 1em !important;
+    overflow-y: auto !important;
+  }
+
+  #colorlib-aside .author-img {
+    width: 80px !important;
+    height: 80px !important;
+    margin: 0 auto 0.8em auto !important;
+  }
+
+  #colorlib-aside #colorlib-logo a {
+    font-size: 1.1em !important;
+  }
+
+  #colorlib-aside .position a {
+    font-size: 0.75em !important;
+  }
+
+  #colorlib-aside .location {
+    font-size: 0.7em !important;
+  }
+
+  #colorlib-aside .text-center {
+    margin-bottom: 0.8em !important;
+  }
+
+  #colorlib-aside #colorlib-main-menu ul li {
+    margin-bottom: 3px !important;
+  }
+
+  #colorlib-aside #colorlib-main-menu ul li a {
+    font-size: 0.85em !important;
+    padding: 8px 15px !important;
+  }
+
+  #colorlib-aside .colorlib-footer {
+    padding-top: 0.8em !important;
+    margin-top: 0.5em !important;
+  }
+
+  #colorlib-aside .colorlib-footer ul li {
+    margin: 0 6px !important;
+  }
+
+  #colorlib-aside .colorlib-footer ul li a {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 14px !important;
+  }
+
   /* Hero Section Mobile */
   h1.hero-name,
   #colorlib-hero .hero-name,
   .slider-text-inner h1.hero-name {
     font-size: 28px !important;
     letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    display: block !important;
+    width: fit-content !important;
+    text-align: center !important;
+    margin: 0 auto 15px auto !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    float: none !important;
+  }
+
+  .slider-text-inner,
+  .hero-desc {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
   }
 
   .hero-greeting {
@@ -3217,10 +3288,83 @@ body.offcanvas #colorlib-aside {
 
 /* Small Mobile (max-width: 480px) */
 @media screen and (max-width: 480px) {
+  /* Sidebar Small Mobile Fix */
+  #colorlib-aside {
+    width: 260px !important;
+    padding: 0.8em 0.8em !important;
+    overflow-y: auto !important;
+  }
+
+  #colorlib-aside .author-img {
+    width: 60px !important;
+    height: 60px !important;
+    margin: 0 auto 0.5em auto !important;
+    border-width: 2px !important;
+  }
+
+  #colorlib-aside #colorlib-logo a {
+    font-size: 0.95em !important;
+  }
+
+  #colorlib-aside .position a {
+    font-size: 0.65em !important;
+  }
+
+  #colorlib-aside .location {
+    font-size: 0.6em !important;
+  }
+
+  #colorlib-aside .text-center {
+    margin-bottom: 0.5em !important;
+  }
+
+  #colorlib-aside #colorlib-main-menu ul li {
+    margin-bottom: 2px !important;
+  }
+
+  #colorlib-aside #colorlib-main-menu ul li a {
+    font-size: 0.75em !important;
+    padding: 6px 12px !important;
+  }
+
+  #colorlib-aside .colorlib-footer {
+    padding-top: 0.5em !important;
+    margin-top: 0.3em !important;
+  }
+
+  #colorlib-aside .colorlib-footer ul li {
+    margin: 0 4px !important;
+  }
+
+  #colorlib-aside .colorlib-footer ul li a {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+  }
+
+  /* Hero Name Small Mobile */
   h1.hero-name,
   #colorlib-hero .hero-name,
   .slider-text-inner h1.hero-name {
-    font-size: 24px !important;
+    font-size: 22px !important;
+    white-space: nowrap !important;
+    display: block !important;
+    width: fit-content !important;
+    text-align: center !important;
+    margin: 0 auto 15px auto !important;
+    position: relative !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    float: none !important;
+  }
+
+  .slider-text-inner,
+  .hero-desc {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
   }
 
   .hero-typing {
