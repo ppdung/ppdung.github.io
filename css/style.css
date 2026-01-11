@@ -3103,34 +3103,52 @@ body.offcanvas #colorlib-aside {
     font-size: 14px !important;
   }
 
-  /* Hero Section Mobile */
-  h1.hero-name,
-  #colorlib-hero .hero-name,
-  .slider-text-inner h1.hero-name {
-    font-size: 28px !important;
-    letter-spacing: 0 !important;
-    white-space: nowrap !important;
-    display: block !important;
-    width: fit-content !important;
+  /* Hero Section Mobile - Force center */
+  .slider-text,
+  .col-md-8.col-md-offset-2 {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
     text-align: center !important;
-    margin: 0 auto 15px auto !important;
-    position: relative !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    float: none !important;
   }
 
   .slider-text-inner,
-  .hero-desc {
+  .hero-desc,
+  .desc.hero-desc {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
+    justify-content: center !important;
     text-align: center !important;
     width: 100% !important;
   }
 
+  h1.hero-name,
+  #colorlib-hero .hero-name,
+  .slider-text-inner h1.hero-name,
+  .hero-desc h1.hero-name,
+  .desc.hero-desc h1.hero-name {
+    font-size: 28px !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    display: block !important;
+    width: auto !important;
+    max-width: 100% !important;
+    text-align: center !important;
+    margin: 0 auto 15px auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    position: static !important;
+    left: auto !important;
+    transform: none !important;
+    float: none !important;
+  }
+
   .hero-greeting {
     font-size: 14px !important;
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
   }
 
   .hero-typing {
@@ -3342,28 +3360,51 @@ body.offcanvas #colorlib-aside {
     font-size: 12px !important;
   }
 
-  /* Hero Name Small Mobile */
-  h1.hero-name,
-  #colorlib-hero .hero-name,
-  .slider-text-inner h1.hero-name {
-    font-size: 22px !important;
-    white-space: nowrap !important;
-    display: block !important;
-    width: fit-content !important;
+  /* Hero Section Small Mobile - Force center */
+  .slider-text,
+  .col-md-8.col-md-offset-2 {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
     text-align: center !important;
-    margin: 0 auto 15px auto !important;
-    position: relative !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    float: none !important;
   }
 
   .slider-text-inner,
-  .hero-desc {
+  .hero-desc,
+  .desc.hero-desc {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
+    justify-content: center !important;
     text-align: center !important;
+    width: 100% !important;
+  }
+
+  h1.hero-name,
+  #colorlib-hero .hero-name,
+  .slider-text-inner h1.hero-name,
+  .hero-desc h1.hero-name,
+  .desc.hero-desc h1.hero-name {
+    font-size: 22px !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    display: block !important;
+    width: auto !important;
+    max-width: 100% !important;
+    text-align: center !important;
+    margin: 0 auto 15px auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    position: static !important;
+    left: auto !important;
+    transform: none !important;
+    float: none !important;
+  }
+
+  .hero-greeting {
+    font-size: 12px !important;
+    text-align: center !important;
+    display: block !important;
     width: 100% !important;
   }
 
