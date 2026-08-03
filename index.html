@@ -626,7 +626,7 @@
 
 					               <div class="timeline-label">
 					                  <h2><a href="#">Middle Software Engineer &mdash; C++/Qt/QML at SMARTCAST Korea</a> <span>Feb 2025 - Present</span></h2>
-									  <p class="timeline-project"><strong>Project: DeepKDS</strong> &mdash; an AI-powered Kitchen Display System designed for seamless integration with POS systems worldwide.</p>
+									  <p class="timeline-project"><strong>Project: DeepKDS</strong> &mdash; a POS-independent, AI-powered Kitchen Display System designed for seamless integration with POS systems worldwide. Now a shipping commercial product used in 5,000+ Korean stores including Lotteria, Hollys, KyoChon Chicken, Ediya, GS Retail and Korail &mdash; <a href="https://www.deeppos.io/products/deepkds" target="_blank" rel="noopener">deeppos.io</a>.</p>
 									  <ul>
 										<li>Architected and developed DeepKDS from the ground up using C++/Qt/QML with multi-platform support (Windows, Android, macOS, Linux on Raspberry Pi), integrating ZeroMQ and RabbitMQ for real-time, low-latency data communication across distributed systems.</li>
 										<li>Collaborated to create DeepKDS AI Agent, a middleware leveraging AI to capture and interpret order data directly from printer output, eliminating dependency on POS vendor APIs and ensuring universal compatibility with POS systems worldwide.</li>
@@ -653,7 +653,7 @@
 
 					               <div class="timeline-label">
 					                  <h2><a href="#">Middle Software Engineer &mdash; C++/Qt/QML at SMARTCAST Korea</a> <span>Mar 2025 - Present</span></h2>
-									  <p class="timeline-project"><strong>Project: DeepDID</strong> &mdash; a customer-facing order-status display (Digital Information Display) that pairs with DeepKDS on the same restaurant network, showing pickup-counter callouts driven by the kitchen's live order feed.</p>
+									  <p class="timeline-project"><strong>Project: DeepDID</strong> &mdash; a customer-facing order-status display (Digital Information Display) that pairs with DeepKDS on the same restaurant network, showing pickup-counter callouts driven by the kitchen's live order feed. Shipped as part of the DeepKDS product line &mdash; <a href="https://www.deeppos.io/products/deepdid" target="_blank" rel="noopener">deeppos.io</a>.</p>
 									  <ul>
 										<li>Architected and developed DeepDID from the ground up using C++/Qt/QML with multi-platform support (Windows, Android, Linux on Raspberry Pi), integrating ZeroMQ for peer-to-peer connectivity to Kitchen Display Systems on the local network and RabbitMQ for cloud command delivery, so a pickup-counter display keeps serving orders when either channel drops.</li>
 										<li>Designed and implemented a cloud-controlled configuration channel with tolerant JSON coercion for cross-version compatibility and a server-pushed version-snapshot rollback that copies the running binary aside before each install, letting operations remotely downgrade a device to a known-good previous release without dispatching a technician if a bad release is detected in the field.</li>
@@ -783,8 +783,17 @@
 									<span class="placeholder-label">2025 &mdash; present</span>
 								</div>
 								<div class="project-info">
-									<h3>DeepKDS - AI-powered Kitchen Display System</h3>
-									<p>Built from the ground up for Windows, Android, macOS and Raspberry Pi. Fault-tolerant ZeroMQ/RabbitMQ messaging with dual-broker failover, WebRTC remote support, and 10-locale internationalization. Released to the Korean POS market.</p>
+									<h3>DeepKDS - POS-independent Kitchen Display System</h3>
+									<p>Shipping commercial product I architected and built from the ground up for Windows, Android, macOS and Raspberry Pi. Connects to any POS through its printer output, so no vendor API or POS redevelopment is needed. Fault-tolerant ZeroMQ/RabbitMQ messaging with dual-broker failover, WebRTC remote support, and one-click auto-translation across 10 locales.</p>
+									<div class="project-stats">
+										<div class="stat"><b>5,000+</b><span>stores</span></div>
+										<div class="stat"><b>85%</b><span>faster orders</span></div>
+										<div class="stat"><b>92%</b><span>fewer errors</span></div>
+									</div>
+									<p class="project-note">Deployed at brands including Lotteria, Hollys, KyoChon Chicken, Ediya, GS Retail and Korail. Figures as published by SMARTCAST.</p>
+									<div class="project-links">
+										<a href="https://www.deeppos.io/products/deepkds" target="_blank" rel="noopener"><i class="icon-link"></i> Live product</a>
+									</div>
 									<div class="project-tags">
 										<span class="tag">C++/Qt/QML</span>
 										<span class="tag">ZeroMQ</span>
@@ -804,8 +813,12 @@
 									<span class="placeholder-label">2025 &mdash; present</span>
 								</div>
 								<div class="project-info">
-									<h3>DeepDID - Customer Order-Status Display</h3>
-									<p>Pickup-counter display paired with DeepKDS over the local network. 38 interchangeable QML themes, 10 locales, hybrid neural text-to-speech, and server-pushed version-snapshot rollback for remote recovery from bad releases.</p>
+									<h3>DeepDID - Digital Information Display</h3>
+									<p>Customer-facing pickup-counter display that pairs with DeepKDS over the local network, calling order numbers in real time and doubling as a store information screen for wait times and promotions. 38 interchangeable QML themes, 10 locales, hybrid neural text-to-speech, and server-pushed version-snapshot rollback for remote recovery from bad releases.</p>
+									<p class="project-note">Ships under the same DeepKDS licence at no additional cost, in wall-mounted, stand, single-match and food-court configurations.</p>
+									<div class="project-links">
+										<a href="https://www.deeppos.io/products/deepdid" target="_blank" rel="noopener"><i class="icon-link"></i> Live product</a>
+									</div>
 									<div class="project-tags">
 										<span class="tag">C++/Qt/QML</span>
 										<span class="tag">Raspberry Pi</span>

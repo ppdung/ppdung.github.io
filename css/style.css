@@ -2789,6 +2789,18 @@ code[class*="language-"] {
   font-weight: 600;
 }
 
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label .timeline-project a {
+  color: var(--accent-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  border-bottom: 1px dotted var(--accent-secondary);
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label .timeline-project a:hover {
+  border-bottom-style: solid;
+  text-decoration: none;
+}
+
 /* Projects Section */
 .projects-grid {
   display: flex;
@@ -2887,6 +2899,71 @@ code[class*="language-"] {
   color: var(--text-muted);
   font-size: 13px;
   margin-bottom: 15px;
+}
+
+.project-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.project-stats .stat {
+  flex: 1 1 auto;
+  min-width: 72px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-tertiary);
+  text-align: center;
+}
+
+.project-stats .stat b {
+  display: block;
+  color: var(--accent-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.project-stats .stat span {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.project-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  transition: color 0.2s ease;
+}
+
+.project-links a:hover {
+  color: var(--accent-secondary);
+  text-decoration: underline;
+}
+
+.project-note {
+  margin-bottom: 12px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.5;
 }
 
 .project-tags {
