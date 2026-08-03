@@ -3661,3 +3661,178 @@ textarea:focus-visible,
     opacity: 1 !important;
   }
 }
+
+/* ============================================
+   Reading aids for a long single-page layout
+   ============================================ */
+
+/* Progress bar showing how far through the page you are. */
+.read-progress {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* Back-to-top. Hidden until you have scrolled past the hero. */
+.to-top {
+  position: fixed;
+  z-index: 9997;
+  right: 26px;
+  bottom: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  color: var(--accent-primary);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s,
+              background 0.2s ease, color 0.2s ease;
+}
+
+.to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.to-top:hover,
+.to-top:focus-visible {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+@media screen and (max-width: 768px) {
+  .to-top {
+    right: 16px;
+    bottom: 16px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* "Show more" for long contribution lists. Without JS every bullet stays
+   visible, so this only ever hides content once the toggle exists. */
+.bullets-toggle {
+  margin-top: 10px;
+  padding: 6px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.bullets-toggle:hover,
+.bullets-toggle:focus-visible {
+  border-color: var(--accent-primary);
+  background: var(--bg-tertiary);
+}
+
+.timeline-label ul li.is-collapsed {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .to-top,
+  .read-progress {
+    transition: none !important;
+  }
+}
+
+/* ============================================
+   Print: recruiters do print these
+   ============================================ */
+@media print {
+  @page { margin: 14mm; }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+  }
+
+  /* chrome that means nothing on paper. The nav needs the same specificity
+     the screen rule uses (#colorlib-aside > nav#colorlib-main-menu), since
+     that one is !important too. */
+  #colorlib-aside > nav#colorlib-main-menu,
+  #colorlib-aside #colorlib-main-menu .collapse,
+  .particles-container,
+  .grid-background,
+  .sidebar-toggle,
+  .sidebar-drag-handle,
+  .colorlib-nav-toggle,
+  .to-top,
+  .read-progress,
+  .skip-link,
+  .hero-buttons,
+  .hero-tech-icons,
+  #contact-form,
+  .project-placeholder,
+  .project-video,
+  .project-image,
+  .bullets-toggle {
+    display: none !important;
+  }
+
+  /* the sidebar floats next to main on screen; stack it on paper */
+  #colorlib-aside,
+  #colorlib-main {
+    position: static !important;
+    width: 100% !important;
+    float: none !important;
+    padding: 0 !important;
+  }
+
+  /* everything is revealed on scroll, which never happens when printing */
+  .animate-box,
+  .panel-collapse {
+    opacity: 1 !important;
+    height: auto !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .timeline-label ul li.is-collapsed { display: list-item !important; }
+
+  section,
+  .project-card,
+  .timeline-entry,
+  .panel {
+    page-break-inside: avoid;
+    background: #fff !important;
+    border-color: #ccc !important;
+  }
+
+  h1, h2, h3, h4,
+  .timeline-label h2,
+  .project-info h3 { color: #000 !important; }
+
+  p, li, span { color: #222 !important; }
+
+  /* a printed page cannot be clicked, so spell the destination out */
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+  }
+}

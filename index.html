@@ -18,6 +18,8 @@
 	<meta name="keywords" content="C++ Developer, Qt Developer, QML, Software Engineer, POS, Kitchen Display System, ZeroMQ, RabbitMQ, WebRTC, Robotics, ROS, Linux, Raspberry Pi, Cross-platform, Vietnam" />
 	<meta name="author" content="Pham Phuoc Dung" />
 
+	<meta name="theme-color" content="#0d1117" />
+	<meta name="color-scheme" content="dark" />
 	<link rel="canonical" href="https://ppdung.github.io/" />
 
 	<!-- Facebook and Twitter integration -->
@@ -112,6 +114,10 @@
 	</head>
 	<body>
 	<a href="#colorlib-main" class="skip-link">Skip to main content</a>
+	<div class="read-progress" id="read-progress" role="presentation"></div>
+	<button type="button" class="to-top" id="to-top" aria-label="Back to top" title="Back to top">
+		<i class="icon-arrow-up" aria-hidden="true"></i>
+	</button>
 	<div id="colorlib-page">
 		<!-- Sidebar Toggle Button - Outside container -->
 		<div class="sidebar-toggle" id="sidebar-toggle" title="Toggle Sidebar"></div>
@@ -1253,6 +1259,78 @@
 					}
 				}, { passive: true });
 			}
+
+			// ============================================
+			// Reading progress + back to top
+			// ============================================
+			const progressBar = document.getElementById('read-progress');
+			const toTopBtn = document.getElementById('to-top');
+			let ticking = false;
+
+			function onScroll() {
+				const doc = document.documentElement;
+				const scrolled = window.scrollY || doc.scrollTop;
+				const max = doc.scrollHeight - window.innerHeight;
+
+				if (progressBar) {
+					progressBar.style.width = (max > 0 ? (scrolled / max) * 100 : 0) + '%';
+				}
+				if (toTopBtn) {
+					toTopBtn.classList.toggle('is-visible', scrolled > window.innerHeight * 0.6);
+				}
+				ticking = false;
+			}
+
+			window.addEventListener('scroll', function () {
+				if (!ticking) {
+					window.requestAnimationFrame(onScroll);
+					ticking = true;
+				}
+			}, { passive: true });
+			onScroll();
+
+			if (toTopBtn) {
+				toTopBtn.addEventListener('click', function () {
+					const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+					window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+				});
+			}
+
+			// ============================================
+			// Collapse long contribution lists
+			// The bullets ship visible, so this only hides them once the
+			// toggle exists -- without JS nothing is lost.
+			// ============================================
+			const KEEP_VISIBLE = 4;
+			document.querySelectorAll('.timeline-label > ul').forEach(function (list, idx) {
+				const items = Array.from(list.children);
+				if (items.length <= KEEP_VISIBLE + 2) return;
+
+				const hidden = items.slice(KEEP_VISIBLE);
+				const listId = 'contrib-list-' + idx;
+				list.id = listId;
+
+				const btn = document.createElement('button');
+				btn.type = 'button';
+				btn.className = 'bullets-toggle';
+				btn.setAttribute('aria-expanded', 'false');
+				btn.setAttribute('aria-controls', listId);
+
+				function render(expanded) {
+					hidden.forEach(function (li) { li.classList.toggle('is-collapsed', !expanded); });
+					btn.setAttribute('aria-expanded', String(expanded));
+					btn.textContent = expanded
+						? '- Show fewer'
+						: '+ Show ' + hidden.length + ' more contributions';
+				}
+
+				btn.addEventListener('click', function () {
+					render(btn.getAttribute('aria-expanded') !== 'true');
+				});
+
+				list.parentNode.insertBefore(btn, list.nextSibling);
+				render(false);
+			});
 
 			// Contact Form Handler - Sends to Formspree (Gmail)
 			const contactForm = document.getElementById('contact-form');
