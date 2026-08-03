@@ -2759,11 +2759,34 @@ code[class*="language-"] {
 }
 
 .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 span {
+  display: block;
+  margin-top: 6px;
+  opacity: 1;
+  filter: none;
   color: var(--accent-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.5px;
 }
 
 .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label ul li {
   color: var(--text-secondary);
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label .timeline-project {
+  margin: 0 0 14px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--accent-primary);
+  border-radius: 0 6px 6px 0;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label .timeline-project strong {
+  color: var(--accent-primary);
+  font-weight: 600;
 }
 
 /* Projects Section */
@@ -2806,6 +2829,47 @@ code[class*="language-"] {
   height: 200px;
   background-size: cover;
   background-position: center;
+}
+
+.project-placeholder {
+  position: relative;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.project-placeholder:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: linear-gradient(var(--border-color) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.25;
+}
+
+.project-placeholder i {
+  position: relative;
+  z-index: 1;
+  font-size: 56px;
+  color: var(--accent-primary);
+}
+
+.project-placeholder .placeholder-label {
+  position: absolute;
+  z-index: 1;
+  right: 16px;
+  bottom: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
 }
 
 .project-info {
