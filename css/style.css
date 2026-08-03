@@ -3836,3 +3836,73 @@ textarea:focus-visible,
     color: #555;
   }
 }
+
+/* ============================================
+   Availability signal
+   ============================================ */
+.hero-availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 auto 26px;
+  padding: 7px 16px;
+  border: 1px solid rgba(65, 205, 82, 0.35);
+  border-radius: 999px;
+  background: rgba(65, 205, 82, 0.08);
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.2px;
+}
+
+.hero-availability .status-dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-secondary);
+  box-shadow: 0 0 0 0 rgba(65, 205, 82, 0.6);
+  animation: availablePulse 2.4s ease-out infinite;
+}
+
+@keyframes availablePulse {
+  0%   { box-shadow: 0 0 0 0 rgba(65, 205, 82, 0.6); }
+  70%  { box-shadow: 0 0 0 7px rgba(65, 205, 82, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(65, 205, 82, 0); }
+}
+
+.hero-tagline strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+@media screen and (max-width: 768px) {
+  .hero-availability {
+    font-size: 11px;
+    line-height: 1.5;
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-availability .status-dot { animation: none; }
+}
+
+/* The sidebar carries the same signal for anyone who scrolled past the hero. */
+#colorlib-aside .availability-note {
+  display: block;
+  margin-top: 4px;
+  color: var(--accent-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.3px;
+}
+
+@media print {
+  .hero-availability {
+    border-color: #999 !important;
+    background: none !important;
+    color: #000 !important;
+  }
+  .hero-availability .status-dot { display: none !important; }
+}
