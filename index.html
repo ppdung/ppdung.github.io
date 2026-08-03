@@ -1187,7 +1187,7 @@
 				}, { passive: true });
 			}
 
-			// Contact Form Handler - Sends to both Formspree (Gmail) and Telegram
+			// Contact Form Handler - Sends to Formspree (Gmail)
 			const contactForm = document.getElementById('contact-form');
 			if (contactForm) {
 				contactForm.addEventListener('submit', async function(e) {
@@ -1200,10 +1200,6 @@
 
 					// Get form data
 					const formData = new FormData(this);
-					const name = formData.get('name');
-					const email = formData.get('email');
-					const subject = formData.get('subject');
-					const message = formData.get('message');
 
 					// Show loading state
 					btnText.style.display = 'none';
@@ -1213,43 +1209,19 @@
 					formStatus.textContent = '';
 
 					try {
-						// Send to Telegram Bot
-						const TELEGRAM_BOT_TOKEN = '8180191623:AAH79LArkAIoLB-y7Ot3VJWhVu0ss8IwLIc';
-						const TELEGRAM_CHAT_ID = '7675978629';
-
-						const telegramMessage = `📬 New Contact Form Submission\n\n👤 Name: ${name}\n📧 Email: ${email}\n📋 Subject: ${subject}\n\n💬 Message:\n${message}`;
-
-						const telegramPromise = fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-							method: 'POST',
-							headers: { 'Content-Type': 'application/json' },
-							body: JSON.stringify({
-								chat_id: TELEGRAM_CHAT_ID,
-								text: telegramMessage,
-								parse_mode: 'HTML'
-							})
-						});
-
-						// Send to Formspree (Gmail)
-						const formspreePromise = fetch(this.action, {
+						const response = await fetch(this.action, {
 							method: 'POST',
 							body: formData,
 							headers: { 'Accept': 'application/json' }
 						});
 
-						// Wait for both
-						const [telegramRes, formspreeRes] = await Promise.allSettled([telegramPromise, formspreePromise]);
-
-						// Check if at least one succeeded
-						const telegramOk = telegramRes.status === 'fulfilled' && telegramRes.value.ok;
-						const formspreeOk = formspreeRes.status === 'fulfilled' && formspreeRes.value.ok;
-
-						if (telegramOk || formspreeOk) {
-							formStatus.className = 'form-status success';
-							formStatus.textContent = '✓ Message sent successfully! I will get back to you soon.';
-							this.reset();
-						} else {
-							throw new Error('Failed to send message');
+						if (!response.ok) {
+							throw new Error('Formspree responded with ' + response.status);
 						}
+
+						formStatus.className = 'form-status success';
+						formStatus.textContent = '✓ Message sent successfully! I will get back to you soon.';
+						this.reset();
 
 					} catch (error) {
 						formStatus.className = 'form-status error';
