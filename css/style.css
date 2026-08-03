@@ -1597,8 +1597,13 @@ p {
   transform: scale(1.05);
 }
 
+/* #colorlib-logo is a <div>, not an <h1>, so the page has a single h1 (the
+   hero name) for SEO. Every other computed value already matches; only the
+   heading line-height needed restoring, since a div inherits body's 1.8
+   instead of the 1.1 Bootstrap gives headings. */
 #colorlib-aside #colorlib-logo {
   margin-bottom: 0.5em !important;
+  line-height: 1.1;
 }
 
 #colorlib-aside #colorlib-logo a {
@@ -3586,5 +3591,73 @@ body.offcanvas #colorlib-aside {
   .project-tags .tag {
     font-size: 9px !important;
     padding: 3px 6px !important;
+  }
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+
+/* Skip link: off-screen until keyboard-focused, so it changes nothing visually
+   for mouse users but lets keyboard users jump past the sidebar nav. */
+.skip-link {
+  position: absolute;
+  z-index: 9999;
+  top: -60px;
+  left: 12px;
+  padding: 10px 18px;
+  border: 1px solid var(--accent-primary);
+  border-radius: 0 0 6px 6px;
+  background: var(--bg-secondary);
+  color: var(--accent-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  color: var(--accent-primary);
+  text-decoration: none;
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Visible focus ring for keyboard users. :focus-visible keeps it off for
+   mouse clicks, so the pointer experience is unchanged. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Respect the OS "reduce motion" setting. This page runs several infinite
+   background animations (particles, orbs, grid drift, section glow) plus a
+   typing effect and scroll-triggered fades -- all of which can trigger
+   symptoms for people with vestibular disorders. Content stays fully
+   visible; only the movement stops. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .particles-container,
+  .grid-background {
+    display: none !important;
+  }
+
+  /* animate-box starts at opacity 0 and is revealed by a scroll waypoint.
+     With animations disabled that reveal may never land, so pin it visible. */
+  .animate-box {
+    opacity: 1 !important;
   }
 }

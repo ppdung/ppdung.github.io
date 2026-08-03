@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+	<meta charset="utf-8">
+	<title>Page not found | Pham Phuoc Dung</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex">
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--bg-primary: #0d1117;
+			--bg-secondary: #161b22;
+			--accent-primary: #58a6ff;
+			--accent-secondary: #41cd52;
+			--text-primary: #e6edf3;
+			--text-secondary: #8b949e;
+			--border-color: #30363d;
+		}
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 24px;
+			background: var(--bg-primary);
+			color: var(--text-primary);
+			font-family: 'Inter', Arial, sans-serif;
+			text-align: center;
+		}
+		.code {
+			margin: 0;
+			color: var(--accent-primary);
+			font-family: 'JetBrains Mono', monospace;
+			font-size: clamp(64px, 18vw, 140px);
+			font-weight: 600;
+			line-height: 1;
+		}
+		h1 {
+			margin: 16px 0 8px;
+			font-size: clamp(20px, 5vw, 28px);
+			font-weight: 600;
+		}
+		p {
+			margin: 0 auto 28px;
+			max-width: 440px;
+			color: var(--text-secondary);
+			font-size: 15px;
+			line-height: 1.6;
+		}
+		a.home {
+			display: inline-block;
+			padding: 12px 26px;
+			border: 1px solid var(--accent-primary);
+			border-radius: 8px;
+			color: var(--accent-primary);
+			font-family: 'JetBrains Mono', monospace;
+			font-size: 14px;
+			text-decoration: none;
+			transition: background 0.2s ease, color 0.2s ease;
+		}
+		a.home:hover,
+		a.home:focus-visible {
+			background: var(--accent-primary);
+			color: var(--bg-primary);
+			outline: none;
+		}
+		@media (prefers-reduced-motion: reduce) {
+			* { transition-duration: 0.001ms !important; }
+		}
+	</style>
+	</head>
+	<body>
+		<main>
+			<p class="code">404</p>
+			<h1>Page not found</h1>
+			<p>That page doesn't exist &mdash; it may have been moved or the link may be mistyped.</p>
+			<a class="home" href="/">&larr; Back to portfolio</a>
+		</main>
+	</body>
+</html>
