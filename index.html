@@ -957,20 +957,24 @@
 							</div>
 						</div>
 
-						<!-- Project: Vending Machine -->
+						<!-- Project: Smart Pharmacy Kiosk -->
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-placeholder">
 									<i class="icon-cog"></i>
-									<span class="placeholder-label">2023 &mdash; 2024</span>
+									<span class="placeholder-label">2024</span>
 								</div>
 								<div class="project-info">
-									<h3>Vending Machine Control Software</h3>
-									<p>Bespoke control solution built from scratch: communication protocols with embedded devices, AWS integration for real-time sales updates, and Korean credit card payment processing.</p>
+									<h3>Smart Pharmacy - Self-service Kiosk</h3>
+									<p>Unattended kiosk that lets a pharmacy sell over the counter without staff at the till. Runs a twenty-five state order machine on Windows and Android, settles through five PG vendors and eight VANs, drives a cash unit that takes notes and pays change back over serial, and pushes each order to the pharmacist's display.</p>
+									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="pharmacy" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
+									</div>
 									<div class="project-tags">
-										<span class="tag">C++/Qt</span>
+										<span class="tag">C++/Qt/QML</span>
 										<span class="tag">Embedded</span>
-										<span class="tag">AWS</span>
+										<span class="tag">Payments</span>
+										<span class="tag">Android</span>
 									</div>
 								</div>
 							</div>
@@ -1754,6 +1758,63 @@
 
 			<footer class="project-modal__footer">
 				<a href="https://www.deeppos.io/products/deepdid" target="_blank" rel="noopener"><i class="icon-link" aria-hidden="true"></i> See the live product</a>
+			</footer>
+		</div>
+	</div>
+
+
+	<div class="project-modal" id="modal-pharmacy" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-pharmacy-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Close project details">&times;</button>
+			<header class="project-modal__header">
+				<p class="project-modal__eyebrow">SMARTCAST Korea &middot; Unattended retail</p>
+				<h2 id="modal-pharmacy-title">Smart Pharmacy &mdash; Self-service Kiosk</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<dl class="project-facts">
+					<div><dt>My role</dt><dd>Built the product on a kiosk platform I had written for a previous product</dd></div>
+					<div><dt>Period</dt><dd>2024</dd></div>
+					<div><dt>Platforms</dt><dd>Windows (MinGW 32-bit) and Android (min SDK 21, target 30)</dd></div>
+					<div><dt>Core stack</dt><dd>C++11, Qt 5.15.2 / QML, SQLite</dd></div>
+					<div><dt>Size</dt><dd>~675 first-party C++/QML source files</dd></div>
+				</dl>
+
+				<section class="project-modal__section">
+					<h3>The problem</h3>
+					<p>A pharmacy counter is staffed for the whole opening day, but a large share of what crosses it is an ordinary over-the-counter sale that needs no pharmacist. This kiosk takes those, so the counter is free for the ones that do. Unattended is the hard part: nobody is standing there when a note jams, a card terminal times out, or a release goes wrong, so every one of those has to have an answer built in.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>What I built</h3>
+					<ul class="project-detail-list">
+						<li><strong>Reused the platform rather than the product.</strong> The kiosk shell, payment stack and state-machine framework came from the tablet ordering system I had built before. Retail-pharmacy sale flow, back-end integration and interface are this product's own, which is why a second unattended product could ship in a fraction of the time the first one took.</li>
+						<li><strong>The sale as a state machine.</strong> Twenty-five named states behind one interface &mdash; standby, splash, category and item select, option select, a four-step order confirmation, payment-type select, credit processing, split payment, success, failure, cancellation, refund, admin and environment check. Unattended means no one is there to nudge a stuck screen, so every step is somewhere the machine can be, not a branch inside a function.</li>
+						<li><strong>Card payment across the Korean market.</strong> Credit payment behind an abstract base and a factory covering five PG vendors (KICC, KIS, NICE, SMARTRO, KOCES), with a second layer of the same shape for eight VANs (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). A pharmacy keeps whichever provider it already has.</li>
+						<li><strong>Cash, including change.</strong> A note and coin unit driven over serial with its own state machine &mdash; idle, init, deposit, withdraw, flush, return, and separate abort-return and error-return paths &mdash; plus a bill dispenser for change. A machine holding a customer's banknote with nobody nearby has to know exactly which state it is in and how to give the money back.</li>
+						<li><strong>Everything else people tap.</strong> Mobile wallets and QR schemes, app card, and the T-money transit card through its vendor SDK.</li>
+						<li><strong>Handoff to the pharmacist.</strong> Completed sales are pushed to a kitchen-display-style screen behind the counter with the order, payment and call-number data, so staff see what the machine sold without watching it.</li>
+						<li><strong>Store-driven configuration.</strong> Each device pulls its own environment, product catalogue and images from the back-end, with sold-out toggling, display ordering and order-history sync, so a pharmacy is set up from the server rather than at the machine.</li>
+						<li><strong>Updating itself, and being made to.</strong> The Android build downloads and installs its own replacement, with a forced-update path for when a version must not stay in the field.</li>
+						<li><strong>Three languages.</strong> Korean, English and Japanese throughout the customer-facing flow and the admin screens.</li>
+						<li><strong>Field diagnostics.</strong> Per-day rotating log files tagged with the device and pharmacy identity, so a report from one machine can be traced without physical access.</li>
+					</ul>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Stack</h3>
+					<div class="project-tags">
+						<span class="tag">C++11</span><span class="tag">Qt 5.15</span><span class="tag">QML</span>
+						<span class="tag">SQLite</span><span class="tag">Windows</span><span class="tag">Android</span>
+						<span class="tag">Serial devices</span><span class="tag">Payment VAN/PG</span>
+						<span class="tag">State machine</span><span class="tag">MVVM</span>
+					</div>
+				</section>
+			</div>
+
+			<footer class="project-modal__footer">
+				<a href="#" data-modal-goto="contact"><i class="icon-paperplane" aria-hidden="true"></i> Get in touch about this work</a>
 			</footer>
 		</div>
 	</div>

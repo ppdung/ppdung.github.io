@@ -4221,6 +4221,16 @@ body.modal-open {
   overflow: hidden;
 }
 
+.panel--master .panel-body,
+.panel--master .panel-body p,
+.panel--master .panel-body ul li {
+  /* The photo behind this panel needs contrast headroom to be visible at
+     all. --text-secondary was the binding constraint at 5.62:1 even on the
+     flat background; the brighter token starts far higher and lets the
+     picture read as a picture. */
+  color: var(--text-primary);
+}
+
 .panel--master .panel-body::before {
   content: '';
   position: absolute;
@@ -4238,11 +4248,11 @@ body.modal-open {
      the banner's lettering is large enough to still read as text through a
      light blur and would compete with the copy on top */
   background-position: center 72%;
-  opacity: 0.32;
+  opacity: 0.62;
   /* brightness() caps the highlights -- the stage banner and the projector
      screen are the brightest things in the frame and would otherwise fight
      the body text sitting on top of them */
-  filter: blur(4px) grayscale(0.3) brightness(0.62) contrast(1.02);
+  filter: blur(3px) grayscale(0.2) brightness(0.85) contrast(1.02);
   /* blur() samples past the element edge and would leave a pale halo, so
      the layer is overscanned before being blurred */
   transform: scale(1.08);
@@ -4257,22 +4267,22 @@ body.modal-open {
   z-index: -1;
   display: block;   /* same clearfix override as ::before */
   background: linear-gradient(100deg,
-              rgba(22, 27, 34, 0.94) 0%,
-              rgba(22, 27, 34, 0.70) 48%,
-              rgba(22, 27, 34, 0.42) 100%);
+              rgba(22, 27, 34, 0.88) 0%,
+              rgba(22, 27, 34, 0.55) 48%,
+              rgba(22, 27, 34, 0.25) 100%);
   pointer-events: none;
 }
 
 @media (max-width: 768px) {
   /* Narrow columns leave text sitting over the busiest part of the frame. */
   .panel--master .panel-body::before {
-    opacity: 0.12;
+    opacity: 0.38;
   }
 
   .panel--master .panel-body::after {
     background: linear-gradient(180deg,
-                rgba(22, 27, 34, 0.90) 0%,
-                rgba(22, 27, 34, 0.94) 100%);
+                rgba(22, 27, 34, 0.72) 0%,
+                rgba(22, 27, 34, 0.82) 100%);
   }
 }
 
