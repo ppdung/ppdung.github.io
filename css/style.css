@@ -1427,8 +1427,46 @@ body.offcanvas {
 .col-padding {
   padding: 10px !important; }
 
-.js .animate-box {
-  opacity: 0; }
+/* Reveal-on-scroll.
+   Gated on .js-reveal, set by a one-line script at the top of <head>, so the
+   page is never left blank for a reader without JavaScript. Transitions
+   rather than keyframes: they are cheap, compositor-friendly, and can be
+   interrupted, which matters when someone flings the page downward. */
+.js-reveal .animate-box {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
+              transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.js-reveal .animate-box[data-animate-effect="fadeInLeft"] {
+  transform: translateX(-28px);
+}
+
+.js-reveal .animate-box[data-animate-effect="fadeInRight"] {
+  transform: translateX(28px);
+}
+
+.js-reveal .animate-box[data-animate-effect="fadeIn"] {
+  transform: none;
+}
+
+.js-reveal .animate-box.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Nothing is hidden when motion is unwelcome, so a failed or slow reveal can
+   never cost this reader the content. */
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .animate-box,
+  .js-reveal .animate-box[data-animate-effect="fadeInLeft"],
+  .js-reveal .animate-box[data-animate-effect="fadeInRight"] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
 
 /* =======================================================
 *
@@ -4291,4 +4329,44 @@ body.modal-open {
   .panel--master .panel-body::after {
     display: none !important;
   }
+}
+
+/* ==========================================================================
+   Project card imagery
+   Same WebP-with-JPEG-fallback pattern as elsewhere: the plain url() is the
+   fallback for browsers without image-set().
+   ========================================================================== */
+.project-image {
+  position: relative;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* The date sits on the image, so it needs its own scrim to stay readable
+   whatever the photograph is doing underneath. */
+.project-image .placeholder-label {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  background: rgba(1, 4, 9, 0.78);
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.project-image--deepkds {
+  background-image: url(../images/deepkds.jpg);
+  background-image: image-set(url(../images/deepkds.webp) type("image/webp"),
+                              url(../images/deepkds.jpg) type("image/jpeg"));
+}
+
+.project-image--deepdid {
+  background-image: url(../images/deepdid.jpg);
+  background-image: image-set(url(../images/deepdid.webp) type("image/webp"),
+                              url(../images/deepdid.jpg) type("image/jpeg"));
 }

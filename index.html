@@ -1,6 +1,28 @@
 <!DOCTYPE HTML>
 <html lang="en">
 	<head>
+	<meta charset="utf-8">
+	<script>
+		/* Marks the document as able to run the reveal-on-scroll animation.
+		   The .animate-box elements are only hidden under this class, so a
+		   reader without JavaScript -- or one where this file fails -- gets
+		   the content rather than an empty page. This used to ride on
+		   Modernizr's .js class, which stopped being added when Modernizr
+		   was removed, silently disabling the whole mechanism. */
+		document.documentElement.className += ' js-reveal';
+
+		/* Failsafe. The class above is what hides the content, so if main.js
+		   never arrives -- blocked, cached badly, network dropped mid-load --
+		   the page would stay blank. Drop the class if the reveal has not
+		   announced itself in three seconds. */
+		setTimeout(function () {
+			if (!window.__revealReady) {
+				var d = document.documentElement;
+				d.className = d.className.replace(/\s*js-reveal\b/, '');
+			}
+		}, 3000);
+	</script>
+
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-0586HR4EGC"></script>
 	<script>
@@ -10,7 +32,6 @@
 		gtag('config', 'G-0586HR4EGC');
 	</script>
 
-	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Pham Phuoc Dung — C++ / Qt Developer, Ho Chi Minh City</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -145,8 +166,6 @@
 	<link rel="preload" href="fonts/icomoon/icomoon.woff2" as="font" type="font/woff2" crossorigin>
 	<link rel="preload" href="fonts/devicon/devicon.woff2" as="font" type="font/woff2" crossorigin>
 
-	<!-- Animate.css -->
-	<link rel="stylesheet" href="css/animate.css">
 	<!-- Icon fonts: icomoon + devicon, subsetted -->
 	<link rel="stylesheet" href="css/icons.css">
 	<!-- Bootstrap  -->
@@ -885,8 +904,7 @@
 						<!-- Project: DeepKDS -->
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
-								<div class="project-placeholder">
-									<i class="devicon-qt-original colored"></i>
+								<div class="project-image project-image--deepkds">
 									<span class="placeholder-label">2025 &mdash; present</span>
 								</div>
 								<div class="project-info">
@@ -916,8 +934,7 @@
 						<!-- Project: DeepDID -->
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
-								<div class="project-placeholder">
-									<i class="icon-monitor"></i>
+								<div class="project-image project-image--deepdid">
 									<span class="placeholder-label">2025 &mdash; present</span>
 								</div>
 								<div class="project-info">

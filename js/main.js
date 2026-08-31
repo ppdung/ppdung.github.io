@@ -37,40 +37,85 @@
 	};
 
 
-	// Animations
-	var contentWayPoint = function() {
-		$('.animate-box').waypoint( function( direction ) {
+	// Reveal-on-scroll.
+	//
+	// The previous implementation collected every box that had crossed the
+	// waypoint into one pending queue and then delayed each by its index into
+	// that queue times 200ms. Scrolling quickly to the footer put forty-odd
+	// boxes in the queue at once, so the last of them was scheduled eight
+	// seconds out: the reader arrived at the bottom of the page and waited,
+	// watching content trickle in. It also only fired on direction === 'down',
+	// so anything scrolled up to that had never been revealed stayed hidden.
+	//
+	// IntersectionObserver reveals on entry regardless of direction, and the
+	// stagger is per-callback and capped, so the worst case is ~210ms no
+	// matter how fast the page is flung about.
+	var revealOnScroll = function () {
+		// Tells the failsafe in <head> that the reveal is alive, so it does not
+		// strip the class that hides the boxes.
+		window.__revealReady = true;
 
-			if( direction === 'down' && !$(this.element).hasClass('animated') ) {
+		var boxes = Array.prototype.slice.call(document.querySelectorAll('.animate-box'));
+		if (!boxes.length) { return; }
 
-				$(this.element).addClass('item-animate');
-				setTimeout(function(){
-
-					$('body .animate-box.item-animate').each(function(k){
-						var el = $(this);
-						setTimeout( function () {
-							var effect = el.data('animate-effect');
-							if ( effect === 'fadeIn') {
-								el.addClass('fadeIn animated');
-							} else if ( effect === 'fadeInLeft') {
-								el.addClass('fadeInLeft animated');
-							} else if ( effect === 'fadeInRight') {
-								el.addClass('fadeInRight animated');
-							} else {
-								el.addClass('fadeInUp animated');
-							}
-
-							el.removeClass('item-animate');
-						},  k * 200 );
-					});
-					
-				}, 100);
-				
+		function reveal(el, delay) {
+			if (delay > 0) {
+				setTimeout(function () { el.classList.add('is-visible'); }, delay);
+			} else {
+				el.classList.add('is-visible');
 			}
+		}
 
-		} , { offset: '85%' } );
+		// Without IntersectionObserver, show everything rather than hide it.
+		if (!('IntersectionObserver' in window)) {
+			boxes.forEach(function (el) { reveal(el, 0); });
+			return;
+		}
+
+		var STAGGER_MS = 70;
+		var MAX_STEPS = 3;
+		var pending = boxes.slice();
+
+		// Anything the reader has already scrolled clear of is shown at once,
+		// with no animation to catch up on. Without this, landing on the
+		// footer -- by fling, by anchor, by restored scroll position -- leaves
+		// every box above that point hidden until it is scrolled back to.
+		function sweepPassed() {
+			pending = pending.filter(function (el) {
+				if (el.classList.contains('is-visible')) { return false; }
+				if (el.getBoundingClientRect().bottom < 0) {
+					el.classList.add('is-visible');
+					observer.unobserve(el);
+					return false;
+				}
+				return true;
+			});
+		}
+
+		var observer = new IntersectionObserver(function (entries) {
+			var shown = 0;
+			entries.forEach(function (entry) {
+				if (!entry.isIntersecting) { return; }
+				reveal(entry.target, Math.min(shown, MAX_STEPS) * STAGGER_MS);
+				shown++;
+				observer.unobserve(entry.target);
+			});
+			sweepPassed();
+		}, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+
+		pending.forEach(function (el) { observer.observe(el); });
+
+		// Backstop for scrolls that outrun the observer.
+		var ticking = false;
+		window.addEventListener('scroll', function () {
+			if (ticking) { return; }
+			ticking = true;
+			window.requestAnimationFrame(function () {
+				sweepPassed();
+				ticking = false;
+			});
+		}, { passive: true });
 	};
-
 
 	var burgerMenu = function() {
 
@@ -182,7 +227,7 @@
 	// Document on load.
 	$(function(){
 		fullHeight();
-		contentWayPoint();
+		revealOnScroll();
 		burgerMenu();
 		clickMenu();
 		navigationSection();
