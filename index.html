@@ -984,15 +984,17 @@
 								</div>
 								<div class="project-info">
 									<h3>OrderEAT - Tablet Ordering System</h3>
-									<p>POS software launched in Seoul, South Korea for restaurant tablet ordering</p>
+									<p>Self-order kiosk and tablet application launched in Seoul, built from an empty repository for Windows and Android. The order flow runs as an explicit state machine, and card payment sits behind a pluggable vendor layer covering five PG providers and eight VANs, so a new store is onboarded with a subclass rather than a rewrite.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="ordereat" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
 									</div>
 									<div class="project-tags">
-										<span class="tag">Qt/QML</span>
-										<span class="tag">C++</span>
+										<span class="tag">C++/Qt/QML</span>
+										<span class="tag">RabbitMQ</span>
+										<span class="tag">SQLite</span>
 										<span class="tag">AWS</span>
 										<span class="tag">Android</span>
+										<span class="tag">Payments</span>
 									</div>
 								</div>
 							</div>
@@ -1767,11 +1769,12 @@
 
 			<div class="project-modal__body">
 				<dl class="project-facts">
-					<div><dt>My role</dt><dd>Designed and implemented from inception</dd></div>
-					<div><dt>Period</dt><dd>May 2023 &ndash; Aug 2024</dd></div>
-					<div><dt>Platforms</dt><dd>Windows, Android</dd></div>
-					<div><dt>Core stack</dt><dd>C++, Qt/QML, AWS</dd></div>
-				</dl>
+						<div><dt>My role</dt><dd>Designed and implemented from inception</dd></div>
+						<div><dt>Period</dt><dd>May 2023 &ndash; Aug 2024</dd></div>
+						<div><dt>Platforms</dt><dd>Windows (MSVC 2019) and Android (min SDK 21, target 30)</dd></div>
+						<div><dt>Core stack</dt><dd>C++11, Qt 5.15 / QML, SQLite, AMQP, AWS</dd></div>
+						<div><dt>Size</dt><dd>~1,000 first-party C++/QML source files</dd></div>
+					</dl>
 
 				<section class="project-modal__section">
 					<h3>The problem</h3>
@@ -1781,12 +1784,18 @@
 				<section class="project-modal__section">
 					<h3>What I built</h3>
 					<ul class="project-detail-list">
-						<li><strong>The product, from inception.</strong> Designed and implemented OrderEAT for both Windows and Android in Qt/QML.</li>
-						<li><strong>Cloud sync.</strong> Integrated communication with AWS servers for menu and order updates.</li>
-						<li><strong>Payments.</strong> Korean credit card payment processing inside the ordering flow.</li>
-						<li><strong>In-restaurant integration.</strong> Interfaced with the restaurant's local POS and Kitchen Display Systems, so a tablet order lands where the staff already look.</li>
-						<li><strong>Ongoing delivery.</strong> Developed new functions against requirements from the Korean team leader, implemented in Qt/QML.</li>
-						<li><strong>Ways of working.</strong> Requirements tracked in Notion, designs handed over in Figma, source control on remote GitHub repositories.</li>
+						<li><strong>The product, from inception.</strong> Designed and implemented OrderEAT for both Windows and Android from an empty repository, in C++11 and Qt/QML, growing to roughly a thousand first-party source files.</li>
+						<li><strong>The order flow as an explicit state machine.</strong> Around twenty named states behind a single interface &mdash; standby, splash, order-type select, menu select, order review, payment-type select, credit processing, instalment-month select, split payment, success, failure, cancellation, refund, reservation, on-delivery, admin and environment check. Payment is where a kiosk actually breaks, and giving every step a state of its own means a failure has somewhere defined to go instead of leaving a customer staring at a frozen screen.</li>
+						<li><strong>Card payment as a pluggable vendor layer.</strong> Credit payment sits behind an abstract base and a factory, with implementations for five Korean PG vendors (KICC, KIS, NICE, SMARTRO, KOCES). A separate VAN layer, same shape, covers eight more (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). Onboarding a store that uses a different VAN is a new subclass, not a change to the order flow.</li>
+						<li><strong>Everything else Koreans actually pay with.</strong> Mobile wallets and QR schemes, app card, and the T-money transit card through its vendor SDK &mdash; plus a physical cash and coin acceptor driven over serial, with its own init, deposit, withdraw, flush and abort-return state machine, because a machine holding someone's banknote cannot be allowed to lose track of it.</li>
+						<li><strong>In-restaurant integration.</strong> Protocol packet encoders and decoders for three POS families, including table-occupancy lookup so a tablet order attaches to the right table, and handoff to the kitchen display.</li>
+						<li><strong>Messaging.</strong> A RabbitMQ layer over AMQP handling exchange and queue declaration, binding, consumption and automatic reconnection, alongside a TCP client and server and an embedded HTTP server for talking to other devices on the store's own network.</li>
+						<li><strong>Cloud sync.</strong> Around 180 typed request and result classes against the back-end covering menu and category management, sold-out toggling, display ordering, image registration and per-store environment download.</li>
+						<li><strong>Updating itself.</strong> On Android the app downloads and installs its own replacement, so a store's kiosks move to a new build without anyone visiting them.</li>
+						<li><strong>Themeable storefront.</strong> Independent QML theme trees let one binary present a completely different interface per brand, with a dedicated sold-out treatment. Views follow MVVM with a C++ view model behind each screen.</li>
+						<li><strong>Serving-robot handoff.</strong> Screens for cooking-complete, robot-arrived and robot-departed, plus an employee-call status view, so the kiosk participates in table service rather than stopping at the receipt.</li>
+						<li><strong>Field diagnostics.</strong> On-demand screen capture the support side can pull back, for reproducing what a customer saw.</li>
+						<li><strong>Ways of working.</strong> Requirements tracked in Notion, designs handed over in Figma, source control on remote Git repositories.</li>
 					</ul>
 				</section>
 
@@ -1798,9 +1807,11 @@
 				<section class="project-modal__section">
 					<h3>Stack</h3>
 					<div class="project-tags">
-						<span class="tag">C++</span><span class="tag">Qt</span><span class="tag">QML</span>
-						<span class="tag">AWS</span><span class="tag">Android</span><span class="tag">Windows</span>
-						<span class="tag">Payments</span><span class="tag">POS integration</span>
+						<span class="tag">C++11</span><span class="tag">Qt 5.15</span><span class="tag">QML</span>
+						<span class="tag">SQLite</span><span class="tag">RabbitMQ</span><span class="tag">AWS</span>
+						<span class="tag">Android</span><span class="tag">Windows</span>
+						<span class="tag">Payment VAN/PG</span><span class="tag">POS integration</span>
+						<span class="tag">Serial devices</span><span class="tag">MVVM</span>
 					</div>
 				</section>
 			</div>
