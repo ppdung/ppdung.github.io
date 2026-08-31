@@ -899,6 +899,7 @@
 									</div>
 									<p class="project-note">Deployed at brands including Lotteria, Hollys, KyoChon Chicken, Ediya, GS Retail and Korail. Figures as published by SMARTCAST.</p>
 									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="deepkds" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
 										<a href="https://www.deeppos.io/products/deepkds" target="_blank" rel="noopener"><i class="icon-link"></i> Live product</a>
 									</div>
 									<div class="project-tags">
@@ -924,6 +925,7 @@
 									<p>Customer-facing pickup-counter display that pairs with DeepKDS over the local network, calling order numbers in real time and doubling as a store information screen for wait times and promotions. 38 interchangeable QML themes, 10 locales, hybrid neural text-to-speech, and server-pushed version-snapshot rollback for remote recovery from bad releases.</p>
 									<p class="project-note">Ships under the same DeepKDS licence at no additional cost, in wall-mounted, stand, single-match and food-court configurations.</p>
 									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="deepdid" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
 										<a href="https://www.deeppos.io/products/deepdid" target="_blank" rel="noopener"><i class="icon-link"></i> Live product</a>
 									</div>
 									<div class="project-tags">
@@ -983,6 +985,9 @@
 								<div class="project-info">
 									<h3>OrderEAT - Tablet Ordering System</h3>
 									<p>POS software launched in Seoul, South Korea for restaurant tablet ordering</p>
+									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="ordereat" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
+									</div>
 									<div class="project-tags">
 										<span class="tag">Qt/QML</span>
 										<span class="tag">C++</span>
@@ -1050,39 +1055,8 @@
 							</div>
 						</div>
 
-						<!-- Project 5: Robot Control Software -->
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
-							<div class="project-card">
-								<div class="project-image project-image--robot-control"></div>
-								<div class="project-info">
-									<h3>Robot Control Software - Windows</h3>
-									<p>User Interface for Manipulator Robot designed using Qt/QML</p>
-									<div class="project-tags">
-										<span class="tag">Qt/QML</span>
-										<span class="tag">C++</span>
-										<span class="tag">Windows</span>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<!-- Project 6: Mobile Robot UI -->
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
-							<div class="project-card">
-								<div class="project-image project-image--mobile-robot"></div>
-								<div class="project-info">
-									<h3>Mobile Robot Control Software - Linux</h3>
-									<p>User Interface for Serving Robot designed using Qt on Linux</p>
-									<div class="project-tags">
-										<span class="tag">Qt</span>
-										<span class="tag">C++</span>
-										<span class="tag">Linux</span>
-										<span class="tag">ROS</span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+						
+											</div>
 				</div>
 			</section>
 
@@ -1487,6 +1461,105 @@
 				});
 			}
 
+			// ============================================
+			// Project detail dialogs
+			// ============================================
+			(function () {
+				var openModal = null;
+				var lastTrigger = null;
+
+				var FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+				function focusable(modal) {
+					// offsetParent is null for position:fixed elements, so it cannot be
+					// used as the visibility test here -- check the box instead.
+					return Array.prototype.filter.call(
+						modal.querySelectorAll(FOCUSABLE),
+						function (el) {
+							var r = el.getBoundingClientRect();
+							return r.width > 0 && r.height > 0;
+						}
+					);
+				}
+
+				function open(key, trigger) {
+					var modal = document.getElementById('modal-' + key);
+					if (!modal) return;
+
+					lastTrigger = trigger || null;
+					openModal = modal;
+
+					// Replace the scrollbar with padding so the page behind does not
+					// shift sideways when overflow is hidden.
+					var gap = window.innerWidth - document.documentElement.clientWidth;
+					if (gap > 0) document.body.style.paddingRight = gap + 'px';
+					document.body.classList.add('modal-open');
+
+					modal.hidden = false;
+					// Focus the dialog itself rather than its first control, so the
+					// title is announced and nothing starts out visually highlighted.
+					modal.focus();
+
+					track('select_content', { content_type: 'project', item_id: key });
+				}
+
+				function close() {
+					if (!openModal) return;
+					openModal.hidden = true;
+					openModal = null;
+					document.body.classList.remove('modal-open');
+					document.body.style.paddingRight = '';
+					if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
+				}
+
+				document.querySelectorAll('[data-project-modal]').forEach(function (btn) {
+					btn.addEventListener('click', function () {
+						open(this.getAttribute('data-project-modal'), this);
+					});
+				});
+
+				document.querySelectorAll('[data-modal-close]').forEach(function (el) {
+					el.addEventListener('click', function (e) { e.preventDefault(); close(); });
+				});
+
+				// Footer links that close the dialog and then move the page. The
+				// scroll has to wait for the body scroll lock to come off.
+				document.querySelectorAll('[data-modal-goto]').forEach(function (el) {
+					el.addEventListener('click', function (e) {
+						e.preventDefault();
+						var section = this.getAttribute('data-modal-goto');
+						close();
+						var target = document.querySelector('[data-section="' + section + '"]');
+						if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					});
+				});
+
+				document.addEventListener('keydown', function (e) {
+					if (!openModal) return;
+
+					if (e.key === 'Escape') {
+						e.preventDefault();
+						close();
+						return;
+					}
+
+					// Keep Tab inside the dialog.
+					if (e.key !== 'Tab') return;
+					var items = focusable(openModal);
+					if (!items.length) return;
+					var first = items[0];
+					var last = items[items.length - 1];
+
+					if (e.shiftKey && document.activeElement === first) {
+						e.preventDefault();
+						last.focus();
+					} else if (!e.shiftKey && document.activeElement === last) {
+						e.preventDefault();
+						first.focus();
+					}
+				});
+			}());
+
 			// Contact Form Handler - Sends to Formspree (Gmail)
 			const contactForm = document.getElementById('contact-form');
 			if (contactForm) {
@@ -1542,6 +1615,201 @@
 			}
 		});
 	</script>
+
+
+	<!-- ==========================================================================
+	     Project detail dialogs
+
+	     These live as direct children of <body> on purpose. .project-card:hover
+	     and body.offcanvas #colorlib-main both set a transform, and a transformed
+	     ancestor becomes the containing block for position:fixed descendants,
+	     which would trap the overlay inside the card.
+
+	     The content is real markup rather than a JS template so it stays in the
+	     page source for search engines and still reads without JavaScript.
+	     ========================================================================== -->
+
+	<div class="project-modal" id="modal-deepkds" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-deepkds-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Close project details">&times;</button>
+			<header class="project-modal__header">
+				<p class="project-modal__eyebrow">SMARTCAST Korea &middot; Shipping commercial product</p>
+				<h2 id="modal-deepkds-title">DeepKDS &mdash; POS-independent Kitchen Display System</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<dl class="project-facts">
+					<div><dt>My role</dt><dd>Architect and lead developer, from an empty repository</dd></div>
+					<div><dt>Period</dt><dd>Feb 2025 &ndash; present</dd></div>
+					<div><dt>Platforms</dt><dd>Windows, Android, macOS, Linux on Raspberry Pi</dd></div>
+					<div><dt>Core stack</dt><dd>C++17, Qt/QML, ZeroMQ, RabbitMQ, WebRTC, SQLite</dd></div>
+				</dl>
+
+				<section class="project-modal__section">
+					<h3>The problem</h3>
+					<p>A kitchen display system normally has to be integrated against each POS vendor's API &mdash; which assumes the POS exposes one, or gets redeveloped to. Every deployment is then gated on a third party's cooperation. DeepKDS reads order data from the POS's own printer output instead, so it drops into a restaurant without the POS vendor being involved at all.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>What I built</h3>
+					<ul class="project-detail-list">
+						<li><strong>POS independence.</strong> Co-created the DeepKDS AI Agent, middleware that captures and interprets order data directly from printer output, removing any dependency on POS vendor APIs and making the product compatible with POS systems worldwide.</li>
+						<li><strong>Cross-platform architecture.</strong> Architected and developed the product from the ground up in C++/Qt/QML, one codebase serving Windows, Android, macOS and Linux on Raspberry Pi, with ZeroMQ and RabbitMQ carrying real-time, low-latency data between distributed systems.</li>
+						<li><strong>Reliability on restaurant networks.</strong> A fault-tolerant messaging layer with dual-broker failover, exponential-backoff reconnection and transaction-level deduplication, so displays keep serving orders through broker outages and the unstable connectivity typical of a working kitchen.</li>
+						<li><strong>Remote support without a site visit.</strong> Peer-to-peer remote control and screen sharing on WebRTC, with hardware-accelerated H.264 encoding written per platform (MediaCodec, Media Foundation, V4L2, x264), so support engineers diagnose and fix on-site issues without dispatching a technician.</li>
+						<li><strong>Secure back-end channel.</strong> Designed and implemented the protocol between the app and the web server covering device registration, subscription management and remote support sessions.</li>
+						<li><strong>Internationalisation.</strong> Ten locales with automatic menu translation, so a single build serves restaurants in different countries instead of maintaining localised forks.</li>
+						<li><strong>Hardware and third-party integration.</strong> Serial customer-pager protocols, thermal receipt printers, text-to-speech order announcements, and Kakao AlimTalk for automated customer notifications.</li>
+						<li><strong>On-device persistence.</strong> SQLite with write-ahead logging, indexed queries and automated retention policies, holding response times steady on low-power embedded hardware across long-running deployments.</li>
+						<li><strong>Observability.</strong> Structured, category-based logging and symbol-resolved crash reporting, so a field failure can be traced to a line of code across very heterogeneous deployment environments.</li>
+						<li><strong>Release engineering.</strong> A cross-platform CI/CD pipeline producing signed, self-contained builds for Windows, Android and Raspberry Pi, which shortened release turnaround and removed manual packaging errors.</li>
+						<li><strong>Interface design.</strong> A modern, intuitive UI/UX with AI-assisted insights, built to current design standards.</li>
+					</ul>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Where it ended up</h3>
+					<div class="project-stats project-stats--modal">
+						<div class="stat"><b>5,000+</b><span>Korean stores</span></div>
+						<div class="stat"><b>85%</b><span>faster orders</span></div>
+						<div class="stat"><b>92%</b><span>fewer errors</span></div>
+					</div>
+					<p class="project-note">Deployed at brands including Lotteria, Hollys, KyoChon Chicken, Ediya, GS Retail and Korail. Figures as published by SMARTCAST.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Stack</h3>
+					<div class="project-tags">
+						<span class="tag">C++17</span><span class="tag">Qt</span><span class="tag">QML</span>
+						<span class="tag">ZeroMQ</span><span class="tag">RabbitMQ</span><span class="tag">WebRTC</span>
+						<span class="tag">SQLite</span><span class="tag">Embedded Linux</span>
+						<span class="tag">Raspberry Pi</span><span class="tag">Android</span><span class="tag">CI/CD</span>
+					</div>
+				</section>
+			</div>
+
+			<footer class="project-modal__footer">
+				<a href="https://www.deeppos.io/products/deepkds" target="_blank" rel="noopener"><i class="icon-link" aria-hidden="true"></i> See the live product</a>
+			</footer>
+		</div>
+	</div>
+
+	<div class="project-modal" id="modal-deepdid" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-deepdid-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Close project details">&times;</button>
+			<header class="project-modal__header">
+				<p class="project-modal__eyebrow">SMARTCAST Korea &middot; Ships with the DeepKDS product line</p>
+				<h2 id="modal-deepdid-title">DeepDID &mdash; Digital Information Display</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<dl class="project-facts">
+					<div><dt>My role</dt><dd>Architect and lead developer, from an empty repository</dd></div>
+					<div><dt>Period</dt><dd>Mar 2025 &ndash; present</dd></div>
+					<div><dt>Platforms</dt><dd>Windows, Android, Linux on Raspberry Pi</dd></div>
+					<div><dt>Core stack</dt><dd>C++17, Qt/QML, ZeroMQ, RabbitMQ, WebRTC, SQLite</dd></div>
+				</dl>
+
+				<section class="project-modal__section">
+					<h3>The problem</h3>
+					<p>The kitchen knows when an order is ready. The customer waiting at the counter does not. DeepDID is the customer-facing half of the system: it pairs with DeepKDS over the store's own network, calls order numbers as they happen, and doubles as an information screen for wait times and promotions. Because it hangs on a wall in a shop, it has to survive network drops, bad releases and hardware that was never meant to talk.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>What I built</h3>
+					<ul class="project-detail-list">
+						<li><strong>Two independent paths to the kitchen.</strong> ZeroMQ for peer-to-peer connectivity to Kitchen Display Systems on the local network, RabbitMQ for cloud command delivery &mdash; a pickup-counter display keeps serving orders when either channel drops.</li>
+						<li><strong>Recovering from a bad release, remotely.</strong> A cloud-controlled configuration channel with tolerant JSON coercion for cross-version compatibility, plus a server-pushed version-snapshot rollback that copies the running binary aside before each install. Operations can downgrade a device in the field to a known-good release without sending anyone to the store.</li>
+						<li><strong>Reliability on restaurant networks.</strong> Dual-broker failover, exponential-backoff reconnection and transaction-level deduplication, so customer-facing displays keep announcing orders through broker outages.</li>
+						<li><strong>Remote support without a site visit.</strong> Peer-to-peer WebRTC with hardware-accelerated H.264 written per platform &mdash; MediaCodec on Android, Media Foundation and D3D11 on Windows, V4L2 on Raspberry Pi.</li>
+						<li><strong>Privacy as the default.</strong> Every opt-in remote-support capability &mdash; screen access, file transfer, clipboard sync &mdash; sits behind a default-off master switch, persisted in SQLite and controllable both from a device-side admin panel and the cloud settings channel. A store cannot be observed remotely until an operator explicitly consents.</li>
+						<li><strong>Speech on hardware that ships without audio.</strong> A hybrid text-to-speech announcer with two interchangeable engines: the platform speech API where the host provides one, and a subprocess pipeline to a neural TTS binary on stock Raspberry Pi images that do not. Natural spoken order callouts on hardware with no working system audio stack.</li>
+						<li><strong>One build, many storefronts.</strong> An interchangeable-theme rendering layer with thirty-eight QML themes, ten locale translations, a video-and-image advertisement rotator, and a server-driven hot-swap between horizontal and vertical kiosk layouts &mdash; so brands with radically different screens and languages run the same binary.</li>
+						<li><strong>Safe configuration upgrades.</strong> SQLite with upsert semantics and an idempotent, marker-gated migration path off the legacy INI store, keeping settings responsive on low-power hardware while schema evolves progressively.</li>
+						<li><strong>Google Play compliance.</strong> Raised the target SDK to the current requirement and rebuilt both the app binary and its bundled OpenSSL shared libraries with 16&nbsp;KB page-size alignment for arm64, verifying segment alignment before every release so the app keeps installing on devices running the new page size.</li>
+						<li><strong>Kiosks that run for months.</strong> Rotating daily log files, rate-limited heartbeat logging so long-running devices do not fill their storage, a boot-time version marker so field-gathered logs attribute to a specific build, and a shared-memory single-instance guard so two GUI processes never fight over the framebuffer.</li>
+						<li><strong>Release engineering.</strong> A cross-platform CI/CD pipeline on self-hosted Gitea Actions producing per-platform builds for Windows, Android and Raspberry Pi, gated on a tag-to-source version match and auto-detecting the Qt, MinGW and Android NDK layouts across runner install roots.</li>
+					</ul>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>How it ships</h3>
+					<p class="project-note">Included under the same DeepKDS licence at no additional cost, in wall-mounted, stand, single-match and food-court configurations.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Stack</h3>
+					<div class="project-tags">
+						<span class="tag">C++17</span><span class="tag">Qt</span><span class="tag">QML</span>
+						<span class="tag">ZeroMQ</span><span class="tag">RabbitMQ</span><span class="tag">WebRTC</span>
+						<span class="tag">SQLite</span><span class="tag">Raspberry Pi</span>
+						<span class="tag">Android</span><span class="tag">Gitea Actions</span><span class="tag">CI/CD</span>
+					</div>
+				</section>
+			</div>
+
+			<footer class="project-modal__footer">
+				<a href="https://www.deeppos.io/products/deepdid" target="_blank" rel="noopener"><i class="icon-link" aria-hidden="true"></i> See the live product</a>
+			</footer>
+		</div>
+	</div>
+
+	<div class="project-modal" id="modal-ordereat" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-ordereat-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Close project details">&times;</button>
+			<header class="project-modal__header">
+				<p class="project-modal__eyebrow">SMARTCAST Korea &middot; Launched in Seoul</p>
+				<h2 id="modal-ordereat-title">OrderEAT &mdash; Tablet Ordering System</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<dl class="project-facts">
+					<div><dt>My role</dt><dd>Designed and implemented from inception</dd></div>
+					<div><dt>Period</dt><dd>May 2023 &ndash; Aug 2024</dd></div>
+					<div><dt>Platforms</dt><dd>Windows, Android</dd></div>
+					<div><dt>Core stack</dt><dd>C++, Qt/QML, AWS</dd></div>
+				</dl>
+
+				<section class="project-modal__section">
+					<h3>The problem</h3>
+					<p>Restaurants in Seoul wanted guests ordering from a tablet at the table rather than queueing at a counter. That one change puts the tablet in the middle of everything the restaurant already runs: it has to agree with the POS, hand tickets to the kitchen display, and take a Korean credit card, all without the guest noticing any of it.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>What I built</h3>
+					<ul class="project-detail-list">
+						<li><strong>The product, from inception.</strong> Designed and implemented OrderEAT for both Windows and Android in Qt/QML.</li>
+						<li><strong>Cloud sync.</strong> Integrated communication with AWS servers for menu and order updates.</li>
+						<li><strong>Payments.</strong> Korean credit card payment processing inside the ordering flow.</li>
+						<li><strong>In-restaurant integration.</strong> Interfaced with the restaurant's local POS and Kitchen Display Systems, so a tablet order lands where the staff already look.</li>
+						<li><strong>Ongoing delivery.</strong> Developed new functions against requirements from the Korean team leader, implemented in Qt/QML.</li>
+						<li><strong>Ways of working.</strong> Requirements tracked in Notion, designs handed over in Figma, source control on remote GitHub repositories.</li>
+					</ul>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Working with the Korean team</h3>
+					<p>Two on-site assignments in Korea totalling four months, working directly alongside the local team &mdash; the start of the three years of Korean collaboration I have now.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Stack</h3>
+					<div class="project-tags">
+						<span class="tag">C++</span><span class="tag">Qt</span><span class="tag">QML</span>
+						<span class="tag">AWS</span><span class="tag">Android</span><span class="tag">Windows</span>
+						<span class="tag">Payments</span><span class="tag">POS integration</span>
+					</div>
+				</section>
+			</div>
+
+			<footer class="project-modal__footer">
+				<a href="#" data-modal-goto="contact"><i class="icon-paperplane" aria-hidden="true"></i> Get in touch about this work</a>
+			</footer>
+		</div>
+	</div>
 
 	</body>
 </html>
