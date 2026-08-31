@@ -126,18 +126,29 @@
 	}
 	</script>
 
-	<!-- Google Fonts - Modern Developer Fonts -->
+	<!-- Google Fonts - Modern Developer Fonts.
+	     Weights are the ones style.css actually sets; dropping the unused 300
+	     removes a whole static font file per unicode subset. -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+	<link rel="preload" as="style"
+	      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+	<link rel="stylesheet" media="print" onload="this.media='all'; this.onload=null;"
+	      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+	<noscript>
+		<link rel="stylesheet"
+		      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+	</noscript>
 
-	<!-- DevIcons for Tech Stack -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+	<!-- Icon fonts are subsetted and self-hosted (see css/icons.css). Preloading
+	     them means font-display:block never reaches its block period. -->
+	<link rel="preload" href="fonts/icomoon/icomoon.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="fonts/devicon/devicon.woff2" as="font" type="font/woff2" crossorigin>
 
 	<!-- Animate.css -->
 	<link rel="stylesheet" href="css/animate.css">
-	<!-- Icomoon Icon Fonts-->
-	<link rel="stylesheet" href="css/icomoon.css">
+	<!-- Icon fonts: icomoon + devicon, subsetted -->
+	<link rel="stylesheet" href="css/icons.css">
 	<!-- Bootstrap  -->
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<!-- Theme style  -->
@@ -160,7 +171,7 @@
 			<!-- Drag Handle for resizing -->
 			<div class="sidebar-drag-handle"></div>
 			<div class="text-center">
-				<div class="author-img" style="background-image: url(images/about.jpg);"></div>
+				<div class="author-img"></div>
 				<div id="colorlib-logo"><a href="index.html">Pham Phuoc Dung</a></div>
 				<span class="position"><a href="#">C++ & Qt Developer</a></span>
 				<span class="location">Ho Chi Minh City, Vietnam</span>
@@ -1042,7 +1053,7 @@
 						<!-- Project 5: Robot Control Software -->
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
-								<div class="project-image" style="background-image: url(images/Work_3.jpg);"></div>
+								<div class="project-image project-image--robot-control"></div>
 								<div class="project-info">
 									<h3>Robot Control Software - Windows</h3>
 									<p>User Interface for Manipulator Robot designed using Qt/QML</p>
@@ -1058,7 +1069,7 @@
 						<!-- Project 6: Mobile Robot UI -->
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
-								<div class="project-image" style="background-image: url(images/UI_MobileRobot.jpg);"></div>
+								<div class="project-image project-image--mobile-robot"></div>
 								<div class="project-info">
 									<h3>Mobile Robot Control Software - Linux</h3>
 									<p>User Interface for Serving Robot designed using Qt on Linux</p>

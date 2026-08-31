@@ -1,9 +1,7 @@
-@font-face {
-  font-family: 'icomoon';
-  src: url("../fonts/icomoon/icomoon.eot?srf3rx");
-  src: url("../fonts/icomoon/icomoon.eot?srf3rx#iefix") format("embedded-opentype"), url("../fonts/icomoon/icomoon.ttf?srf3rx") format("truetype"), url("../fonts/icomoon/icomoon.woff?srf3rx") format("woff"), url("../fonts/icomoon/icomoon.svg?srf3rx#icomoon") format("svg");
-  font-weight: normal;
-  font-style: normal; }
+/* The icomoon @font-face used to be duplicated here, pointing at the .eot/
+   .ttf/.svg files. It loaded after css/icons.css and so overrode it, pulling
+   the full 152 KB font back in. The single declaration now lives in
+   css/icons.css. */
 
 /* =======================================================
 *
@@ -2233,7 +2231,9 @@ h1.hero-name,
 
 .typed-cursor {
   color: var(--accent-primary);
-  font-weight: 100;
+  /* Inter is no longer requested at 300 or below; 100 only ever resolved to
+     the nearest available face anyway, and this is a single "|" glyph. */
+  font-weight: 400;
 }
 
 /* Override slider-text-inner để căn giữa */
@@ -3905,4 +3905,29 @@ textarea:focus-visible,
     color: #000 !important;
   }
   .hero-availability .status-dot { display: none !important; }
+}
+
+/* ==========================================================================
+   Image sources
+   The plain url() comes first as the fallback: browsers without image-set()
+   (Safari < 17, which only speaks -webkit-image-set and has no type())
+   ignore the second declaration and keep the JPEG. Everything newer picks
+   the WebP, which is 3-4x smaller on these UI screenshots.
+   ========================================================================== */
+#colorlib-aside .author-img {
+  background-image: url(../images/avatar.jpg);
+  background-image: image-set(url(../images/avatar.webp) type("image/webp"),
+                              url(../images/avatar.jpg) type("image/jpeg"));
+}
+
+.project-image--robot-control {
+  background-image: url(../images/Work_3.jpg);
+  background-image: image-set(url(../images/Work_3.webp) type("image/webp"),
+                              url(../images/Work_3.jpg) type("image/jpeg"));
+}
+
+.project-image--mobile-robot {
+  background-image: url(../images/UI_MobileRobot.jpg);
+  background-image: image-set(url(../images/UI_MobileRobot.webp) type("image/webp"),
+                              url(../images/UI_MobileRobot.jpg) type("image/jpeg"));
 }

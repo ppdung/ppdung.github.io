@@ -1,0 +1,98 @@
+/* ==========================================================================
+   Icon fonts — subsetted and self-hosted
+
+   Both fonts previously shipped their full glyph set: devicon came from
+   jsDelivr as a 262 KB webfont and icomoon as a 78 KB TTF, between them
+   carrying 1,183 glyphs so this page could draw 38.
+
+   These are pyftsubset builds containing exactly the glyphs referenced in
+   index.html, converted to woff2 (with woff for older Safari). devicon:
+   476 KB -> 8 KB. icomoon: 152 KB -> 4 KB. Self-hosting also drops a
+   third-party connection from the critical path.
+
+   Regenerate after adding an icon:
+     pyftsubset devicon.ttf --unicodes="U+E912,..." --flavor=woff2 \
+       --output-file=fonts/devicon/devicon.woff2 --layout-features='' --no-hinting
+
+   font-display is block rather than swap: an icon font falling back renders
+   tofu boxes, not readable text. Both files are preloaded in the document
+   head, so the block period is never reached in practice.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'icomoon';
+  src: url('../fonts/icomoon/icomoon.woff2') format('woff2'),
+       url('../fonts/icomoon/icomoon.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'devicon';
+  src: url('../fonts/devicon/devicon.woff2') format('woff2'),
+       url('../fonts/devicon/devicon.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"],
+[class^="devicon-"], [class*=" devicon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-"], [class*=" icon-"] { font-family: 'icomoon' !important; }
+[class^="devicon-"], [class*=" devicon-"] { font-family: 'devicon' !important; }
+
+/* --- icomoon glyphs (21) --- */
+.icon-arrow-up:before { content: "\ea0e"; }
+.icon-cog:before { content: "\e96a"; }
+.icon-download4:before { content: "\e0a9"; }
+.icon-facebook2:before { content: "\eac0"; }
+.icon-flow-children:before { content: "\e94a"; }
+.icon-flow-merge:before { content: "\ea16"; }
+.icon-flow-parallel:before { content: "\ea15"; }
+.icon-github:before { content: "\eae0"; }
+.icon-globe:before { content: "\e968"; }
+.icon-globe-outline:before { content: "\e9df"; }
+.icon-instagram:before { content: "\eac2"; }
+.icon-link:before { content: "\e943"; }
+.icon-linkedin2:before { content: "\eaf9"; }
+.icon-map:before { content: "\e9dc"; }
+.icon-monitor:before { content: "\e079"; }
+.icon-paperplane:before { content: "\e91e"; }
+.icon-pen2:before { content: "\e90f"; }
+.icon-phone:before { content: "\e98a"; }
+.icon-settings:before { content: "\e90a"; }
+.icon-spinner6:before { content: "\e9af"; }
+.icon-video:before { content: "\e965"; }
+
+/* --- devicon glyphs (17) --- */
+.devicon-amazonwebservices-original:before { content: "\e603"; }
+.devicon-android-plain:before { content: "\e60e"; }
+.devicon-apple-original:before { content: "\e622"; }
+.devicon-c-plain:before { content: "\e639"; }
+.devicon-cmake-plain:before { content: "\ea2a"; }
+.devicon-cplusplus-plain:before { content: "\e635"; }
+.devicon-docker-plain:before { content: "\e61f"; }
+.devicon-git-plain:before { content: "\e7a8"; }
+.devicon-github-original:before { content: "\ea10"; }
+.devicon-jira-plain:before { content: "\ea63"; }
+.devicon-linux-plain:before { content: "\eb1c"; }
+.devicon-opencv-plain:before { content: "\ea14"; }
+.devicon-python-plain:before { content: "\eb89"; }
+.devicon-qt-original:before { content: "\e912"; }
+.devicon-raspberrypi-line:before { content: "\e9bb"; }
+.devicon-sqlite-plain:before { content: "\ea32"; }
+.devicon-windows8-original:before { content: "\ebf5"; }
