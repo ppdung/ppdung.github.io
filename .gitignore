@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Sass build cache (regenerated on every compile, never needs versioning)
+.sass-cache/
+*.scssc
+
+# Source maps: css/style.css is now hand-edited and no longer generated from
+# sass/, so the checked-in maps were stale and pointed at output that no longer
+# matches. Regenerate locally if you need them.
+*.css.map
+
+# Editor / tooling
+prepros-6.config
+node_modules/
