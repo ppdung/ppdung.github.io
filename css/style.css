@@ -4372,3 +4372,41 @@ body.modal-open {
   background-image: image-set(url(../images/deepdid.webp) type("image/webp"),
                               url(../images/deepdid.jpg) type("image/jpeg"));
 }
+
+/* ==========================================================================
+   Language switch
+   Sits in the sidebar footer alongside the social links and inherits their
+   38px button, so it reads as one row rather than a bolted-on control.
+   ========================================================================== */
+#colorlib-aside .colorlib-footer ul li.lang-switch a {
+  overflow: hidden;
+}
+
+#colorlib-aside .colorlib-footer ul li.lang-switch a:hover,
+#colorlib-aside .colorlib-footer ul li.lang-switch a:focus-visible {
+  border-color: var(--accent-primary) !important;
+}
+
+.lang-flag {
+  display: block;
+  width: 22px;
+  height: auto;
+  border-radius: 2px;
+  /* The sidebar buttons dim their icons; a flag has its own colours, so it is
+     held back with opacity instead and comes up to full on hover. */
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+#colorlib-aside .colorlib-footer ul li.lang-switch a:hover .lang-flag,
+#colorlib-aside .colorlib-footer ul li.lang-switch a:focus-visible .lang-flag {
+  opacity: 1;
+}
+
+.lang-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
