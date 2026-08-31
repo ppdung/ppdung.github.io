@@ -4198,3 +4198,87 @@ body.modal-open {
     display: none !important;
   }
 }
+
+/* ==========================================================================
+   Master's degree panel: graduation photo as a backdrop
+
+   The photo is decorative, so it sits on a ::before rather than in the
+   markup -- nothing for a screen reader to announce, and no alt text to
+   invent. The panel heading above it keeps its solid accent fill, so the
+   image reads as the backdrop to the degree details specifically.
+
+   Legibility is bought three ways: the image is dimmed hard with opacity,
+   desaturated so the orange stage banner stops competing with the accent
+   colour, and covered by a scrim gradient. Text on top keeps its normal
+   colours and stays well clear of the contrast floor.
+   ========================================================================== */
+
+.panel--master .panel-body {
+  position: relative;
+  /* a new stacking context, so the z-index:-1 backdrop lands above the
+     panel's own background but below the text */
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.panel--master .panel-body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* Bootstrap's clearfix mixin sets display:table on .panel-body's pseudo
+     elements. An absolutely positioned table box with no content shrinks to
+     0x0 and ignores the inset, so this has to be forced back to block. */
+  display: block;
+  background-image: url(../images/master-graduation.jpg);
+  background-image: image-set(url(../images/master-graduation.webp) type("image/webp"),
+                              url(../images/master-graduation.jpg) type("image/jpeg"));
+  background-size: cover;
+  /* framed on the two figures and the diploma rather than the stage banner --
+     the banner's lettering is large enough to still read as text through a
+     light blur and would compete with the copy on top */
+  background-position: center 72%;
+  opacity: 0.32;
+  /* brightness() caps the highlights -- the stage banner and the projector
+     screen are the brightest things in the frame and would otherwise fight
+     the body text sitting on top of them */
+  filter: blur(4px) grayscale(0.3) brightness(0.62) contrast(1.02);
+  /* blur() samples past the element edge and would leave a pale halo, so
+     the layer is overscanned before being blurred */
+  transform: scale(1.08);
+}
+
+/* Scrim: darkest at the left where the text starts, easing off to the right
+   so the photo is still readable as a photo. */
+.panel--master .panel-body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: block;   /* same clearfix override as ::before */
+  background: linear-gradient(100deg,
+              rgba(22, 27, 34, 0.94) 0%,
+              rgba(22, 27, 34, 0.70) 48%,
+              rgba(22, 27, 34, 0.42) 100%);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  /* Narrow columns leave text sitting over the busiest part of the frame. */
+  .panel--master .panel-body::before {
+    opacity: 0.12;
+  }
+
+  .panel--master .panel-body::after {
+    background: linear-gradient(180deg,
+                rgba(22, 27, 34, 0.90) 0%,
+                rgba(22, 27, 34, 0.94) 100%);
+  }
+}
+
+@media print {
+  .panel--master .panel-body::before,
+  .panel--master .panel-body::after {
+    display: none !important;
+  }
+}
