@@ -234,7 +234,9 @@ figure {
 
 #colorlib-hero {
   min-height: 500px;
-  background: #fff url(../images/loader.gif) no-repeat center center;
+  /* The white background and its loader.gif came from the template. The file
+     was never in the repo and the dark-theme rule further down overrides the
+     colour anyway, so this only ever named a missing asset. */
   width: 100%;
   float: left;
   margin-bottom: 10em;

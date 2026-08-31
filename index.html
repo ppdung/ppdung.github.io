@@ -1028,12 +1028,16 @@
 									<iframe id="video-qualcomm" src="https://www.youtube.com/embed/srL3h80J9yY?enablejsapi=1" title="Qualcomm Vietnam Innovation Challenge mobile robot demo" loading="lazy" frameborder="0" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
-									<h3>Qualcomm Vietnam Innovation Challenge</h3>
-									<p>Top 10 shortlisted startup - Mobile Robot for restaurant service</p>
+									<h3>Qualcomm Vietnam Innovation Challenge 2022</h3>
+									<p>Autonomous indoor service robot for restaurants. I led the three-person team that took it into the Top 10 of Qualcomm&rsquo;s national startup challenge, and pitched it to investors at the finale.</p>
+									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="qvic" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
+									</div>
 									<div class="project-tags">
 										<span class="tag">ROS</span>
 										<span class="tag">SLAM</span>
-										<span class="tag">Qt</span>
+										<span class="tag">Sensor fusion</span>
+										<span class="tag">C++/Qt</span>
 										<span class="tag">Linux</span>
 									</div>
 								</div>
@@ -1183,6 +1187,17 @@
 	<!-- Initialize Typed.js -->
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
+			// Browsers that refuse site data -- Safari's private mode, blocked
+			// cookies, some managed profiles -- throw on any localStorage access
+			// rather than returning null. That exception used to escape here and
+			// abort the rest of this block, taking the reading progress, the
+			// "show more" toggles, every analytics event, the project dialogs and
+			// the contact form down with it.
+			var store = {
+				get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+				set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) { /* not fatal */ } }
+			};
+
 			// Typed.js initialization
 			if (document.getElementById('typed')) {
 				new Typed('#typed', {
@@ -1229,15 +1244,15 @@
 					// Adjust main content width
 					if (sidebar.classList.contains('collapsed')) {
 						mainContent.style.width = '100%';
-						localStorage.setItem('sidebarCollapsed', 'true');
+						store.set('sidebarCollapsed', 'true');
 					} else {
 						mainContent.style.width = 'calc(100% - 300px)';
-						localStorage.setItem('sidebarCollapsed', 'false');
+						store.set('sidebarCollapsed', 'false');
 					}
 				});
 
 				// Restore sidebar state from localStorage
-				if (localStorage.getItem('sidebarCollapsed') === 'true') {
+				if (store.get('sidebarCollapsed') === 'true') {
 					sidebar.classList.add('collapsed');
 					sidebarToggle.classList.add('collapsed');
 					mainContent.style.width = '100%';
@@ -1282,21 +1297,27 @@
 						document.body.style.userSelect = '';
 
 						// Save state
-						localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+						store.set('sidebarCollapsed', sidebar.classList.contains('collapsed'));
 					}
 				});
 			}
 
-			// Touch support for mobile drag
+			// Touch support for mobile drag.
+			// startX is declared here rather than borrowed: the `let startX` in
+			// the mouse-drag block above is a different block scope, so this used
+			// to work only by falling back to an implicit global, which strict
+			// mode would reject.
 			if (dragHandle && sidebar) {
+				let touchStartX = 0;
+
 				dragHandle.addEventListener('touchstart', function(e) {
 					const touch = e.touches[0];
-					startX = touch.clientX;
+					touchStartX = touch.clientX;
 				}, { passive: true });
 
 				dragHandle.addEventListener('touchmove', function(e) {
 					const touch = e.touches[0];
-					const deltaX = touch.clientX - startX;
+					const deltaX = touch.clientX - touchStartX;
 
 					if (deltaX < -50) {
 						sidebar.classList.add('collapsed');
@@ -1832,6 +1853,64 @@
 
 			<footer class="project-modal__footer">
 				<a href="#" data-modal-goto="contact"><i class="icon-paperplane" aria-hidden="true"></i> Get in touch about this work</a>
+			</footer>
+		</div>
+	</div>
+
+
+	<div class="project-modal" id="modal-qvic" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-qvic-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Close project details">&times;</button>
+			<header class="project-modal__header">
+				<p class="project-modal__eyebrow">VAS Corporation &middot; Team of three &middot; Top 10 nationally</p>
+				<h2 id="modal-qvic-title">Qualcomm Vietnam Innovation Challenge 2022</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<dl class="project-facts">
+					<div><dt>My role</dt><dd>Team Leader &mdash; development planning, technical problem-solving, investor pitch</dd></div>
+					<div><dt>Period</dt><dd>Mar 2022 &ndash; Feb 2023</dd></div>
+					<div><dt>Team</dt><dd>Three engineers, plus hardware and embedded software groups</dd></div>
+					<div><dt>Result</dt><dd>Top 10 of QVIC 2022</dd></div>
+					<div><dt>Core stack</dt><dd>C++, Qt, ROS, SLAM, embedded Linux</dd></div>
+				</dl>
+
+				<section class="project-modal__section">
+					<h3>What QVIC is</h3>
+					<p>The Qualcomm Vietnam Innovation Challenge is Qualcomm Technologies&rsquo; national startup programme in Vietnam, run with support from the Ministry of Science and Technology, aimed at teams working in areas like smart cities, AI, IoT, AR and machine learning. Ten teams are shortlisted from the national field. Each receives a US$10,000 grant and months of technical and business incubation: consultation from Qualcomm engineers, access to Qualcomm&rsquo;s R&amp;D lab in Hanoi, and intellectual-property and patent support. The three winners share US$225,000 at the finale.</p>
+					<p class="project-note">We reached the Top 10 and went through the incubation; the prize money went to the top three. I pitched the product to investors at the finale event.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>The product</h3>
+					<p>An autonomous indoor mobile robot for restaurant service, with a robotic arm integrated for manipulation as well as carrying. A serving robot has to cross a floor it does not control &mdash; chairs move, people step backwards without looking, a spill changes the map &mdash; so the navigation had to hold up in a room that never matches yesterday&rsquo;s survey.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>What I did</h3>
+					<ul class="project-detail-list">
+						<li><strong>Led the team.</strong> Three engineers, with development planning and the technical problems that got escalated. Work tracked in JIRA, code in Bitbucket and GitHub.</li>
+						<li><strong>Autonomous navigation.</strong> Built the navigation on SLAM for indoor mapping and localisation, so the robot places itself in a space with no external positioning to lean on.</li>
+						<li><strong>Sensor fusion.</strong> Combined Lidar, IMU and camera to improve obstacle handling and navigation reliability &mdash; each sensor covers a case the others miss, which is what makes a robot safe to run around customers.</li>
+						<li><strong>Robotic arm integration.</strong> Extended the platform from moving things to handling them, for pick-and-place alongside delivery.</li>
+						<li><strong>Cross-team delivery.</strong> Coordinated with the hardware and embedded software groups to land the product on schedule &mdash; the deadline was an external competition date, which does not move.</li>
+						<li><strong>Pitched it.</strong> Presented the company&rsquo;s products to investors at the QVIC 2022 finale.</li>
+					</ul>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Stack</h3>
+					<div class="project-tags">
+						<span class="tag">C++</span><span class="tag">Qt</span><span class="tag">ROS</span>
+						<span class="tag">SLAM</span><span class="tag">Sensor fusion</span><span class="tag">Lidar</span>
+						<span class="tag">OpenCV</span><span class="tag">Embedded Linux</span><span class="tag">JIRA</span>
+					</div>
+				</section>
+			</div>
+
+			<footer class="project-modal__footer">
+				<a href="https://www.youtube.com/watch?v=srL3h80J9yY" target="_blank" rel="noopener"><i class="icon-video" aria-hidden="true"></i> Watch the robot demo</a>
 			</footer>
 		</div>
 	</div>
