@@ -599,15 +599,15 @@ body.offcanvas {
 .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label p + p {
   margin-top: 15px; }
 
-.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 {
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h3 {
   font-size: 20px;
   font-family: "Quicksand", Arial, sans-serif;
   font-weight: 500; }
 
-.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 a {
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h3 a {
   color: #000; }
 
-.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 span {
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h3 span {
   -webkit-opacity: .4;
   -moz-opacity: .4;
   opacity: .4;
@@ -2592,7 +2592,7 @@ h1.hero-name,
   color: var(--accent-primary);
 }
 
-.skill-card h4 {
+.skill-card h3 {
   color: var(--text-primary);
   font-size: 16px;
   font-weight: 600;
@@ -2755,15 +2755,15 @@ code[class*="language-"] {
   border-color: transparent var(--bg-secondary) transparent transparent;
 }
 
-.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 {
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h3 {
   color: var(--text-primary);
 }
 
-.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 a {
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h3 a {
   color: var(--text-primary);
 }
 
-.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 span {
+.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h3 span {
   display: block;
   margin-top: 6px;
   opacity: 1;
@@ -3360,7 +3360,7 @@ body.offcanvas #colorlib-aside {
     font-size: 24px;
   }
 
-  .skill-card h4 {
+  .skill-card h3 {
     font-size: 14px;
   }
 
@@ -3417,7 +3417,7 @@ body.offcanvas #colorlib-aside {
     font-size: 16px !important;
   }
 
-  .timeline-item h4 {
+  .timeline-item h3 {
     font-size: 13px !important;
   }
 
@@ -3824,7 +3824,7 @@ textarea:focus-visible,
   }
 
   h1, h2, h3, h4,
-  .timeline-label h2,
+  .timeline-label h3,
   .project-info h3 { color: #000 !important; }
 
   p, li, span { color: #222 !important; }
