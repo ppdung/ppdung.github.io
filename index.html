@@ -1009,7 +1009,7 @@
 								</div>
 								<div class="project-info">
 									<h3>OrderEAT - Tablet Ordering System</h3>
-									<p>Self-order kiosk and tablet application launched in Seoul, built from an empty repository for Windows and Android. The order flow runs as an explicit state machine, and card payment sits behind a pluggable vendor layer covering five PG providers and eight VANs, so a new store is onboarded with a subclass rather than a rewrite.</p>
+									<p>Self-order kiosk and tablet application launched in Seoul, built from an empty repository for Windows and Android. The order flow runs as an explicit state machine, and card payment sits behind a pluggable vendor layer covering four wired PG providers and eight VANs, so a new store is onboarded with a subclass rather than a rewrite.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="ordereat" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
 									</div>
@@ -1075,12 +1075,16 @@
 								</div>
 								<div class="project-info">
 									<h3>Teaching-less SCARA Robot</h3>
-									<p>Computer vision-based teaching-less application for SCARA robot</p>
+									<p>Bachelor thesis: teach a robot by showing it, not by jogging it to every point. A stereo pair of industrial cameras tracks optical markers in 3D, hand-eye calibration ties camera space to the robot base, and the resulting poses stream to the arm over TCP &mdash; so a task is defined by moving a marker through it.</p>
+									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="scara" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
+									</div>
 									<div class="project-tags">
-										<span class="tag">OpenCV</span>
 										<span class="tag">C++</span>
-										<span class="tag">Python</span>
-										<span class="tag">Qt</span>
+										<span class="tag">Qt/QML</span>
+										<span class="tag">OpenCV</span>
+										<span class="tag">Stereo vision</span>
+										<span class="tag">Hand-eye calibration</span>
 									</div>
 								</div>
 							</div>
@@ -1921,6 +1925,64 @@
 		</div>
 	</div>
 
+	<div class="project-modal" id="modal-scara" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-scara-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Close project details">&times;</button>
+			<header class="project-modal__header">
+				<p class="project-modal__eyebrow">HCMUT &middot; Bachelor thesis &middot; 2021</p>
+				<h2 id="modal-scara-title">Teaching-less SCARA Robot</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<dl class="project-facts">
+					<div><dt>My role</dt><dd>Sole author of the calibration, transform, robot-link and utility modules, and the host application</dd></div>
+					<div><dt>Period</dt><dd>2021</dd></div>
+					<div><dt>Platform</dt><dd>Windows x64, MSVC</dd></div>
+					<div><dt>Core stack</dt><dd>C++, Qt 5 / QML, OpenCV 4.5.1, VTK &amp; CTK, OpenBLAS</dd></div>
+					<div><dt>Cameras</dt><dd>Basler Pylon 6.0 and The Imaging Source SDKs</dd></div>
+				</dl>
+
+				<section class="project-modal__section">
+					<h3>The problem</h3>
+					<p>Teaching an industrial arm normally means jogging it by hand to every single point of a task and storing each pose &mdash; slow, and it has to be redone whenever the work changes. Teaching-less inverts that: a person moves an optical marker through the motion they want, a camera system watches, and the robot receives the path. The hard part is not the watching. It is that the camera measures in its own coordinate frame and the robot moves in another, so nothing the camera sees means anything to the arm until those two frames are tied together and stay tied.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>What I built</h3>
+					<ul class="project-detail-list">
+						<li><strong>Hand-eye calibration.</strong> The module that solves the frame problem above. It collects paired samples &mdash; where the robot says its flange is, and where the tracker sees the marker &mdash; then solves for the fixed transform between them. The operator captures poses one at a time, sees them accumulate in a table, and can exclude a bad sample before solving, because one careless capture skews the whole result. Solved calibrations are saved and reloaded rather than redone each session.</li>
+						<li><strong>Transform manager.</strong> A named registry of 4&times;4 rigid transforms with a matrix editor, reset-to-identity, and save/load. It listens to live tracker data and to the registration residuals, so the error left over after fitting is visible next to the transform it belongs to instead of buried in a log.</li>
+						<li><strong>Robot link over TCP.</strong> Client and server sides both implemented, so the software can drive a controller or stand in as one &mdash; which is what makes it testable on a desk without an arm plugged in.</li>
+						<li><strong>Utility layer.</strong> YAML-backed configuration and program settings, matrix helpers, file I/O, and VTK actor and labelled-axis builders for drawing frames and markers in the 3D view.</li>
+						<li><strong>Modular host application.</strong> Each capability ships as its own Qt plugin DLL with a model/view split and QML front-end, loaded through a module menu in the host app alongside tracker settings. Adding a capability means adding a module, not editing the shell.</li>
+						<li><strong>Stereo depth research.</strong> Alongside the marker-based tracking, I looked at learned monocular depth &mdash; Detectron2 for instance segmentation and MiDaS for depth estimation &mdash; as a route to reconstructing a scene without physical markers.</li>
+					</ul>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Built on</h3>
+					<p class="project-note">The modules above sit on top of an existing in-house optical-tracking framework (camera interface, blob and marker detection, stereo reconstruction, tracker) rather than replacing it. My work is the calibration, transform, robot-communication and application layers that turn tracked markers into robot motion.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Stack</h3>
+					<div class="project-tags">
+						<span class="tag">C++</span><span class="tag">Qt 5</span><span class="tag">QML</span>
+						<span class="tag">OpenCV 4.5</span><span class="tag">VTK</span><span class="tag">CTK</span>
+						<span class="tag">OpenBLAS</span><span class="tag">Basler Pylon</span>
+						<span class="tag">Stereo vision</span><span class="tag">Hand-eye calibration</span>
+						<span class="tag">TCP</span><span class="tag">MVVM</span>
+					</div>
+				</section>
+			</div>
+
+			<footer class="project-modal__footer">
+				<a href="https://www.youtube.com/watch?v=NhR2n_e45Ps" target="_blank" rel="noopener"><i class="icon-video" aria-hidden="true"></i> Watch the demo</a>
+			</footer>
+		</div>
+	</div>
+
 	<div class="project-modal" id="modal-ordereat" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-ordereat-title" hidden>
 		<div class="project-modal__backdrop" data-modal-close></div>
 		<div class="project-modal__dialog">
@@ -1949,7 +2011,7 @@
 					<ul class="project-detail-list">
 						<li><strong>The product, from inception.</strong> Designed and implemented OrderEAT for both Windows and Android from an empty repository, in C++11 and Qt/QML, growing to roughly a thousand first-party source files.</li>
 						<li><strong>The order flow as an explicit state machine.</strong> Around twenty named states behind a single interface &mdash; standby, splash, order-type select, menu select, order review, payment-type select, credit processing, instalment-month select, split payment, success, failure, cancellation, refund, reservation, on-delivery, admin and environment check. Payment is where a kiosk actually breaks, and giving every step a state of its own means a failure has somewhere defined to go instead of leaving a customer staring at a frozen screen.</li>
-						<li><strong>Card payment as a pluggable vendor layer.</strong> Credit payment sits behind an abstract base and a factory, with implementations for five Korean PG vendors (KICC, KIS, NICE, SMARTRO, KOCES). A separate VAN layer, same shape, covers eight more (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). Onboarding a store that uses a different VAN is a new subclass, not a change to the order flow.</li>
+						<li><strong>Card payment as a pluggable vendor layer.</strong> Credit payment sits behind an abstract base and a factory, with four Korean PG vendors wired through it (KICC, KIS, NICE, SMARTRO) and a fifth (KOCES) implemented against the same base. A separate VAN layer, same shape, covers eight more (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). Onboarding a store that uses a different VAN is a new subclass, not a change to the order flow.</li>
 						<li><strong>Everything else Koreans actually pay with.</strong> Mobile wallets and QR schemes, app card, and the T-money transit card through its vendor SDK &mdash; plus a physical cash and coin acceptor driven over serial, with its own init, deposit, withdraw, flush and abort-return state machine, because a machine holding someone's banknote cannot be allowed to lose track of it.</li>
 						<li><strong>In-restaurant integration.</strong> Protocol packet encoders and decoders for three POS families, including table-occupancy lookup so a tablet order attaches to the right table, and handoff to the kitchen display.</li>
 						<li><strong>Messaging.</strong> A RabbitMQ layer over AMQP handling exchange and queue declaration, binding, consumption and automatic reconnection, alongside a TCP client and server and an embedded HTTP server for talking to other devices on the store's own network.</li>

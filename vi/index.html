@@ -1012,7 +1012,7 @@
 								</div>
 								<div class="project-info">
 									<h3>OrderEAT &ndash; Hệ thống gọi món trên máy tính bảng</h3>
-									<p>Ứng dụng kiosk tự phục vụ và máy tính bảng, triển khai tại Seoul, xây từ repository trống cho Windows và Android. Luồng gọi món chạy dưới dạng máy trạng thái tường minh, còn thanh toán thẻ nằm sau một tầng nhà cung cấp cắm-thay-được gồm năm PG và tám VAN &mdash; nên thêm một cửa hàng mới chỉ là viết thêm subclass chứ không phải viết lại.</p>
+									<p>Ứng dụng kiosk tự phục vụ và máy tính bảng, triển khai tại Seoul, xây từ repository trống cho Windows và Android. Luồng gọi món chạy dưới dạng máy trạng thái tường minh, còn thanh toán thẻ nằm sau một tầng nhà cung cấp cắm-thay-được gồm bốn PG được nối vào và tám VAN &mdash; nên thêm một cửa hàng mới chỉ là viết thêm subclass chứ không phải viết lại.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="ordereat" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Chi tiết dự án</button>
 									</div>
@@ -1078,12 +1078,16 @@
 								</div>
 								<div class="project-info">
 									<h3>Robot SCARA teaching-less</h3>
-									<p>Ứng dụng teaching-less dùng thị giác máy tính cho robot SCARA</p>
+									<p>Luận văn tốt nghiệp: dạy robot bằng cách làm mẫu cho nó xem, thay vì rà tay tới từng điểm. Một cặp camera công nghiệp stereo theo dõi marker quang học trong không gian 3D, hiệu chuẩn hand-eye gắn hệ toạ độ camera với gốc robot, và các tư thế thu được truyền sang cánh tay qua TCP &mdash; nên một công việc được định nghĩa bằng cách di chuyển marker qua nó.</p>
+									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="scara" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Chi tiết dự án</button>
+									</div>
 									<div class="project-tags">
-										<span class="tag">OpenCV</span>
 										<span class="tag">C++</span>
-										<span class="tag">Python</span>
-										<span class="tag">Qt</span>
+										<span class="tag">Qt/QML</span>
+										<span class="tag">OpenCV</span>
+										<span class="tag">Thị giác stereo</span>
+										<span class="tag">Hiệu chuẩn hand-eye</span>
 									</div>
 								</div>
 							</div>
@@ -1924,6 +1928,64 @@
 		</div>
 	</div>
 
+	<div class="project-modal" id="modal-scara" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-scara-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Đóng chi tiết dự án">&times;</button>
+			<header class="project-modal__header">
+				<p class="project-modal__eyebrow">HCMUT &middot; Luận văn tốt nghiệp &middot; 2021</p>
+				<h2 id="modal-scara-title">Robot SCARA teaching-less</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<dl class="project-facts">
+					<div><dt>Vai trò</dt><dd>Tự viết toàn bộ các module hiệu chuẩn, biến đổi toạ độ, giao tiếp robot và tiện ích, cùng ứng dụng chủ</dd></div>
+					<div><dt>Thời gian</dt><dd>2021</dd></div>
+					<div><dt>Nền tảng</dt><dd>Windows x64, MSVC</dd></div>
+					<div><dt>Công nghệ chính</dt><dd>C++, Qt 5 / QML, OpenCV 4.5.1, VTK &amp; CTK, OpenBLAS</dd></div>
+					<div><dt>Camera</dt><dd>SDK Basler Pylon 6.0 và The Imaging Source</dd></div>
+				</dl>
+
+				<section class="project-modal__section">
+					<h3>Bài toán</h3>
+					<p>Dạy một cánh tay công nghiệp theo cách thông thường nghĩa là phải rà tay robot tới từng điểm của công việc rồi lưu lại từng tư thế &mdash; chậm, và phải làm lại mỗi khi công việc thay đổi. Teaching-less đảo ngược điều đó: người vận hành di chuyển một marker quang học theo đúng đường mình muốn, hệ camera quan sát, và robot nhận được quỹ đạo. Phần khó không nằm ở việc quan sát. Nó nằm ở chỗ camera đo trong hệ toạ độ của nó còn robot chuyển động trong hệ khác, nên mọi thứ camera thấy đều vô nghĩa với cánh tay cho tới khi hai hệ đó được gắn với nhau và giữ nguyên mối liên hệ ấy.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Những gì tôi đã xây dựng</h3>
+					<ul class="project-detail-list">
+						<li><strong>Hiệu chuẩn hand-eye.</strong> Module giải đúng bài toán hệ toạ độ ở trên. Nó thu các cặp mẫu &mdash; vị trí mặt bích do robot báo, và vị trí marker do tracker thấy &mdash; rồi giải ra phép biến đổi cố định giữa hai bên. Người vận hành chụp từng tư thế một, thấy chúng dồn dần trong bảng, và có thể loại bỏ mẫu xấu trước khi giải, vì chỉ một lần chụp cẩu thả là lệch cả kết quả. Kết quả hiệu chuẩn được lưu và nạp lại thay vì phải làm lại mỗi phiên.</li>
+						<li><strong>Trình quản lý phép biến đổi.</strong> Một sổ đăng ký các phép biến đổi cứng 4&times;4 có tên, kèm trình sửa ma trận, nút đưa về đơn vị, và lưu/nạp. Nó lắng nghe dữ liệu tracker theo thời gian thực và cả sai số dư của phép khớp, nên sai số còn lại hiện ngay cạnh phép biến đổi tương ứng thay vì nằm chôn trong log.</li>
+						<li><strong>Kết nối robot qua TCP.</strong> Hiện thực cả phía client lẫn server, nên phần mềm vừa điều khiển được bộ điều khiển thật, vừa đóng vai bộ điều khiển &mdash; đó là thứ khiến nó kiểm thử được ngay trên bàn làm việc mà không cần cắm cánh tay.</li>
+						<li><strong>Tầng tiện ích.</strong> Cấu hình và thiết lập chương trình lưu bằng YAML, các hàm hỗ trợ ma trận, đọc ghi tệp, cùng bộ dựng actor VTK và trục toạ độ có nhãn để vẽ các hệ quy chiếu và marker trong khung nhìn 3D.</li>
+						<li><strong>Ứng dụng chủ dạng module.</strong> Mỗi chức năng là một plugin Qt riêng dạng DLL, tách model/view và có giao diện QML, nạp qua menu module trong ứng dụng chủ cùng với phần thiết lập tracker. Thêm một chức năng nghĩa là thêm một module, không phải sửa phần khung.</li>
+						<li><strong>Nghiên cứu ước lượng chiều sâu.</strong> Song song với tracking dựa trên marker, tôi tìm hiểu hướng ước lượng chiều sâu bằng học máy từ ảnh đơn &mdash; Detectron2 cho phân vùng đối tượng và MiDaS cho bản đồ chiều sâu &mdash; như một cách dựng lại cảnh mà không cần marker vật lý.</li>
+					</ul>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Xây trên nền</h3>
+					<p class="project-note">Các module trên nằm bên trên một framework tracking quang học có sẵn của phòng thí nghiệm (giao tiếp camera, phát hiện blob và marker, dựng lại 3D stereo, tracker) chứ không thay thế nó. Phần việc của tôi là các tầng hiệu chuẩn, biến đổi toạ độ, giao tiếp robot và ứng dụng &mdash; thứ biến marker được theo dõi thành chuyển động của robot.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Công nghệ</h3>
+					<div class="project-tags">
+						<span class="tag">C++</span><span class="tag">Qt 5</span><span class="tag">QML</span>
+						<span class="tag">OpenCV 4.5</span><span class="tag">VTK</span><span class="tag">CTK</span>
+						<span class="tag">OpenBLAS</span><span class="tag">Basler Pylon</span>
+						<span class="tag">Thị giác stereo</span><span class="tag">Hiệu chuẩn hand-eye</span>
+						<span class="tag">TCP</span><span class="tag">MVVM</span>
+					</div>
+				</section>
+			</div>
+
+			<footer class="project-modal__footer">
+				<a href="https://www.youtube.com/watch?v=NhR2n_e45Ps" target="_blank" rel="noopener"><i class="icon-video" aria-hidden="true"></i> Xem video demo</a>
+			</footer>
+		</div>
+	</div>
+
 	<div class="project-modal" id="modal-ordereat" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-ordereat-title" hidden>
 		<div class="project-modal__backdrop" data-modal-close></div>
 		<div class="project-modal__dialog">
@@ -1952,7 +2014,7 @@
 					<ul class="project-detail-list">
 						<li><strong>Sản phẩm, từ lúc khởi đầu.</strong> Thiết kế và hiện thực OrderEAT cho cả Windows và Android từ một repository trống, bằng C++11 và Qt/QML, lớn dần tới khoảng một nghìn file mã nguồn tự viết.</li>
 						<li><strong>Luồng gọi món là một máy trạng thái tường minh.</strong> Khoảng hai mươi trạng thái có tên sau một interface duy nhất &mdash; chờ, màn hình mở đầu, chọn kiểu đơn, chọn món, duyệt đơn, chọn hình thức thanh toán, xử lý thẻ, chọn số tháng trả góp, chia hoá đơn, thành công, thất bại, huỷ, hoàn tiền, đặt chỗ, đang giao, quản trị và kiểm tra môi trường. Thanh toán mới là chỗ kiosk thực sự hỏng, và cho mỗi bước một trạng thái riêng nghĩa là khi lỗi xảy ra nó có chỗ xác định để đi tới, thay vì để khách ngồi nhìn một màn hình đứng hình.</li>
-						<li><strong>Thanh toán thẻ như một tầng nhà cung cấp cắm-thay-được.</strong> Thanh toán thẻ nằm sau một lớp cơ sở trừu tượng và một factory, với hiện thực cho năm nhà cung cấp PG Hàn Quốc (KICC, KIS, NICE, SMARTRO, KOCES). Một tầng VAN riêng, cùng kiểu, phủ thêm tám nhà nữa (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). Tiếp nhận một cửa hàng dùng VAN khác chỉ là viết thêm subclass, không đụng gì tới luồng gọi món.</li>
+						<li><strong>Thanh toán thẻ như một tầng nhà cung cấp cắm-thay-được.</strong> Thanh toán thẻ nằm sau một lớp cơ sở trừu tượng và một factory, với bốn nhà cung cấp PG Hàn Quốc được nối vào (KICC, KIS, NICE, SMARTRO) và nhà thứ năm (KOCES) đã hiện thực trên cùng lớp cơ sở. Một tầng VAN riêng, cùng kiểu, phủ thêm tám nhà nữa (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). Tiếp nhận một cửa hàng dùng VAN khác chỉ là viết thêm subclass, không đụng gì tới luồng gọi món.</li>
 						<li><strong>Những cách người Hàn thực sự trả tiền.</strong> Ví điện tử và các phương thức QR, thẻ trong ứng dụng, và thẻ giao thông T-money qua SDK của nhà cung cấp &mdash; cùng bộ nhận tiền giấy và tiền xu vật lý điều khiển qua cổng serial, có máy trạng thái riêng cho khởi tạo, nhận tiền, rút, xả và huỷ-trả, bởi một cái máy đang giữ tờ tiền của người ta thì không được phép quên mất nó.</li>
 						<li><strong>Tích hợp trong nhà hàng.</strong> Bộ mã hoá và giải mã gói tin giao thức cho ba dòng POS, gồm cả tra cứu bàn đang có khách để đơn từ máy tính bảng gắn đúng bàn, và bàn giao sang màn hình bếp.</li>
 						<li><strong>Messaging.</strong> Tầng RabbitMQ trên nền AMQP lo việc khai báo exchange và queue, binding, tiêu thụ message và tự kết nối lại, bên cạnh một TCP client, một TCP server và một HTTP server nhúng để nói chuyện với các thiết bị khác trong mạng của cửa hàng.</li>
