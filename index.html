@@ -1941,43 +1941,49 @@
 
 			<div class="project-modal__body">
 				<dl class="project-facts">
-					<div><dt>My role</dt><dd>Sole author of the calibration, transform, robot-link and utility modules, and the host application</dd></div>
-					<div><dt>Period</dt><dd>2021</dd></div>
-					<div><dt>Platform</dt><dd>Windows x64, MSVC</dd></div>
-					<div><dt>Core stack</dt><dd>C++, Qt 5 / QML, OpenCV 4.5.1, VTK &amp; CTK, OpenBLAS</dd></div>
-					<div><dt>Cameras</dt><dd>Basler Pylon 6.0 and The Imaging Source SDKs</dd></div>
+					<div><dt>Full title</dt><dd>Development of automatic teaching method using stereo camera for SCARA robot</dd></div>
+					<div><dt>Programme</dt><dd>B.Eng. Control Engineering &amp; Automation, HCMUT &mdash; GPA 8.12/10</dd></div>
+					<div><dt>Supervisor</dt><dd>Dr. Nguyen Hoang Giap</dd></div>
+					<div><dt>Robot</dt><dd>EPSON SCARA with its own controller, driven over LAN</dd></div>
+					<div><dt>Vision</dt><dd>Stereo rig built from two Basler Dart daA1600-60um cameras &mdash; 2 MP, 1600&times;1200 at 45 FPS, USB 3.0, working range 500&ndash;1500 mm</dd></div>
+					<div><dt>Core stack</dt><dd>C++, Qt / QML, OpenCV, MATLAB (analysis tooling)</dd></div>
 				</dl>
 
 				<section class="project-modal__section">
 					<h3>The problem</h3>
-					<p>Teaching an industrial arm normally means jogging it by hand to every single point of a task and storing each pose &mdash; slow, and it has to be redone whenever the work changes. Teaching-less inverts that: a person moves an optical marker through the motion they want, a camera system watches, and the robot receives the path. The hard part is not the watching. It is that the camera measures in its own coordinate frame and the robot moves in another, so nothing the camera sees means anything to the arm until those two frames are tied together and stay tied.</p>
+					<p>Teaching an industrial arm the conventional way means jogging it by hand to every point of a task and storing each pose. It is slow, and the whole thing has to be redone whenever the work changes. Teaching-less replaces that: the camera measures where the object actually is, and the robot is told how far to move. The difficulty is that the camera measures in its own frame while the robot moves in another, and a SCARA also has to arrive with the right end-effector rotation, not just the right position.</p>
 				</section>
 
 				<section class="project-modal__section">
 					<h3>What I built</h3>
 					<ul class="project-detail-list">
-						<li><strong>Hand-eye calibration.</strong> The module that solves the frame problem above. It collects paired samples &mdash; where the robot says its flange is, and where the tracker sees the marker &mdash; then solves for the fixed transform between them. The operator captures poses one at a time, sees them accumulate in a table, and can exclude a bad sample before solving, because one careless capture skews the whole result. Solved calibrations are saved and reloaded rather than redone each session.</li>
-						<li><strong>Transform manager.</strong> A named registry of 4&times;4 rigid transforms with a matrix editor, reset-to-identity, and save/load. It listens to live tracker data and to the registration residuals, so the error left over after fitting is visible next to the transform it belongs to instead of buried in a log.</li>
-						<li><strong>Robot link over TCP.</strong> Client and server sides both implemented, so the software can drive a controller or stand in as one &mdash; which is what makes it testable on a desk without an arm plugged in.</li>
-						<li><strong>Utility layer.</strong> YAML-backed configuration and program settings, matrix helpers, file I/O, and VTK actor and labelled-axis builders for drawing frames and markers in the 3D view.</li>
-						<li><strong>Modular host application.</strong> Each capability ships as its own Qt plugin DLL with a model/view split and QML front-end, loaded through a module menu in the host app alongside tracker settings. Adding a capability means adding a module, not editing the shell.</li>
-						<li><strong>Stereo depth research.</strong> Alongside the marker-based tracking, I looked at learned monocular depth &mdash; Detectron2 for instance segmentation and MiDaS for depth estimation &mdash; as a route to reconstructing a scene without physical markers.</li>
+						<li><strong>A master/slave system across the network.</strong> On the master, a PC reads the stereo pair, computes how far the robot has to travel, and encodes that as a message. On the slave, the EPSON controller decodes it back into a displacement and executes the pick-and-place. The two talk over LAN through a socket protocol I defined, using the controller&rsquo;s own network-server, looping and motion command set.</li>
+						<li><strong>Four concurrent flows.</strong> Image processing, position computation and transmission, end-effector rotation tracking, and controller communication each run as their own flow, because the camera cannot stop looking while the robot is moving.</li>
+						<li><strong>Rotation, not just position.</strong> A SCARA that arrives at the right coordinate with the wrong wrist angle still misses the part, so the system continuously recomputes and updates the end-effector rotation from the marker rather than assuming it.</li>
+						<li><strong>Tracker and pick-place modules.</strong> The operator-facing application splits into a tracker module for the vision side and a pick-place module for the task, behind one interface.</li>
+						<li><strong>Purpose-built test hardware.</strong> Comparing candidate marker types before choosing one, then designing and fabricating the camera mount, an acrylic accuracy panel, and its stand &mdash; measuring the error needed apparatus that did not exist yet.</li>
+						<li><strong>A second application just for measuring error.</strong> Separate tooling for the repeatability and coordinate-comparison experiments, plotting the results rather than reading numbers off a table.</li>
 					</ul>
 				</section>
 
 				<section class="project-modal__section">
-					<h3>Built on</h3>
-					<p class="project-note">The modules above sit on top of an existing in-house optical-tracking framework (camera interface, blob and marker detection, stereo reconstruction, tracker) rather than replacing it. My work is the calibration, transform, robot-communication and application layers that turn tracked markers into robot motion.</p>
+					<h3>How it was validated</h3>
+					<p>Four experiments: repeatability of the vision system; whether the distance between two points measured by the stereo rig agrees with the same distance measured by the robot controller; how far the coordinate read back after a move differs from the one sent; and whether the arm reaches a commanded setpoint. The last of these was run at four setpoints, checking both position and angle against the starting pose.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>What did not work</h3>
+					<p>The marker carried retroreflective points on only three faces, so when the robot rotated an unmarked face toward the camera the system lost the ability to update its rotation angle. Synchronisation between the robot&rsquo;s motion and the capture instant was also left unoptimised, which limits how fast the loop can run. The thesis proposes a marker with more faces and better motion-capture timing as the next steps.</p>
 				</section>
 
 				<section class="project-modal__section">
 					<h3>Stack</h3>
 					<div class="project-tags">
-						<span class="tag">C++</span><span class="tag">Qt 5</span><span class="tag">QML</span>
-						<span class="tag">OpenCV 4.5</span><span class="tag">VTK</span><span class="tag">CTK</span>
-						<span class="tag">OpenBLAS</span><span class="tag">Basler Pylon</span>
-						<span class="tag">Stereo vision</span><span class="tag">Hand-eye calibration</span>
-						<span class="tag">TCP</span><span class="tag">MVVM</span>
+						<span class="tag">C++</span><span class="tag">Qt</span><span class="tag">QML</span>
+						<span class="tag">OpenCV</span><span class="tag">MATLAB</span>
+						<span class="tag">Stereo vision</span><span class="tag">Basler Pylon</span>
+						<span class="tag">EPSON SCARA</span><span class="tag">TCP sockets</span>
+						<span class="tag">Hand-eye calibration</span>
 					</div>
 				</section>
 			</div>

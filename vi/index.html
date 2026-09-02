@@ -1944,43 +1944,49 @@
 
 			<div class="project-modal__body">
 				<dl class="project-facts">
-					<div><dt>Vai trò</dt><dd>Tự viết toàn bộ các module hiệu chuẩn, biến đổi toạ độ, giao tiếp robot và tiện ích, cùng ứng dụng chủ</dd></div>
-					<div><dt>Thời gian</dt><dd>2021</dd></div>
-					<div><dt>Nền tảng</dt><dd>Windows x64, MSVC</dd></div>
-					<div><dt>Công nghệ chính</dt><dd>C++, Qt 5 / QML, OpenCV 4.5.1, VTK &amp; CTK, OpenBLAS</dd></div>
-					<div><dt>Camera</dt><dd>SDK Basler Pylon 6.0 và The Imaging Source</dd></div>
+					<div><dt>Tên đề tài</dt><dd>Phát triển phương pháp teaching tự động dùng stereo camera cho robot SCARA</dd></div>
+					<div><dt>Chương trình</dt><dd>Kỹ sư Kỹ thuật Điều khiển &amp; Tự động hoá, HCMUT &mdash; GPA 8,12/10</dd></div>
+					<div><dt>Hướng dẫn</dt><dd>TS. Nguyễn Hoàng Giáp</dd></div>
+					<div><dt>Robot</dt><dd>SCARA EPSON cùng bộ điều khiển riêng, điều khiển qua mạng LAN</dd></div>
+					<div><dt>Thị giác</dt><dd>Hệ stereo ghép từ hai camera Basler Dart daA1600-60um &mdash; 2 MP, 1600&times;1200 ở 45 FPS, USB 3.0, tầm đo 500&ndash;1500 mm</dd></div>
+					<div><dt>Công nghệ chính</dt><dd>C++, Qt / QML, OpenCV, MATLAB (công cụ phân tích)</dd></div>
 				</dl>
 
 				<section class="project-modal__section">
 					<h3>Bài toán</h3>
-					<p>Dạy một cánh tay công nghiệp theo cách thông thường nghĩa là phải rà tay robot tới từng điểm của công việc rồi lưu lại từng tư thế &mdash; chậm, và phải làm lại mỗi khi công việc thay đổi. Teaching-less đảo ngược điều đó: người vận hành di chuyển một marker quang học theo đúng đường mình muốn, hệ camera quan sát, và robot nhận được quỹ đạo. Phần khó không nằm ở việc quan sát. Nó nằm ở chỗ camera đo trong hệ toạ độ của nó còn robot chuyển động trong hệ khác, nên mọi thứ camera thấy đều vô nghĩa với cánh tay cho tới khi hai hệ đó được gắn với nhau và giữ nguyên mối liên hệ ấy.</p>
+					<p>Dạy một cánh tay công nghiệp theo cách thông thường nghĩa là rà tay robot tới từng điểm của công việc rồi lưu lại từng tư thế. Cách đó chậm, và phải làm lại toàn bộ mỗi khi công việc thay đổi. Teaching tự động thay thế điều đó: camera đo vật thật sự đang nằm ở đâu, rồi báo cho robot biết cần dịch chuyển bao xa. Cái khó là camera đo trong hệ toạ độ của nó còn robot chuyển động trong hệ khác, và một robot SCARA còn phải tới nơi với đúng góc xoay của đầu công tác chứ không chỉ đúng vị trí.</p>
 				</section>
 
 				<section class="project-modal__section">
 					<h3>Những gì tôi đã xây dựng</h3>
 					<ul class="project-detail-list">
-						<li><strong>Hiệu chuẩn hand-eye.</strong> Module giải đúng bài toán hệ toạ độ ở trên. Nó thu các cặp mẫu &mdash; vị trí mặt bích do robot báo, và vị trí marker do tracker thấy &mdash; rồi giải ra phép biến đổi cố định giữa hai bên. Người vận hành chụp từng tư thế một, thấy chúng dồn dần trong bảng, và có thể loại bỏ mẫu xấu trước khi giải, vì chỉ một lần chụp cẩu thả là lệch cả kết quả. Kết quả hiệu chuẩn được lưu và nạp lại thay vì phải làm lại mỗi phiên.</li>
-						<li><strong>Trình quản lý phép biến đổi.</strong> Một sổ đăng ký các phép biến đổi cứng 4&times;4 có tên, kèm trình sửa ma trận, nút đưa về đơn vị, và lưu/nạp. Nó lắng nghe dữ liệu tracker theo thời gian thực và cả sai số dư của phép khớp, nên sai số còn lại hiện ngay cạnh phép biến đổi tương ứng thay vì nằm chôn trong log.</li>
-						<li><strong>Kết nối robot qua TCP.</strong> Hiện thực cả phía client lẫn server, nên phần mềm vừa điều khiển được bộ điều khiển thật, vừa đóng vai bộ điều khiển &mdash; đó là thứ khiến nó kiểm thử được ngay trên bàn làm việc mà không cần cắm cánh tay.</li>
-						<li><strong>Tầng tiện ích.</strong> Cấu hình và thiết lập chương trình lưu bằng YAML, các hàm hỗ trợ ma trận, đọc ghi tệp, cùng bộ dựng actor VTK và trục toạ độ có nhãn để vẽ các hệ quy chiếu và marker trong khung nhìn 3D.</li>
-						<li><strong>Ứng dụng chủ dạng module.</strong> Mỗi chức năng là một plugin Qt riêng dạng DLL, tách model/view và có giao diện QML, nạp qua menu module trong ứng dụng chủ cùng với phần thiết lập tracker. Thêm một chức năng nghĩa là thêm một module, không phải sửa phần khung.</li>
-						<li><strong>Nghiên cứu ước lượng chiều sâu.</strong> Song song với tracking dựa trên marker, tôi tìm hiểu hướng ước lượng chiều sâu bằng học máy từ ảnh đơn &mdash; Detectron2 cho phân vùng đối tượng và MiDaS cho bản đồ chiều sâu &mdash; như một cách dựng lại cảnh mà không cần marker vật lý.</li>
+						<li><strong>Hệ master/slave qua mạng.</strong> Ở phía master, máy tính đọc cặp ảnh stereo, tính khoảng cách robot cần dịch chuyển, và mã hoá thành bản tin. Ở phía slave, bộ điều khiển EPSON giải mã ngược lại thành lượng dịch chuyển và thực thi gắp thả. Hai bên trao đổi qua LAN bằng giao thức socket tôi tự định nghĩa, dùng chính tập lệnh network-server, vòng lặp và điều khiển chuyển động của bộ điều khiển.</li>
+						<li><strong>Bốn luồng chạy song song.</strong> Xử lý ảnh, tính toán và gửi vị trí, bám góc xoay đầu công tác, và giao tiếp với bộ điều khiển &mdash; mỗi phần là một luồng riêng, vì camera không thể ngừng quan sát trong lúc robot đang chạy.</li>
+						<li><strong>Góc xoay, không chỉ vị trí.</strong> Một robot SCARA tới đúng toạ độ nhưng sai góc cổ tay thì vẫn gắp trượt, nên hệ thống liên tục tính lại và cập nhật góc xoay đầu công tác từ marker thay vì mặc định nó không đổi.</li>
+						<li><strong>Module tracker và pick-place.</strong> Ứng dụng cho người vận hành tách thành module tracker cho phần thị giác và module pick-place cho phần công việc, nằm sau một giao diện chung.</li>
+						<li><strong>Phần cứng thí nghiệm tự làm.</strong> So sánh các loại marker khả thi trước khi chọn, rồi thiết kế và thi công giá đỡ camera, tấm mica kiểm tra độ chính xác và giá đỡ của nó &mdash; muốn đo được sai số thì phải có bộ đồ gá mà lúc đó chưa tồn tại.</li>
+						<li><strong>Một ứng dụng riêng chỉ để đo sai số.</strong> Công cụ tách biệt cho các thí nghiệm lặp lại và so sánh toạ độ, vẽ đồ thị kết quả thay vì đọc số trên bảng.</li>
 					</ul>
 				</section>
 
 				<section class="project-modal__section">
-					<h3>Xây trên nền</h3>
-					<p class="project-note">Các module trên nằm bên trên một framework tracking quang học có sẵn của phòng thí nghiệm (giao tiếp camera, phát hiện blob và marker, dựng lại 3D stereo, tracker) chứ không thay thế nó. Phần việc của tôi là các tầng hiệu chuẩn, biến đổi toạ độ, giao tiếp robot và ứng dụng &mdash; thứ biến marker được theo dõi thành chuyển động của robot.</p>
+					<h3>Cách kiểm chứng</h3>
+					<p>Bốn thí nghiệm: sai số lặp lại của hệ thị giác; khoảng cách giữa hai điểm do hệ stereo đo có khớp với chính khoảng cách đó do bộ điều khiển robot đo hay không; toạ độ đọc về sau khi di chuyển lệch bao nhiêu so với toạ độ đã gửi đi; và robot có tới được setpoint đặt trước hay không. Thí nghiệm cuối chạy tại bốn setpoint, kiểm tra cả vị trí lẫn góc so với tư thế ban đầu.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Những gì chưa đạt</h3>
+					<p>Marker chỉ mang điểm phản quang trên ba mặt, nên khi robot xoay một mặt không có điểm phản quang về phía camera thì hệ thống mất khả năng cập nhật góc xoay. Việc đồng bộ giữa thời điểm robot di chuyển và thời điểm chụp ảnh cũng chưa được tối ưu, làm hạn chế tốc độ vòng lặp. Luận văn đề xuất hướng tiếp theo là marker nhiều mặt hơn và xử lý đồng bộ thời gian tốt hơn.</p>
 				</section>
 
 				<section class="project-modal__section">
 					<h3>Công nghệ</h3>
 					<div class="project-tags">
-						<span class="tag">C++</span><span class="tag">Qt 5</span><span class="tag">QML</span>
-						<span class="tag">OpenCV 4.5</span><span class="tag">VTK</span><span class="tag">CTK</span>
-						<span class="tag">OpenBLAS</span><span class="tag">Basler Pylon</span>
-						<span class="tag">Thị giác stereo</span><span class="tag">Hiệu chuẩn hand-eye</span>
-						<span class="tag">TCP</span><span class="tag">MVVM</span>
+						<span class="tag">C++</span><span class="tag">Qt</span><span class="tag">QML</span>
+						<span class="tag">OpenCV</span><span class="tag">MATLAB</span>
+						<span class="tag">Thị giác stereo</span><span class="tag">Basler Pylon</span>
+						<span class="tag">SCARA EPSON</span><span class="tag">TCP socket</span>
+						<span class="tag">Hiệu chuẩn hand-eye</span>
 					</div>
 				</section>
 			</div>
