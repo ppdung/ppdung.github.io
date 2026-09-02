@@ -971,11 +971,16 @@
 								</div>
 								<div class="project-info">
 									<h3>Smartcast Agent &ndash; Middleware đồng bộ POS</h3>
-									<p>Middleware đồng bộ dữ liệu giữa hệ POS tại chỗ và nền tảng nhà bếp. Được mở rộng thêm tích hợp với các nhà cung cấp POS khác, cùng giao diện thiết kế lại và sơ đồ luồng dữ liệu đã tối ưu.</p>
+									<p>Middleware chạy trên máy chủ cửa hàng, giúp một sản phẩm tablet duy nhất làm việc được với bất kỳ hệ POS nào nhà hàng đang dùng. Mười một adapter của các hãng nằm sau một bộ điều phối, chuẩn hoá dữ liệu đơn hàng, bàn và thực đơn về một luồng gói tin, đồng thời điều khiển màn hình bếp và máy in hoá đơn. Tiếp nhận từ team leader trước và bảo trì từ đó tới nay.</p>
+									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="agent" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Chi tiết dự án</button>
+									</div>
 									<div class="project-tags">
 										<span class="tag">C++/MFC</span>
 										<span class="tag">POS APIs</span>
 										<span class="tag">Windows</span>
+										<span class="tag">Firebird</span>
+										<span class="tag">MariaDB</span>
 									</div>
 								</div>
 							</div>
@@ -2062,6 +2067,68 @@
 
 			<footer class="project-modal__footer">
 				<a href="https://www.youtube.com/watch?v=6zFjGb3t2Cc" target="_blank" rel="noopener"><i class="icon-video" aria-hidden="true"></i> Xem video demo</a>
+			</footer>
+		</div>
+	</div>
+
+	<div class="project-modal" id="modal-agent" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-agent-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Đóng chi tiết dự án">&times;</button>
+			<header class="project-modal__header">
+				<p class="project-modal__eyebrow">SMARTCAST Korea &middot; Mã nguồn kế thừa &middot; 2024&ndash;nay</p>
+				<h2 id="modal-agent-title">Smartcast Agent &mdash; Middleware tích hợp POS</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<dl class="project-facts">
+					<div><dt>Vai trò</dt><dd>Tiếp nhận mã nguồn từ team leader trước và là người duy nhất bảo trì từ đó tới nay</dd></div>
+					<div><dt>Thời gian</dt><dd>08/2024 &ndash; nay</dd></div>
+					<div><dt>Nền tảng</dt><dd>Windows, máy chủ đặt tại cửa hàng</dd></div>
+					<div><dt>Công nghệ chính</dt><dd>C++ / MFC (liên kết tĩnh, Unicode), BCGControlBar Pro, Visual Studio 2013 toolset v120</dd></div>
+					<div><dt>Tầng dữ liệu</dt><dd>Firebird qua IBPP, MariaDB, SQLite với SQLCipher</dd></div>
+					<div><dt>Adapter POS</dt><dd>Mười một hãng, cộng một template cho hãng thứ mười hai</dd></div>
+				</dl>
+
+				<section class="project-modal__section">
+					<h3>Phần mềm này làm gì</h3>
+					<p>Nhà hàng nào cũng đã có sẵn một hệ POS, và không hai hệ nào nói cùng một thứ tiếng. Agent chạy trên chính máy chủ của cửa hàng, nhận diện hệ POS đang cài, chuẩn hoá dữ liệu đơn hàng, bàn và thực đơn của nó về một luồng gói tin thống nhất, chuyển đơn sang màn hình bếp và máy in hoá đơn, rồi đẩy thay đổi thực đơn và trạng thái hết hàng ngược về máy tính bảng gọi món. Đây chính là mảnh ghép giúp một sản phẩm tablet duy nhất chạy được trong cửa hàng dùng hệ POS mà hãng chưa từng gặp.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Tiếp nhận mã nguồn của người khác</h3>
+					<p>Đây không phải dự án tôi khởi tạo. Nó đến tay tôi khi đã là một hệ thống đang chạy với những cửa hàng thật phụ thuộc vào nó, do một người đã nghỉ viết ra, và việc đầu tiên là phải sửa được nó một cách an toàn. Điều đó định hình mọi thứ bên dưới: công việc là adapter, sửa crash và hạ tầng phát hành, không phải viết lại.</p>
+					<ul class="project-detail-list">
+						<li><strong>Mười một adapter POS sau một bộ điều phối.</strong> OKPOS ba biến thể, ZIN, DeepPOS, Smile POS, Wise POS, Banana, Easy POS, First POS, Foodtech Mate, và một nhánh chỉ có KDS. Bộ điều phối đưa từng yêu cầu đơn hàng, bàn và thực đơn tới đúng adapter, còn thư mục template khiến việc thêm hãng mới chỉ là chép lại và viết ba handler thay vì sửa phần lõi.</li>
+						<li><strong>Viết tài liệu để bàn giao được.</strong> Tôi viết README cho repo, mô tả toàn bộ solution, từng adapter, các cờ biên dịch, cấu trúc thư mục khi triển khai và quy trình thêm một hãng POS &mdash; đúng thứ tài liệu tôi cần trong ngày đầu tiên mà không có.</li>
+						<li><strong>Pipeline CI cho một toolchain từ 2013.</strong> Gitea Actions tự host để dựng file thực thi Windows, trên một dự án mà trước đó vẫn build tay trên một máy duy nhất.</li>
+						<li><strong>Khiến file nhị phân tự khai báo mình là ai.</strong> Đóng dấu phiên bản để một bản build lấy về từ cửa hàng xác định được, thay vì phải đoán báo cáo lỗi đến từ bản phát hành nào.</li>
+					</ul>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Ba lỗi production đáng kể lại</h3>
+					<ul class="project-detail-list">
+						<li><strong>Lỗi 8607 &mdash; khách tiếp theo thừa hưởng đơn của khách trước.</strong> Bản ghi đơn của một bàn chỉ được xoá khi POS gửi callback trạng thái đơn sau thanh toán. Có hệ POS không phải lúc nào cũng gửi, nên bản ghi còn nguyên. Khách kế tiếp ngồi vào bàn đó được POS cấp đơn mới, nhưng nhánh xử lý đổi đơn chỉ cập nhật món ăn mà không bao giờ ghi đè số đơn đã lưu &mdash; nên Agent cứ gửi lại một số đơn đã đóng từ tối hôm trước, và POS từ chối. Tôi tìm ra bằng cách dựng lại chuỗi bản tin thật của một bàn qua hai ngày từ nhật ký gói tin, rồi sửa vòng đời của bản ghi chứ không sửa triệu chứng.</li>
+						<li><strong>Agent chết khi người vận hành bấm nút Read.</strong> Handler đọc bộ lọc bàn duyệt qua hai cơ sở dữ liệu tham chiếu nhau bằng chỉ số, và chứa bốn lỗi riêng biệt trong cùng một vòng lặp dựng phản hồi, trong đó có một lỗi lệch-một truy cập vượt quá mảng. Bấm một nút trên giao diện KDS là hạ luôn middleware của cả cửa hàng, phải khởi động lại bằng tay.</li>
+						<li><strong>Cũng nút đó, một kiểu chết khác.</strong> Trên nhánh POS chỉ-có-KDS, handler thông tin thực đơn giải tham chiếu thẳng ba trường chuỗi lấy từ cơ sở dữ liệu thực đơn mà không kiểm tra null. Chỉ cần một dòng thực đơn thiếu dữ liệu là tiến trình chết.</li>
+					</ul>
+					<p class="project-note">Mỗi lỗi đều được viết lại thành tài liệu nằm ngay cạnh phần mã đã sửa &mdash; triệu chứng, cách tái hiện, nguyên nhân gốc, bằng chứng và cách khắc phục &mdash; để người tiếp nhận sau tôi không phải bắt đầu từ chỗ tôi đã bắt đầu.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Công nghệ</h3>
+					<div class="project-tags">
+						<span class="tag">C++</span><span class="tag">MFC</span><span class="tag">Win32</span>
+						<span class="tag">Firebird</span><span class="tag">MariaDB</span><span class="tag">SQLite</span>
+						<span class="tag">SQLCipher</span><span class="tag">OpenSSL</span><span class="tag">libcurl</span>
+						<span class="tag">rapidjson</span><span class="tag">Serial</span><span class="tag">CI/CD</span>
+					</div>
+				</section>
+			</div>
+
+			<footer class="project-modal__footer">
+				<a href="#" data-modal-goto="contact"><i class="icon-paperplane" aria-hidden="true"></i> Liên hệ về công việc này</a>
 			</footer>
 		</div>
 	</div>
