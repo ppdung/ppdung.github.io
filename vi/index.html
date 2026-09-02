@@ -990,7 +990,7 @@
 								</div>
 								<div class="project-info">
 									<h3>Smart Pharmacy &ndash; Kiosk bán thuốc tự động</h3>
-									<p>Kiosk không người trực, giúp nhà thuốc bán hàng không kê đơn mà không cần nhân viên đứng quầy. Chạy máy trạng thái 25 bước trên Windows và Android, thanh toán qua năm nhà cung cấp PG và tám VAN, điều khiển bộ nhận tiền mặt biết thu tiền và trả tiền thối qua cổng serial, và đẩy từng đơn sang màn hình của dược sĩ.</p>
+									<p>Kiosk không người trực, giúp nhà thuốc bán hàng không kê đơn mà không cần nhân viên đứng quầy. Chạy máy trạng thái 20 bước trên Windows và Android, thanh toán qua bốn nhà cung cấp PG và tám VAN, điều khiển bộ nhận tiền mặt biết thu tiền và trả tiền thối qua cổng serial, và đẩy từng đơn sang màn hình của dược sĩ.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="pharmacy" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Chi tiết dự án</button>
 									</div>
@@ -1823,7 +1823,7 @@
 					<div><dt>Thời gian</dt><dd>2024</dd></div>
 					<div><dt>Nền tảng</dt><dd>Windows (MinGW 32-bit) và Android (min SDK 21, target 30)</dd></div>
 					<div><dt>Công nghệ chính</dt><dd>C++11, Qt 5.15.2 / QML, SQLite</dd></div>
-					<div><dt>Quy mô</dt><dd>~675 file mã nguồn C++/QML tự viết</dd></div>
+					<div><dt>Quy mô</dt><dd>565 file mã nguồn C++/QML tự viết, ~121.000 dòng</dd></div>
 				</dl>
 
 				<section class="project-modal__section">
@@ -1836,7 +1836,7 @@
 					<ul class="project-detail-list">
 						<li><strong>Tái sử dụng nền tảng chứ không phải sản phẩm.</strong> Phần khung kiosk, ngăn xếp thanh toán và framework máy trạng thái lấy từ hệ thống gọi món trên máy tính bảng tôi đã xây trước đó. Luồng bán hàng nhà thuốc, tích hợp back-end và giao diện là của riêng sản phẩm này &mdash; đó là lý do sản phẩm không người trực thứ hai ra được trong khoảng thời gian ngắn hơn hẳn sản phẩm đầu.</li>
 						<li><strong>Giao dịch bán hàng là một máy trạng thái.</strong> Hai mươi lăm trạng thái có tên sau một interface duy nhất &mdash; chờ, màn hình mở đầu, chọn nhóm và chọn món, chọn tuỳ chọn, xác nhận đơn bốn bước, chọn hình thức thanh toán, xử lý thẻ, chia hoá đơn, thành công, thất bại, huỷ, hoàn tiền, quản trị và kiểm tra môi trường. Không người trực nghĩa là không ai ở đó để gỡ một màn hình bị treo, nên mỗi bước là một chỗ máy có thể đang đứng, chứ không phải một nhánh if bên trong hàm.</li>
-						<li><strong>Thanh toán thẻ cho cả thị trường Hàn Quốc.</strong> Thanh toán thẻ nằm sau một lớp cơ sở trừu tượng và một factory, phủ năm nhà cung cấp PG (KICC, KIS, NICE, SMARTRO, KOCES), cùng một tầng thứ hai cùng kiểu cho tám VAN (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). Nhà thuốc giữ nguyên nhà cung cấp họ đang dùng.</li>
+						<li><strong>Thanh toán thẻ cho cả thị trường Hàn Quốc.</strong> Thanh toán thẻ nằm sau một lớp cơ sở trừu tượng và một factory, phủ bốn nhà cung cấp PG (KICC, KIS, NICE, SMARTRO), cùng nhà cung cấp thứ năm (KOCES) đã hiện thực trên cùng lớp cơ sở, và một tầng thứ hai cùng kiểu cho tám VAN (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). Nhà thuốc giữ nguyên nhà cung cấp họ đang dùng.</li>
 						<li><strong>Tiền mặt, kể cả tiền thối.</strong> Bộ nhận tiền giấy và tiền xu điều khiển qua cổng serial với máy trạng thái riêng &mdash; nghỉ, khởi tạo, nhận tiền, rút, xả, trả lại, cùng hai nhánh riêng cho huỷ-trả và lỗi-trả &mdash; kèm bộ nhả tiền để trả tiền thối. Một cái máy đang giữ tờ tiền của khách mà không có ai bên cạnh thì phải biết chính xác nó đang ở trạng thái nào và trả tiền lại bằng cách nào.</li>
 						<li><strong>Những cách thanh toán còn lại.</strong> Ví điện tử và các phương thức QR, thẻ trong ứng dụng, và thẻ giao thông T-money thông qua SDK của nhà cung cấp.</li>
 						<li><strong>Bàn giao cho dược sĩ.</strong> Đơn hoàn tất được đẩy sang màn hình kiểu màn hình bếp đặt sau quầy, kèm dữ liệu đơn hàng, thanh toán và số gọi &mdash; để nhân viên biết máy đã bán gì mà không phải đứng canh.</li>
@@ -1844,6 +1844,8 @@
 						<li><strong>Tự cập nhật, và bị buộc cập nhật.</strong> Bản Android tự tải và cài bản thay thế cho chính nó, kèm nhánh cập nhật bắt buộc cho những phiên bản không được phép ở lại ngoài hiện trường.</li>
 						<li><strong>Ba ngôn ngữ.</strong> Tiếng Hàn, tiếng Anh và tiếng Nhật xuyên suốt luồng hướng tới khách hàng lẫn màn hình quản trị.</li>
 						<li><strong>Chẩn đoán ngoài hiện trường.</strong> File log xoay vòng theo ngày, gắn định danh thiết bị và nhà thuốc, để một báo cáo từ một máy cụ thể truy được mà không cần tới tận nơi.</li>
+						<li><strong>Một HTTP server chạy ngay trong kiosk.</strong> Máy lắng nghe chứ không chỉ hỏi vòng: một daemon HTTP nhúng nhận JSON đẩy từ agent của cửa hàng, nên thay đổi hết hàng, cấu hình in hoá đơn và kết quả thanh toán lên màn hình ngay lúc xảy ra thay vì đợi lần hỏi kế tiếp.</li>
+						<li><strong>Hai toolchain từ một cây mã nguồn.</strong> Một project qmake sinh ra cả hai bản dựng &mdash; Qt 5.15.2 MinGW 32-bit cho tủ Windows và Clang multi-ABI cho bo mạch Android &mdash; với các phần riêng theo nền tảng (bộ tiền mặt qua serial trên Windows, app thanh toán qua JNI trên Android) được chọn lúc biên dịch thay vì tách nhánh.</li>
 					</ul>
 				</section>
 

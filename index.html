@@ -987,7 +987,7 @@
 								</div>
 								<div class="project-info">
 									<h3>Smart Pharmacy - Self-service Kiosk</h3>
-									<p>Unattended kiosk that lets a pharmacy sell over the counter without staff at the till. Runs a twenty-five state order machine on Windows and Android, settles through five PG vendors and eight VANs, drives a cash unit that takes notes and pays change back over serial, and pushes each order to the pharmacist's display.</p>
+									<p>Unattended kiosk that lets a pharmacy sell over the counter without staff at the till. Runs a twenty-state order machine on Windows and Android, settles through four wired PG vendors and eight VANs, drives a cash unit that takes notes and pays change back over serial, and pushes each order to the pharmacist's display.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="pharmacy" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
 									</div>
@@ -1820,7 +1820,7 @@
 					<div><dt>Period</dt><dd>2024</dd></div>
 					<div><dt>Platforms</dt><dd>Windows (MinGW 32-bit) and Android (min SDK 21, target 30)</dd></div>
 					<div><dt>Core stack</dt><dd>C++11, Qt 5.15.2 / QML, SQLite</dd></div>
-					<div><dt>Size</dt><dd>~675 first-party C++/QML source files</dd></div>
+					<div><dt>Size</dt><dd>565 first-party C++/QML source files, ~121,000 lines</dd></div>
 				</dl>
 
 				<section class="project-modal__section">
@@ -1832,8 +1832,8 @@
 					<h3>What I built</h3>
 					<ul class="project-detail-list">
 						<li><strong>Reused the platform rather than the product.</strong> The kiosk shell, payment stack and state-machine framework came from the tablet ordering system I had built before. Retail-pharmacy sale flow, back-end integration and interface are this product's own, which is why a second unattended product could ship in a fraction of the time the first one took.</li>
-						<li><strong>The sale as a state machine.</strong> Twenty-five named states behind one interface &mdash; standby, splash, category and item select, option select, a four-step order confirmation, payment-type select, credit processing, split payment, success, failure, cancellation, refund, admin and environment check. Unattended means no one is there to nudge a stuck screen, so every step is somewhere the machine can be, not a branch inside a function.</li>
-						<li><strong>Card payment across the Korean market.</strong> Credit payment behind an abstract base and a factory covering five PG vendors (KICC, KIS, NICE, SMARTRO, KOCES), with a second layer of the same shape for eight VANs (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). A pharmacy keeps whichever provider it already has.</li>
+						<li><strong>The sale as a state machine.</strong> Twenty named states behind one interface &mdash; standby, splash, category and item select, option select, a four-step order confirmation, payment-type select, credit processing, split payment, success, failure, cancellation, refund, admin and environment check. Unattended means no one is there to nudge a stuck screen, so every step is somewhere the machine can be, not a branch inside a function.</li>
+						<li><strong>Card payment across the Korean market.</strong> Credit payment behind an abstract base and a factory covering four PG vendors (KICC, KIS, NICE, SMARTRO), with a fifth (KOCES) implemented against the same base, and a second layer of the same shape for eight VANs (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). A pharmacy keeps whichever provider it already has.</li>
 						<li><strong>Cash, including change.</strong> A note and coin unit driven over serial with its own state machine &mdash; idle, init, deposit, withdraw, flush, return, and separate abort-return and error-return paths &mdash; plus a bill dispenser for change. A machine holding a customer's banknote with nobody nearby has to know exactly which state it is in and how to give the money back.</li>
 						<li><strong>Everything else people tap.</strong> Mobile wallets and QR schemes, app card, and the T-money transit card through its vendor SDK.</li>
 						<li><strong>Handoff to the pharmacist.</strong> Completed sales are pushed to a kitchen-display-style screen behind the counter with the order, payment and call-number data, so staff see what the machine sold without watching it.</li>
@@ -1841,6 +1841,8 @@
 						<li><strong>Updating itself, and being made to.</strong> The Android build downloads and installs its own replacement, with a forced-update path for when a version must not stay in the field.</li>
 						<li><strong>Three languages.</strong> Korean, English and Japanese throughout the customer-facing flow and the admin screens.</li>
 						<li><strong>Field diagnostics.</strong> Per-day rotating log files tagged with the device and pharmacy identity, so a report from one machine can be traced without physical access.</li>
+						<li><strong>An HTTP server inside the kiosk.</strong> The machine listens rather than only polls: an embedded HTTP daemon accepts pushed JSON from the store agent, so sold-out changes, receipt-store settings and payment results reach the screen the moment they happen instead of on the next poll.</li>
+						<li><strong>Two toolchains from one tree.</strong> One qmake project produces both builds &mdash; Qt 5.15.2 MinGW 32-bit for the Windows cabinet and Clang multi-ABI for the Android board &mdash; with the platform-specific pieces (serial cash unit on Windows, JNI payment apps on Android) selected at build time rather than forked.</li>
 					</ul>
 				</section>
 
