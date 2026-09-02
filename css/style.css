@@ -4410,3 +4410,17 @@ body.modal-open {
   letter-spacing: 0.04em;
   line-height: 1;
 }
+
+/* Inline code inside project dialogs: Bootstrap's default is a light box with
+   red text, which fights the dark theme. */
+.project-modal code,
+.project-facts code {
+  padding: 2px 6px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+  color: var(--accent-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
