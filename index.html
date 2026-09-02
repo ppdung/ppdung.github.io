@@ -1056,12 +1056,17 @@
 								</div>
 								<div class="project-info">
 									<h3>Mobile Manipulator Robot</h3>
-									<p>Indoor mobile robot with robot arm for pick-and-place applications</p>
+									<p>Master&rsquo;s thesis. An AGV carries a 5-DOF arm so goods move and get picked without a person at either end &mdash; but the arm can only reach an object if the base parks accurately, and SLAM navigation alone does not park that well. A stereo camera tracking a marker corrects the final approach, cutting parking error from about 9&nbsp;cm to about 3&nbsp;cm.</p>
+									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="manipulator" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
+									</div>
 									<div class="project-tags">
 										<span class="tag">ROS</span>
 										<span class="tag">SLAM</span>
 										<span class="tag">C++</span>
 										<span class="tag">OpenCV</span>
+										<span class="tag">ArUco</span>
+										<span class="tag">RGB-D</span>
 									</div>
 								</div>
 							</div>
@@ -1979,6 +1984,75 @@
 
 			<footer class="project-modal__footer">
 				<a href="https://www.youtube.com/watch?v=NhR2n_e45Ps" target="_blank" rel="noopener"><i class="icon-video" aria-hidden="true"></i> Watch the demo</a>
+			</footer>
+		</div>
+	</div>
+
+	<div class="project-modal" id="modal-manipulator" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-manipulator-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Close project details">&times;</button>
+			<header class="project-modal__header">
+				<p class="project-modal__eyebrow">HCMUT &middot; Master&rsquo;s thesis &middot; Defended 11 Jan 2023</p>
+				<h2 id="modal-manipulator-title">Mobile Manipulator with Marker-Vision Tracking</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<dl class="project-facts">
+					<div><dt>Full title</dt><dd>Design mobile manipulator system using Marker-Vision Tracking algorithm</dd></div>
+					<div><dt>Programme</dt><dd>M.Eng. Control Engineering &amp; Automation, HCMUT &mdash; GPA 8.46/10</dd></div>
+					<div><dt>Supervisor</dt><dd>Dr. Nguyen Hoang Giap</dd></div>
+					<div><dt>Period</dt><dd>Sep &ndash; Dec 2022, defended January 2023</dd></div>
+					<div><dt>Core stack</dt><dd>ROS on Ubuntu, C++, Python, Qt, OpenCV / ArUco</dd></div>
+					<div><dt>Hardware</dt><dd>Differential-drive AGV, 5-DOF arm, LiDAR, stereo tracking camera, RGB-D camera, BLDC drives, embedded PC</dd></div>
+				</dl>
+
+				<section class="project-modal__section">
+					<h3>The problem</h3>
+					<p>An AGV moves goods across a factory, but somebody still has to load it and unload it. Mount an arm on top and that person is no longer needed &mdash; which only works if the arm can actually reach the object when the vehicle stops. That is the catch. An AGV navigating on wheel odometry and SLAM parks to roughly nine centimetres, and an arm reaching for a specific box does not have nine centimetres to spare. The vehicle is accurate enough to arrive; it is not accurate enough to arrive somewhere the arm can work from.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>What I built</h3>
+					<ul class="project-detail-list">
+						<li><strong>Marker-vision tracking for the final approach.</strong> Navigation gets the vehicle close; a stereo tracking camera watching a passive marker on the robot closes the last gap, measuring the marker to better than 0.2&nbsp;mm and correcting the pose before the arm moves. <strong>Average parking error dropped from about 9&nbsp;cm to about 3&nbsp;cm.</strong></li>
+						<li><strong>The pick station is wherever you put the marker.</strong> Because the target is defined by the marker rather than by a taught coordinate, moving the marker moves the station. No re-teaching, no re-surveying a position each time the line changes &mdash; the same idea as my bachelor thesis, applied to a vehicle instead of an arm.</li>
+						<li><strong>Grasping by sight, not by memory.</strong> An RGB-D camera on the arm finds the ArUco-tagged object in the frame and resolves its position at grasp time, so a small residual error in where the vehicle stopped does not become a missed pick.</li>
+						<li><strong>An end effector that does not drop the payload.</strong> Electromagnetic gripper on the final axis paired with a steel-plated tray, so the load stays put while the vehicle is moving rather than only while the arm is holding it.</li>
+						<li><strong>Navigation stack.</strong> LiDAR SLAM for mapping, AMCL for localisation, and Dijkstra and A* path planning through move_base, with odometry computed from wheel encoders.</li>
+						<li><strong>Operator interface.</strong> A Qt application for driving and monitoring the vehicle.</li>
+					</ul>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Measured</h3>
+					<dl class="project-facts">
+						<div><dt>AGV parking error</dt><dd>~9 cm without tracking &rarr; ~3 cm with it</dd></div>
+						<div><dt>Marker detection</dt><dd>Better than 0.2 mm</dd></div>
+						<div><dt>RGB-D repeatability</dt><dd>4.247 mm</dd></div>
+						<div><dt>Arm + camera repeatability</dt><dd>8.751 mm</dd></div>
+					</dl>
+					<p class="project-note">Angular parking error stayed under one degree in both configurations. Tested in a laboratory setting and in a working factory.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>What did not work</h3>
+					<p>The thesis is explicit about its limits, and they are worth repeating. The 5-DOF arm carried enough mechanical error to dominate the end-to-end pick accuracy &mdash; the vision was not the weak link, the mechanics were. The driver for the fifth axis failed partway through and was never replaced, so that axis could not rotate during the recorded experiments. The chassis had no suspension, so on uneven or slippery floors the wheels lost contact and odometry drifted. And the operator interface only ever drove the vehicle, never the arm.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Stack</h3>
+					<div class="project-tags">
+						<span class="tag">ROS</span><span class="tag">Ubuntu</span><span class="tag">C++</span>
+						<span class="tag">Python</span><span class="tag">Qt</span><span class="tag">OpenCV</span>
+						<span class="tag">ArUco</span><span class="tag">SLAM</span><span class="tag">AMCL</span>
+						<span class="tag">move_base</span><span class="tag">Stereo vision</span><span class="tag">RGB-D</span>
+					</div>
+				</section>
+			</div>
+
+			<footer class="project-modal__footer">
+				<a href="https://www.youtube.com/watch?v=6zFjGb3t2Cc" target="_blank" rel="noopener"><i class="icon-video" aria-hidden="true"></i> Watch the demo</a>
 			</footer>
 		</div>
 	</div>

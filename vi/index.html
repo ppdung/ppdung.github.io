@@ -1059,12 +1059,17 @@
 								</div>
 								<div class="project-info">
 									<h3>Robot di động tích hợp cánh tay</h3>
-									<p>Robot di động trong nhà tích hợp cánh tay cho ứng dụng gắp &ndash; đặt</p>
+									<p>Luận văn thạc sĩ. Xe tự hành mang cánh tay 5 bậc tự do để hàng vừa di chuyển vừa được gắp mà không cần người ở hai đầu &mdash; nhưng cánh tay chỉ với tới vật nếu xe đỗ đủ chính xác, mà chỉ riêng SLAM thì không đỗ chính xác được đến vậy. Một camera stereo bám marker hiệu chỉnh đoạn tiếp cận cuối, kéo sai số đỗ từ khoảng 9&nbsp;cm xuống khoảng 3&nbsp;cm.</p>
+									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="manipulator" aria-haspopup="dialog"><i class="icon-flow-children" aria-hidden="true"></i> Chi tiết dự án</button>
+									</div>
 									<div class="project-tags">
 										<span class="tag">ROS</span>
 										<span class="tag">SLAM</span>
 										<span class="tag">C++</span>
 										<span class="tag">OpenCV</span>
+										<span class="tag">ArUco</span>
+										<span class="tag">RGB-D</span>
 									</div>
 								</div>
 							</div>
@@ -1982,6 +1987,75 @@
 
 			<footer class="project-modal__footer">
 				<a href="https://www.youtube.com/watch?v=NhR2n_e45Ps" target="_blank" rel="noopener"><i class="icon-video" aria-hidden="true"></i> Xem video demo</a>
+			</footer>
+		</div>
+	</div>
+
+	<div class="project-modal" id="modal-manipulator" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-manipulator-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Đóng chi tiết dự án">&times;</button>
+			<header class="project-modal__header">
+				<p class="project-modal__eyebrow">HCMUT &middot; Luận văn thạc sĩ &middot; Bảo vệ 11/01/2023</p>
+				<h2 id="modal-manipulator-title">Cánh tay robot di động với Marker-Vision Tracking</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<dl class="project-facts">
+					<div><dt>Tên đề tài</dt><dd>Thiết kế hệ thống cánh tay robot di động ứng dụng thuật toán Marker-Vision Tracking</dd></div>
+					<div><dt>Chương trình</dt><dd>Thạc sĩ Kỹ thuật Điều khiển &amp; Tự động hoá, HCMUT &mdash; GPA 8.46/10</dd></div>
+					<div><dt>Hướng dẫn</dt><dd>TS. Nguyễn Hoàng Giáp</dd></div>
+					<div><dt>Thời gian</dt><dd>09&ndash;12/2022, bảo vệ tháng 01/2023</dd></div>
+					<div><dt>Công nghệ chính</dt><dd>ROS trên Ubuntu, C++, Python, Qt, OpenCV / ArUco</dd></div>
+					<div><dt>Phần cứng</dt><dd>Xe tự hành vi sai, cánh tay 5 bậc tự do, LiDAR, camera stereo, camera RGB-D, driver BLDC, máy tính nhúng</dd></div>
+				</dl>
+
+				<section class="project-modal__section">
+					<h3>Bài toán</h3>
+					<p>Xe tự hành chở hàng qua nhà máy, nhưng vẫn phải có người chất hàng lên và dỡ hàng xuống. Gắn thêm một cánh tay lên trên thì không cần người đó nữa &mdash; với điều kiện cánh tay thật sự với tới được vật khi xe dừng. Đó mới là điểm mắc. Xe tự hành điều hướng bằng odometry bánh xe và SLAM chỉ đỗ chính xác trong khoảng chín centimet, mà một cánh tay đang với lấy một thùng hàng cụ thể thì không có chín centimet để dư. Xe đủ chính xác để tới nơi; nó không đủ chính xác để tới một chỗ mà cánh tay làm việc được.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Những gì tôi đã xây dựng</h3>
+					<ul class="project-detail-list">
+						<li><strong>Marker-vision tracking cho đoạn tiếp cận cuối.</strong> Điều hướng đưa xe tới gần; một camera stereo quan sát marker thụ động gắn trên robot khép nốt khoảng cách còn lại, đo vị trí marker với sai số dưới 0,2&nbsp;mm và hiệu chỉnh tư thế trước khi cánh tay hoạt động. <strong>Sai số đỗ trung bình giảm từ khoảng 9&nbsp;cm xuống khoảng 3&nbsp;cm.</strong></li>
+						<li><strong>Trạm gắp nằm ở đúng chỗ bạn đặt marker.</strong> Vì đích đến được định nghĩa bằng marker chứ không phải toạ độ đã dạy sẵn, dời marker là dời trạm. Không phải dạy lại, không phải đo lại vị trí mỗi lần dây chuyền thay đổi &mdash; cùng một ý tưởng với luận văn đại học của tôi, nhưng áp cho cả chiếc xe thay vì chỉ cánh tay.</li>
+						<li><strong>Gắp bằng mắt, không bằng trí nhớ.</strong> Camera RGB-D trên cánh tay tìm vật có dán ArUco trong khung hình và xác định vị trí ngay tại thời điểm gắp, nên phần sai số còn lại của chỗ xe dừng không biến thành một cú gắp trượt.</li>
+						<li><strong>Đầu công tác không làm rơi hàng.</strong> Tay gắp nam châm điện ở trục cuối kết hợp khay chứa có tấm sắt, để hàng nằm yên trong lúc xe di chuyển chứ không chỉ lúc cánh tay đang giữ.</li>
+						<li><strong>Tầng điều hướng.</strong> SLAM bằng LiDAR để dựng bản đồ, AMCL để định vị, và hoạch định đường đi Dijkstra cùng A* qua move_base, với odometry tính từ encoder bánh xe.</li>
+						<li><strong>Giao diện vận hành.</strong> Ứng dụng Qt để điều khiển và giám sát xe.</li>
+					</ul>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Số liệu đo được</h3>
+					<dl class="project-facts">
+						<div><dt>Sai số đỗ của xe</dt><dd>~9 cm khi không dùng &rarr; ~3 cm khi có tracking</dd></div>
+						<div><dt>Nhận dạng marker</dt><dd>Dưới 0,2 mm</dd></div>
+						<div><dt>Lặp lại của RGB-D</dt><dd>4,247 mm</dd></div>
+						<div><dt>Lặp lại của cánh tay + camera</dt><dd>8,751 mm</dd></div>
+					</dl>
+					<p class="project-note">Sai số góc khi đỗ đều dưới một độ ở cả hai cấu hình. Thử nghiệm cả trong phòng thí nghiệm lẫn tại nhà máy đang vận hành.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Những gì chưa đạt</h3>
+					<p>Luận văn nói thẳng về giới hạn của nó, và điều đó đáng nhắc lại. Cánh tay 5 bậc tự do mang sai số cơ khí đủ lớn để chi phối độ chính xác gắp thả của cả chuỗi &mdash; khâu yếu không phải thị giác mà là cơ khí. Driver của trục thứ năm hỏng giữa chừng và không được thay, nên trục đó không xoay được trong các thí nghiệm đã ghi hình. Khung xe không có hệ giảm xóc, nên trên mặt sàn gồ ghề hay trơn trượt bánh xe mất tiếp xúc và odometry bị lệch. Còn giao diện vận hành thì từ đầu tới cuối chỉ điều khiển được xe, chưa bao giờ điều khiển cánh tay.</p>
+				</section>
+
+				<section class="project-modal__section">
+					<h3>Công nghệ</h3>
+					<div class="project-tags">
+						<span class="tag">ROS</span><span class="tag">Ubuntu</span><span class="tag">C++</span>
+						<span class="tag">Python</span><span class="tag">Qt</span><span class="tag">OpenCV</span>
+						<span class="tag">ArUco</span><span class="tag">SLAM</span><span class="tag">AMCL</span>
+						<span class="tag">move_base</span><span class="tag">Thị giác stereo</span><span class="tag">RGB-D</span>
+					</div>
+				</section>
+			</div>
+
+			<footer class="project-modal__footer">
+				<a href="https://www.youtube.com/watch?v=6zFjGb3t2Cc" target="_blank" rel="noopener"><i class="icon-video" aria-hidden="true"></i> Xem video demo</a>
 			</footer>
 		</div>
 	</div>
