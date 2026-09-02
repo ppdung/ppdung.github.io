@@ -2104,16 +2104,6 @@
 				</section>
 
 				<section class="project-modal__section">
-					<h3>Three production bugs worth describing</h3>
-					<ul class="project-detail-list">
-						<li><strong>Error 8607 &mdash; the next customer inherits the last one&rsquo;s order.</strong> A table&rsquo;s order entry was only cleared when the POS sent an order-status callback after payment. One POS did not always send it, so the entry survived. The next customer at that table got a new order from the POS, but the change-order path updated only the menu items and never overwrote the stored order numbers &mdash; so the Agent kept quoting an order that had been closed the previous night, and the POS rejected it. Found by reconstructing the actual message trace for one table across two days from the packet log, then fixing the lifecycle rather than the symptom.</li>
-						<li><strong>Agent dies when an operator presses &ldquo;Read&rdquo;.</strong> The table-filtering read handler walked two databases that referenced each other by index, and contained four separate faults in one response-building loop, including an off-by-one that indexed past the end. Pressing one button in the KDS UI took the whole store&rsquo;s middleware down and it had to be restarted by hand.</li>
-						<li><strong>The same button, a different crash.</strong> On the KDS-only POS path the menu-info handler dereferenced three string fields straight out of the menu database with no null guard. Any incomplete menu row killed the process.</li>
-					</ul>
-					<p class="project-note">Each of these is written up in the repository next to the code it fixes &mdash; symptom, reproduction, root cause, evidence and fix &mdash; so the next person to inherit this does not start where I did.</p>
-				</section>
-
-				<section class="project-modal__section">
 					<h3>Stack</h3>
 					<div class="project-tags">
 						<span class="tag">C++</span><span class="tag">MFC</span><span class="tag">Win32</span>

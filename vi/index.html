@@ -2107,16 +2107,6 @@
 				</section>
 
 				<section class="project-modal__section">
-					<h3>Ba lỗi production đáng kể lại</h3>
-					<ul class="project-detail-list">
-						<li><strong>Lỗi 8607 &mdash; khách tiếp theo thừa hưởng đơn của khách trước.</strong> Bản ghi đơn của một bàn chỉ được xoá khi POS gửi callback trạng thái đơn sau thanh toán. Có hệ POS không phải lúc nào cũng gửi, nên bản ghi còn nguyên. Khách kế tiếp ngồi vào bàn đó được POS cấp đơn mới, nhưng nhánh xử lý đổi đơn chỉ cập nhật món ăn mà không bao giờ ghi đè số đơn đã lưu &mdash; nên Agent cứ gửi lại một số đơn đã đóng từ tối hôm trước, và POS từ chối. Tôi tìm ra bằng cách dựng lại chuỗi bản tin thật của một bàn qua hai ngày từ nhật ký gói tin, rồi sửa vòng đời của bản ghi chứ không sửa triệu chứng.</li>
-						<li><strong>Agent chết khi người vận hành bấm nút Read.</strong> Handler đọc bộ lọc bàn duyệt qua hai cơ sở dữ liệu tham chiếu nhau bằng chỉ số, và chứa bốn lỗi riêng biệt trong cùng một vòng lặp dựng phản hồi, trong đó có một lỗi lệch-một truy cập vượt quá mảng. Bấm một nút trên giao diện KDS là hạ luôn middleware của cả cửa hàng, phải khởi động lại bằng tay.</li>
-						<li><strong>Cũng nút đó, một kiểu chết khác.</strong> Trên nhánh POS chỉ-có-KDS, handler thông tin thực đơn giải tham chiếu thẳng ba trường chuỗi lấy từ cơ sở dữ liệu thực đơn mà không kiểm tra null. Chỉ cần một dòng thực đơn thiếu dữ liệu là tiến trình chết.</li>
-					</ul>
-					<p class="project-note">Mỗi lỗi đều được viết lại thành tài liệu nằm ngay cạnh phần mã đã sửa &mdash; triệu chứng, cách tái hiện, nguyên nhân gốc, bằng chứng và cách khắc phục &mdash; để người tiếp nhận sau tôi không phải bắt đầu từ chỗ tôi đã bắt đầu.</p>
-				</section>
-
-				<section class="project-modal__section">
 					<h3>Công nghệ</h3>
 					<div class="project-tags">
 						<span class="tag">C++</span><span class="tag">MFC</span><span class="tag">Win32</span>
