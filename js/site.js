@@ -605,6 +605,62 @@
 	}
 
 	// ------------------------------------------------------------------
+	// Ambient motion in the hero
+	//
+	// The mesh, orbs, particles, grid and the availability ring are the
+	// page's only endless animations. They pause (css/style.css, "Ambient
+	// motion") while the hero is off screen or the tab is hidden, and pick up
+	// where they stopped. Under reduced motion they never run at all.
+	// ------------------------------------------------------------------
+	function initAmbientMotion() {
+		var hero = doc.getElementById('colorlib-hero');
+		if (!hero) { return; }
+		var offscreen = false;
+
+		function apply() {
+			hero.classList.toggle('motion-paused', offscreen || doc.hidden);
+		}
+
+		if ('IntersectionObserver' in window) {
+			new IntersectionObserver(function (entries) {
+				offscreen = !entries[entries.length - 1].isIntersecting;
+				apply();
+			}).observe(hero);
+		}
+		doc.addEventListener('visibilitychange', apply);
+		apply();
+	}
+
+	// ------------------------------------------------------------------
+	// Lazy CSS backgrounds
+	//
+	// The browser lazy-loads an <img>, not a CSS background, so a decorative
+	// background far down the page ([data-lazy-bg]) gets its image from a
+	// .bg-ready rule, added when it comes within about a screen of the
+	// viewport. Early enough that the photo is there before the box fades
+	// in, and never for a visitor who does not scroll that far.
+	// ------------------------------------------------------------------
+	function initLazyBackgrounds() {
+		var boxes = doc.querySelectorAll('[data-lazy-bg]');
+		if (!boxes.length) { return; }
+
+		function ready(el) { el.classList.add('bg-ready'); }
+
+		if (!('IntersectionObserver' in window)) {
+			each(boxes, ready);
+			return;
+		}
+		var observer = new IntersectionObserver(function (entries) {
+			entries.forEach(function (entry) {
+				if (!entry.isIntersecting) { return; }
+				observer.unobserve(entry.target);
+				ready(entry.target);
+			});
+		}, { rootMargin: '1000px 0px', threshold: 0 });
+		each(boxes, function (el) { observer.observe(el); });
+	}
+
+	// ------------------------------------------------------------------
 	// Education: three disclosure buttons, each showing its own panel.
 	// ------------------------------------------------------------------
 	function initDisclosures() {
@@ -865,6 +921,8 @@
 		run('sidebar', initSidebar);
 		run('reveal', initReveal);
 		run('typing', initTyping);
+		run('ambient motion', initAmbientMotion);
+		run('lazy backgrounds', initLazyBackgrounds);
 		run('dialogs', initDialogs);
 		run('section links', initSectionLinks);
 		run('section tracking', initSectionTracking);

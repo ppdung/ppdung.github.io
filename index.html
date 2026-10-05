@@ -130,25 +130,17 @@
 	}
 	</script>
 
-	<!-- Google Fonts - Modern Developer Fonts.
-	     Weights are the ones style.css actually sets; dropping the unused 300
-	     removes a whole static font file per unicode subset. -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link rel="preload" as="style"
-	      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-	<link rel="stylesheet" media="print" onload="this.media='all'; this.onload=null;"
-	      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-	<noscript>
-		<link rel="stylesheet"
-		      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-	</noscript>
-
 	<!-- Icon fonts are subsetted and self-hosted (see css/icons.css). Preloading
 	     them means font-display:block never reaches its block period. -->
 	<link rel="preload" href="fonts/icomoon/icomoon.woff2" as="font" type="font/woff2" crossorigin>
 	<link rel="preload" href="fonts/devicon/devicon.woff2" as="font" type="font/woff2" crossorigin>
 
+	<!-- Text fonts: Inter and JetBrains Mono, served from this site. Inter is
+	     deliberately not preloaded. With the preload, Chrome held the first
+	     paint back by about a second in Lighthouse's mobile run (observed FCP
+	     2.3 s against 1.3 s). Without it, the files still arrive before the
+	     first paint on throttled 4G. -->
+	<link rel="stylesheet" href="css/fonts.css">
 	<!-- Icon fonts: icomoon + devicon, subsetted -->
 	<link rel="stylesheet" href="css/icons.css">
 	<!-- Bootstrap  -->
@@ -176,7 +168,10 @@
 			<!-- Drag Handle for resizing -->
 			<div class="sidebar-drag-handle"></div>
 			<div class="text-center">
-				<div class="author-img"></div>
+				<picture class="author-img">
+					<source srcset="images/avatar.webp" type="image/webp">
+					<img src="images/avatar.jpg" alt="Pham Phuoc Dung, C++/Qt software engineer" width="400" height="505" decoding="async">
+				</picture>
 				<div id="colorlib-logo"><a href="./">Pham Phuoc Dung</a></div>
 				<span class="position"><span class="position-text">C++ &amp; Qt Developer</span></span>
 				<span class="location">Ho Chi Minh City, Vietnam</span>
@@ -506,7 +501,11 @@
 						<!-- Project: DeepKDS -->
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
-								<div class="project-image project-image--deepkds">
+								<div class="project-image">
+									<picture>
+										<source srcset="images/deepkds.webp" type="image/webp">
+										<img src="images/deepkds.jpg" alt="DeepKDS kitchen display in use in a restaurant kitchen" width="1000" height="474" loading="lazy" decoding="async">
+									</picture>
 									<span class="placeholder-label">2025 &mdash; present</span>
 								</div>
 								<div class="project-info">
@@ -537,7 +536,11 @@
 						<!-- Project: DeepDID -->
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
-								<div class="project-image project-image--deepdid">
+								<div class="project-image">
+									<picture>
+										<source srcset="images/deepdid.webp" type="image/webp">
+										<img src="images/deepdid.jpg" alt="DeepDID pickup display showing order numbers at a Hollys store" width="1000" height="602" loading="lazy" decoding="async">
+									</picture>
 									<span class="placeholder-label">2025 &mdash; present</span>
 								</div>
 								<div class="project-info">
@@ -829,7 +832,7 @@
 						<div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
 							<div class="fancy-collapse-panel">
 								<div class="panel-group" id="accordion">
-									<div class="panel panel-default panel--master">
+									<div class="panel panel-default panel--master" data-lazy-bg>
 									    <div class="panel-heading" id="headingOne">
 									        <h3 class="panel-title">
 									            <button type="button" class="panel-toggle" aria-expanded="true" aria-controls="collapseOne">Master of Engineering in Control Engineering &amp; Automation (Aug 2020 - Apr 2023)</button>

@@ -6,9 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="robots" content="noindex">
 	<link rel="shortcut icon" href="images/favicon.ico">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+	<!-- Root-relative: this page is served at whatever path was missing. -->
+	<link rel="stylesheet" href="/css/fonts.css">
 	<style>
 		:root {
 			--bg-primary: #0d1117;
@@ -29,13 +28,13 @@
 			padding: 24px;
 			background: var(--bg-primary);
 			color: var(--text-primary);
-			font-family: 'Inter', Arial, sans-serif;
+			font-family: 'Inter', 'Inter Fallback', Arial, sans-serif;
 			text-align: center;
 		}
 		.code {
 			margin: 0;
 			color: var(--accent-primary);
-			font-family: 'JetBrains Mono', monospace;
+			font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
 			font-size: clamp(64px, 18vw, 140px);
 			font-weight: 600;
 			line-height: 1;
@@ -58,7 +57,7 @@
 			border: 1px solid var(--accent-primary);
 			border-radius: 8px;
 			color: var(--accent-primary);
-			font-family: 'JetBrains Mono', monospace;
+			font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
 			font-size: 14px;
 			text-decoration: none;
 			transition: background 0.2s ease, color 0.2s ease;
