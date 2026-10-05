@@ -2657,7 +2657,15 @@ h1.hero-name,
   font-size: 13px;
   line-height: 1.6;
   margin-bottom: 20px;
-  flex-grow: 1;
+}
+
+/* From two columns up, the description takes the card's slack so the bars
+   line up across a row however long each card's text runs. A single
+   column has no row to line up with. */
+@media screen and (min-width: 768px) {
+  .skill-card p {
+    flex-grow: 1;
+  }
 }
 
 .skill-bar {
