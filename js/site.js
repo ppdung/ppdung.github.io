@@ -218,19 +218,23 @@
 	// ------------------------------------------------------------------
 	// Role line in the hero
 	//
-	// The heading's text is the full static list (visually hidden), so a
-	// screen reader or a crawler always gets every role. The visible line is
-	// a separate aria-hidden span that starts on the first role. Unless the
-	// reader asked for reduced motion, it types once through the other roles
-	// and back to the first, then stops: the whole run fits inside five
-	// seconds (WCAG 2.2.2), with no cursor left blinking afterwards.
+	// The heading's text is a one-line description (visually hidden), so a
+	// screen reader gets one sentence and a text extractor does not read a
+	// list of job titles into his history. The visible line is a separate
+	// aria-hidden span that starts on the first role; the others are in its
+	// data-roles attribute, separated by "|". Unless the reader asked for
+	// reduced motion, it types once through the other roles and back to the
+	// first, then stops: the whole run fits inside five seconds (WCAG 2.2.2),
+	// with no cursor left blinking afterwards.
 	// ------------------------------------------------------------------
 	function initTyping() {
 		var out = doc.querySelector('.hero-typed');
-		var items = doc.querySelectorAll('.hero-roles > span');
-		if (!out || items.length < 2 || reducedMotion.matches) { return; }
+		if (!out || reducedMotion.matches) { return; }
 
-		var roles = Array.prototype.map.call(items, function (s) { return s.textContent.trim(); });
+		var roles = (out.getAttribute('data-roles') || '').split('|')
+			.map(function (s) { return s.trim(); })
+			.filter(function (s) { return s; });
+		if (roles.length < 2) { return; }
 		var sequence = roles.slice(1).concat(roles[0]);
 
 		// The line is centred, so every letter added or erased used to move
@@ -923,14 +927,17 @@
 	// counts itself (initVideos), and so do the project dialogs.
 	// ------------------------------------------------------------------
 	function initAnalytics() {
-		// Which of the three CV links was used. A distinct name, because GA's
-		// own file_download for the same click is the one that counts it.
+		// Which CV link was used. Distinct names, because GA's own
+		// file_download for the same click is the one that counts it (GA
+		// counts a .pdf link as a download whether it saves or opens the
+		// file). The "View CV" links have no download attribute: cv_view.
 		each(doc.querySelectorAll('a[href$="CV_PhamPhuocDung.pdf"]'), function (link) {
 			var where = link.closest('#colorlib-aside') ? 'sidebar'
 				: link.closest('[data-section="contact"]') ? 'contact'
 				: link.closest('[data-section="home"]') ? 'hero' : 'other';
+			var name = link.hasAttribute('download') ? 'cv_download' : 'cv_view';
 			link.addEventListener('click', function () {
-				track('cv_download', { link_location: where });
+				track(name, { link_location: where });
 			});
 		});
 

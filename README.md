@@ -66,9 +66,10 @@ wording for that language.
   `images/og-cover.jpg`.
 - **Structured data.** Both pages describe the same person
   (`"@id": "https://ppdung.github.io/#person"`). Keep the facts identical
-  (`alternateName`, `sameAs`, employer, school, skills); only `name`,
-  `jobTitle`, `description` and `seeks.name` are written in the page's
-  language, matching what that page shows.
+  (`alternateName`, `sameAs`, employer, school, skills, `award`); only
+  `name`, `givenName`, `additionalName`, `familyName` (ASCII on `/`, with
+  diacritics on `/vi/`), `jobTitle`, `description` and `seeks.name` are
+  written in the page's language, matching what that page shows.
 - **Script text.** The only language-specific strings in `js/site.js` are in
   the `STRINGS` table at the top, keyed by `<html lang>`.
 - **Dates.** When the content changes, update all three together: the
@@ -77,6 +78,46 @@ wording for that language.
   `<url>` entries in `sitemap.xml`. The CV's own entry there follows the CV,
   not the pages (see the CV bullet below). A date nobody maintains is worse
   than none.
+
+## What the pages claim, and the sources
+
+Every claim has to be backed by the page itself, the CV PDF or the owner's
+decisions. These are worded the same way everywhere they appear (visible
+text, dialogs, meta descriptions, the social card and its alt text,
+JSON-LD), in both languages:
+
+- **DeepKDS** is "the second-generation DeepKDS" ("DeepKDS thế hệ thứ hai"),
+  which he architected and built from an empty repository from Feb 2025 and
+  which is the version now running at the DeepKDS brands. The 5,000+ stores,
+  85% / 92% and the brand list belong to the whole DeepKDS line, as published
+  by SMARTCAST; never present them as the result of his build alone. Sources
+  linked: deeppos.io and a NewsImpact article of 11 Sep 2026 (Korean press
+  reporting SMARTCAST's announcement, so not an independent check; it names
+  Lotteria and Hollys).
+- **OrderEAT / SMARTCAST** starts in Mar 2023 ("03/2023"). The CV PDF still
+  says May 2023 until its next export.
+- **QVIC 2022:** his title is Team Leader. The shortlisted entry was VAS
+  Corporation's company entry, listed by Qualcomm as "Platform for next-gen
+  logistics for Industry 4.0", under which he led and pitched the indoor
+  mobile robot with an arm. Qualcomm's QVIC 2022 page (linked from the
+  timeline and the dialog) shows his name on the shortlist image; that
+  image also prints a title the CV does not use, so the site never adds one.
+  The QVIC video is his finale pitch on stage, not a robot demo.
+- **Degrees:** EN "Bachelor of Engineering"; VI "Kỹ sư" (the thesis cover
+  reads "KỸ SƯ NGÀNH KỸ THUẬT ĐIỀU KHIỂN & TỰ ĐỘNG HÓA"), never "Cử nhân".
+  The master's thesis links its HCMUT library record (OPAC `ID=32322`).
+- **Employer:** headings keep the public brand "SMARTCAST Korea"; the
+  registered name ㈜스마트캐스트 and the head office in Goyang, Gyeonggi-do
+  (Seoul Capital Area) are what the locations, About and `worksFor` state.
+- **Name:** "Danny" (from the CV header) is shown under the name, with a
+  note of which part is the family name.
+- **Hero role line:** the heading's text is a one-line description; the
+  rotating roles are in the `data-roles` attribute of `.hero-typed`, not a
+  hidden list, which text extractors read as job titles he has held.
+
+The external records (Qualcomm, HCMUT library, NewsImpact, deeppos.io,
+Google Play) are linked as they were on 2026-10-06; check they still answer
+before relying on them.
 
 ## Notes for anyone editing this
 
@@ -145,10 +186,19 @@ wording for that language.
   with it, GA4 loads YouTube's iframe API and counts each play twice.
 - **The social card** (`images/og-cover.jpg`) is an HTML page rendered in
   headless Chrome at 1200x630 and saved as JPEG at quality 85 (about 80 KB).
-  It shows the portrait, name, title and one line already on the page. Keep
-  everything important inside the central 1200x600 area, which X crops to.
-  After replacing it, ask LinkedIn's Post Inspector and Facebook's Sharing
-  Debugger to re-fetch the page, or old shares keep the cached image.
+  It shows the portrait, name, title and one line that follows the hero
+  tagline; `og:image:alt` and `twitter:image:alt` on both pages quote that
+  line, so the three change together. Keep everything important inside the
+  central 1200x600 area, which X crops to. After replacing it, ask
+  LinkedIn's Post Inspector and Facebook's Sharing Debugger to re-fetch the
+  page, or old shares keep the cached image.
+- **The CV links.** Each "Download CV" link has the `download` attribute;
+  "View CV in browser" (hero) and "View in browser" (Contact) have none and
+  open the PDF in a new tab, in the browser's own viewer.
+- **The menu button** draws its bars as SVG strokes in `currentColor`. Bars
+  painted as backgrounds nearly vanished when a browser forced its own dark
+  mode over this already dark page (Chromium's force-dark, behind Samsung
+  Internet's dark mode) and disappeared in Windows high-contrast mode.
 - **The CV's document properties are set after export.** Canva writes the file
   name as the PDF Title, its account name as the Author, and its internal
   design ids as Keywords. After each new export, set Title, Author, Subject
@@ -163,9 +213,10 @@ wording for that language.
 **Google Analytics 4** (`G-0586HR4EGC`) has enhanced measurement on, which
 already records page views, scrolls, outbound clicks and file downloads.
 `js/site.js` adds only what enhanced measurement cannot see: `cv_download`
-(`link_location`), `contact_click` (`method`), `select_content` (a project
-dialog opened from its button, from a link or with Previous / Next, and a
-video's play button), `section_view` (`section_name`), `generate_lead` and
+and `cv_view` (`link_location`; GA's own `file_download` counts both, since
+both links end in `.pdf`), `contact_click` (`method`), `select_content` (a
+project dialog opened from its button, from a link or with Previous / Next,
+and a video's play button), `section_view` (`section_name`), `generate_lead` and
 `form_submit_error` for the contact form. Every call goes through `track()`,
 which does nothing if the analytics setup did not run.
 
@@ -179,12 +230,14 @@ There is no GA snippet in the HTML. `js/site.js` (`initGtag`) does it all:
   from 769px, a bar along the bottom on phones. It is kept low enough to
   stay below the hero's Download CV and Contact Me buttons at 390x844,
   820x1180, 1366x657 and 1440x900, in both languages; recheck that if its
-  text gets longer. On short phones (375x667, 320x640) the hero reaches the
-  bottom of the screen and the bar still covers the lower part of Contact
-  Me until a choice is made. After a choice, keyboard focus moves to the
-  heading of the section being read, not to `<body>`. The answer is kept in
-  `localStorage` (`analyticsConsent`: `granted` or `denied`), so it holds for
-  both languages.
+  text or the hero's gets longer. On short phones the hero is taller than
+  the screen, and a short-screen rule in `css/style.css` tightens its gaps:
+  at 375x667 the buttons clear the bar in English (10px of Liên hệ is
+  covered in Vietnamese), but at 320x640 the bar still covers Contact Me
+  (and most of Tải CV) until a choice is made. After a choice, keyboard
+  focus moves to the heading of the section being read, not to `<body>`.
+  The answer is kept in `localStorage` (`analyticsConsent`: `granted` or
+  `denied`), so it holds for both languages.
   - Undecided: GA4 sends cookieless pings, so visits are counted but returning
     browsers are not recognised.
   - Allow: the `_ga` cookies are set, for 13 months (`cookie_expires`).

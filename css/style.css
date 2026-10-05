@@ -584,68 +584,53 @@ body.offcanvas {
 .colorlib-nav-toggle {
   cursor: pointer;
   text-decoration: none; }
-  .colorlib-nav-toggle.active i::before, .colorlib-nav-toggle.active i::after {
-    background: #000; }
   .colorlib-nav-toggle:hover, .colorlib-nav-toggle:focus, .colorlib-nav-toggle:active {
     outline: none;
     border-bottom: none !important; }
-  .colorlib-nav-toggle i {
-    position: relative;
-    display: -moz-inline-stack;
-    display: inline-block;
-    zoom: 1;
-    *display: inline;
-    width: 30px;
-    height: 2px;
-    color: #000;
-    font: bold 14px/.4 Helvetica;
-    text-transform: uppercase;
-    text-indent: -55px;
-    background: #000;
-    -webkit-transition: all .2s ease-out;
-    -o-transition: all .2s ease-out;
-    transition: all .2s ease-out; }
-    .colorlib-nav-toggle i::before, .colorlib-nav-toggle i::after {
-      content: '';
-      width: 30px;
-      height: 2px;
-      background: #000;
-      position: absolute;
-      left: 0;
-      -webkit-transition: 0.2s;
-      -o-transition: 0.2s;
-      transition: 0.2s; }
 
-.colorlib-nav-toggle i::before {
-  top: -7px; }
+/* The three bars are SVG strokes in the text colour, not 2px boxes with a
+   background. A browser that forces its own dark mode on top of this already
+   dark page (Chromium's force-dark, which Samsung Internet's dark mode is
+   built on) re-colours backgrounds: the boxed bars came out at 37,42,46 on the
+   15,22,24 page (1.3:1) and the button all but vanished, while an SVG stroke
+   kept its 15.5:1. color-scheme opt-outs (meta or CSS, "only dark" or "only
+   light") made no difference to that transform. In Windows high-contrast
+   mode (forced-colors) a background bar would take the Canvas colour and
+   disappear too; currentColor follows the forced ButtonText instead.
+   The bars sit where the old ones did (y 10-12, 17-19, 24-26 of the 27px
+   content box), so the button keeps its 70x67 box. */
+.nav-toggle__icon {
+  display: block;
+  overflow: visible;
+  color: var(--text-primary); }
 
-.colorlib-nav-toggle i::after {
-  bottom: -7px; }
+.nav-toggle__bar {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  transform-box: view-box;
+  transform-origin: 15px 18px;
+  -webkit-transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+  transition: transform 0.2s ease-out, opacity 0.2s ease-out; }
 
-.colorlib-nav-toggle:hover i::before {
-  top: -10px; }
+.colorlib-nav-toggle:hover .nav-toggle__bar--top {
+  transform: translateY(-3px); }
 
-.colorlib-nav-toggle:hover i::after {
-  bottom: -10px; }
+.colorlib-nav-toggle:hover .nav-toggle__bar--bottom {
+  transform: translateY(3px); }
 
-.colorlib-nav-toggle.active i {
-  background: transparent; }
+.colorlib-nav-toggle.active .nav-toggle__bar--mid {
+  opacity: 0; }
 
-.colorlib-nav-toggle.active i::before {
-  top: 0;
-  -webkit-transform: rotateZ(45deg);
-  -moz-transform: rotateZ(45deg);
-  -ms-transform: rotateZ(45deg);
-  -o-transform: rotateZ(45deg);
-  transform: rotateZ(45deg); }
+.colorlib-nav-toggle.active .nav-toggle__bar--top {
+  transform: rotate(45deg) translateY(7px); }
 
-.colorlib-nav-toggle.active i::after {
-  bottom: 0;
-  -webkit-transform: rotateZ(-45deg);
-  -moz-transform: rotateZ(-45deg);
-  -ms-transform: rotateZ(-45deg);
-  -o-transform: rotateZ(-45deg);
-  transform: rotateZ(-45deg); }
+.colorlib-nav-toggle.active .nav-toggle__bar--bottom {
+  transform: rotate(-45deg) translateY(-7px); }
+
+@media (forced-colors: active) {
+  .nav-toggle__icon {
+    color: ButtonText; } }
 
 /* The hamburger is a <button>; the first lines undo the browser's button
    styling so it keeps the 70x67 box the old link had. */
@@ -1541,8 +1526,10 @@ h1.hero-name,
   min-height: 40px;
 }
 
-/* The visible role line. The heading's real text is the visually hidden
-   .hero-roles list; this span is aria-hidden and starts on the first role.
+/* The visible role line. The heading's real text is a visually hidden
+   one-line description (not a list of job titles, which text extractors
+   read as titles he has held); this span is aria-hidden, starts on the
+   first role, and takes the rest from its data-roles attribute.
    While js/site.js types (once, under five seconds) it shows a caret, placed
    outside the text's box so the centred line does not shift when it goes. */
 .hero-typed {
@@ -1646,6 +1633,98 @@ h1.hero-name,
   background: var(--accent-secondary);
   color: var(--bg-primary);
   box-shadow: 0 0 20px var(--glow-green);
+}
+
+/* A plain link that opens the CV in the browser's own PDF viewer, for
+   readers who want to look at it without saving a file. It takes a row of
+   its own under the two buttons, so the hero keeps two buttons; the padding
+   gives it a 24px-tall target. */
+.hero-buttons .hero-cv-view {
+  width: 100%;
+  margin: -6px 0 0;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.hero-cv-view a {
+  display: inline-block;
+  padding: 4px 8px;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.hero-cv-view a:hover {
+  color: var(--accent-primary);
+}
+
+/* From 769px the buttons sit side by side, so the link goes to the right of
+   them rather than on a row of its own: a row more pushed the hero's last
+   line (the tech icons) under the consent strip at 1366x657. The grid's
+   outer 1fr columns keep the two buttons centred under the name. */
+@media screen and (min-width: 769px) {
+  .hero-buttons {
+    display: grid;
+    grid-template-columns: 1fr auto auto 1fr;
+    align-items: center;
+    align-self: stretch;
+  }
+
+  .hero-buttons .btn-cv {
+    grid-column: 2;
+  }
+
+  .hero-buttons .btn-contact {
+    grid-column: 3;
+  }
+
+  .hero-buttons .hero-cv-view {
+    grid-column: 4;
+    justify-self: start;
+    width: auto;
+    margin: 0;
+    text-align: left;
+  }
+}
+
+/* Short laptop screens (a 1366x768 laptop leaves about 657px): the line with
+   the preferred name made the hero 27px taller, which put its last row, the
+   tech icons, under the consent strip. Smaller gaps between the blocks give
+   that height back. */
+@media screen and (min-width: 769px) and (max-height: 720px) {
+  .hero-typing {
+    margin-bottom: 12px;
+  }
+
+  .hero-tagline {
+    margin-bottom: 20px;
+  }
+
+  .hero-buttons {
+    margin-bottom: 24px;
+  }
+}
+
+/* The preferred name from the CV, "(DANNY)", and which part is the family
+   name, so a reader or a parser used to given-name-first gets it right. Its
+   own line under the name, so the h1 keeps its size and centring. */
+.hero-aka {
+  margin: -6px 0 12px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.hero-aka strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+@media screen and (max-width: 480px) {
+  .hero-aka {
+    font-size: 13px;
+  }
 }
 
 .hero-tech-icons {
@@ -2411,6 +2490,12 @@ section[data-section] {
   color: var(--accent-primary);
 }
 
+/* Download CV and View in browser share a line; on a phone the second one
+   wraps whole rather than splitting "View in / browser". */
+.colorlib-contact .contact-cv a {
+  white-space: nowrap;
+}
+
 /* Phones: five 100px tiles ahead of the form was a lot of scrolling, and the
    120px text indent left the email address too little room, so it ran off
    the screen edge. */
@@ -2549,11 +2634,17 @@ section[data-section] {
   text-underline-offset: 3px;
 }
 
-/* Mobile Navigation Toggle */
-.colorlib-nav-toggle i,
-.colorlib-nav-toggle i::before,
-.colorlib-nav-toggle i::after {
-  background: var(--text-primary);
+/* Links inside running text (the employer's site in About, the sources in
+   project notes and dialogs, the library record in Education): the link blue
+   is only about 1.2:1 against the grey body text, so the underline is what
+   marks them as links (WCAG 1.4.1). */
+.about-desc p a,
+.timeline-label li a,
+.project-note a,
+.project-modal__section p a,
+.panel-body li a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* Scrollbar Styling */
@@ -2809,6 +2900,21 @@ body.offcanvas #colorlib-aside {
   /* Section Padding Mobile */
   section {
     padding: 40px 0 !important;
+  }
+
+  /* The hero's share of that padding goes inside .hero-content instead.
+     On #colorlib-hero it left a 40px band above and below .hero-content
+     that .hero-overlay (absolute, inside .hero-content) never covered, so
+     the brighter, rotating gradient mesh showed through as a strip across
+     the top of the first screen in every engine. Inside it, the overlay
+     covers the padding too; border-box keeps .hero-content one screen
+     tall, and the greeting keeps its 40px clear of the menu button. */
+  #colorlib-hero {
+    padding: 0 !important;
+  }
+
+  #colorlib-hero .hero-content {
+    padding: 40px 0;
   }
 }
 
@@ -3325,6 +3431,37 @@ a.hero-meta__item:focus-visible {
   span.hero-meta__item {
     flex-basis: 100%;
     justify-content: center;
+  }
+}
+
+/* Short phones (375x667, 360x740, 320x640): the hero is taller than the
+   screen there, so each added line pushes Download CV and Contact Me further
+   under the consent bar. Tighter gaps between the blocks keep them at least
+   as clear of it as they were before the preferred-name line. After the
+   .hero-meta and .hero-availability rules above, so these win. */
+@media screen and (max-width: 768px) and (max-height: 760px) {
+  .hero-greeting {
+    margin-bottom: 6px;
+  }
+
+  .hero-typing {
+    margin-bottom: 8px;
+  }
+
+  .hero-tagline {
+    margin-bottom: 18px;
+  }
+
+  .hero-aka {
+    margin-bottom: 8px;
+  }
+
+  .hero-meta {
+    margin-bottom: 14px;
+  }
+
+  .hero-availability {
+    margin-bottom: 16px;
   }
 }
 
@@ -4050,14 +4187,21 @@ body.offcanvas .consent {
   }
 }
 
-/* The privacy note: a project dialog, narrower, with room between its
-   paragraphs (the project dialogs have one paragraph per section). */
+/* The privacy note: a project dialog, narrower. */
 .project-modal--narrow .project-modal__dialog {
   max-width: 640px;
 }
 
-.project-modal--narrow .project-modal__section > p + p {
+/* Room between paragraphs in a dialog section (the privacy note, and the
+   QVIC dialog's paragraph on the entry). */
+.project-modal__section > p + p {
   margin-top: 12px;
+}
+
+/* Korean names (the employer's registered name, the OrderEAT brand) break
+   between words, not between any two syllables as Hangul otherwise may. */
+:lang(ko) {
+  word-break: keep-all;
 }
 
 .privacy-choice {
@@ -4396,12 +4540,6 @@ h1.hero-name,
     padding: 0.5em 1.2em !important;
     font-size: 1em !important;
   }
-}
-
-/* The open menu's close "X" was black on the dark page, about 1.1:1. */
-.colorlib-nav-toggle.active i::before,
-.colorlib-nav-toggle.active i::after {
-  background: var(--text-primary);
 }
 
 /* ==========================================================================
