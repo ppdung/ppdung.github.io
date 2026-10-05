@@ -485,6 +485,7 @@ body.offcanvas {
 .panel-heading a:after {
   font-family: "icomoon";
   content: "\e115";
+  content: "\e115" / "";
   position: absolute;
   right: 20px;
   font-size: 14px;
@@ -494,7 +495,8 @@ body.offcanvas {
   margin-top: -7px; }
 
 .panel-heading a.collapsed:after {
-  content: "\e114"; }
+  content: "\e114";
+  content: "\e114" / ""; }
 
 .panel-heading a.collapsed {
   background: #f2f3f7;
@@ -605,9 +607,6 @@ body.offcanvas {
   font-size: 20px;
   font-family: "Quicksand", Arial, sans-serif;
   font-weight: 500; }
-
-.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h3 a {
-  color: #000; }
 
 .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h3 span {
   -webkit-opacity: .4;
@@ -1662,7 +1661,7 @@ p {
   margin-bottom: 0.8em !important;
 }
 
-#colorlib-aside .position a {
+#colorlib-aside .position-text {
   color: var(--accent-primary) !important;
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 0.95em !important;
@@ -1817,32 +1816,28 @@ p {
   box-shadow: 0 5px 15px rgba(88, 166, 255, 0.2) !important;
 }
 
+/* Brand hovers key off the link target rather than the icon's position, so
+   adding, removing or reordering icons cannot paint the wrong button. */
+
 /* GitHub icon special hover */
-#colorlib-aside .colorlib-footer ul li:first-child a:hover {
+#colorlib-aside .colorlib-footer ul li a[href*="github.com"]:hover {
   color: #fff !important;
   background: #333 !important;
   border-color: #333 !important;
 }
 
 /* LinkedIn icon special hover */
-#colorlib-aside .colorlib-footer ul li:nth-child(2) a:hover {
+#colorlib-aside .colorlib-footer ul li a[href*="linkedin.com"]:hover {
   color: #fff !important;
   background: #0077b5 !important;
   border-color: #0077b5 !important;
 }
 
 /* Facebook icon special hover */
-#colorlib-aside .colorlib-footer ul li:nth-child(3) a:hover {
+#colorlib-aside .colorlib-footer ul li a[href*="facebook.com"]:hover {
   color: #fff !important;
   background: #1877f2 !important;
   border-color: #1877f2 !important;
-}
-
-/* Instagram icon special hover */
-#colorlib-aside .colorlib-footer ul li:nth-child(4) a:hover {
-  color: #fff !important;
-  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888) !important;
-  border-color: #dc2743 !important;
 }
 
 /* Sidebar Collapsed State */
@@ -1942,7 +1937,7 @@ p {
   font-weight: 600;
 }
 
-#colorlib-aside .position a {
+#colorlib-aside .position-text {
   color: var(--accent-primary);
 }
 
@@ -2302,6 +2297,7 @@ h1.hero-name,
 .hero-buttons .btn {
   padding: 12px 28px !important;
   font-family: 'Inter', sans-serif;
+  font-size: 14px;
   font-weight: 500;
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -2799,10 +2795,6 @@ code[class*="language-"] {
   color: var(--text-primary);
 }
 
-.timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h3 a {
-  color: var(--text-primary);
-}
-
 .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h3 span {
   display: block;
   margin-top: 6px;
@@ -3042,6 +3034,47 @@ code[class*="language-"] {
   color: var(--accent-primary);
 }
 
+/* Phones: five 100px tiles ahead of the form was a lot of scrolling, and the
+   120px text indent left the email address too little room, so it ran off
+   the screen edge. */
+@media screen and (max-width: 480px) {
+  .colorlib-contact .colorlib-feature {
+    margin-bottom: 14px;
+  }
+
+  .colorlib-contact .colorlib-feature .colorlib-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .colorlib-contact .colorlib-feature.colorlib-feature-sm .colorlib-icon i {
+    height: 56px;
+    font-size: 24px;
+  }
+
+  .colorlib-contact .colorlib-feature.colorlib-feature-sm .colorlib-text {
+    display: flex;
+    align-items: center;
+    min-height: 56px;
+    margin-top: 0;
+    padding-left: 72px;
+  }
+
+  .colorlib-contact .colorlib-feature .colorlib-text p {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* 360px-class phones: one size down keeps the address on one line. (A <wbr>
+   after the @ would wrap it more neatly, but Chrome then reads the link's
+   name with a space in the middle of the address.) */
+@media screen and (max-width: 374px) {
+  .colorlib-contact .colorlib-feature .colorlib-text p {
+    font-size: 14px;
+  }
+}
+
 /* Form Styles */
 .form-control {
   background: var(--bg-tertiary);
@@ -3247,7 +3280,7 @@ body.offcanvas #colorlib-aside {
     font-size: 1.1em !important;
   }
 
-  #colorlib-aside .position a {
+  #colorlib-aside .position-text {
     font-size: 0.75em !important;
   }
 
@@ -3504,7 +3537,7 @@ body.offcanvas #colorlib-aside {
     font-size: 0.95em !important;
   }
 
-  #colorlib-aside .position a {
+  #colorlib-aside .position-text {
     font-size: 0.65em !important;
   }
 
@@ -3823,7 +3856,9 @@ textarea:focus-visible,
   #contact-form,
   .project-placeholder,
   .project-video,
-  .bullets-toggle {
+  .bullets-toggle,
+  .colorlib-contact .contact-cv,
+  #colorlib-aside .colorlib-footer a[download] {
     display: none !important;
   }
 
@@ -3919,6 +3954,63 @@ textarea:focus-visible,
 
 @media (prefers-reduced-motion: reduce) {
   .hero-availability .status-dot { animation: none; }
+}
+
+/* Location and profile links in the hero. The sidebar carries both, but below
+   769px it is off-canvas, so a phone's first screen had neither. */
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2px 22px;
+  margin: -14px 0 22px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.hero-meta__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 0;
+}
+
+.hero-meta__item i {
+  font-size: 15px;
+  color: var(--accent-primary);
+}
+
+a.hero-meta__item {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-decoration-color: rgba(139, 148, 158, 0.45);
+  text-underline-offset: 4px;
+}
+
+a.hero-meta__item:hover,
+a.hero-meta__item:focus-visible {
+  color: var(--accent-primary);
+  text-decoration-color: currentColor;
+  text-shadow: none;
+}
+
+@media screen and (max-width: 768px) {
+  .hero-meta {
+    margin-top: -8px;
+    font-size: 13px;
+    gap: 0 18px;
+  }
+}
+
+/* Too narrow for one line: location on its own, the two profiles under it,
+   rather than leaving GitHub stranded on a line by itself. */
+@media screen and (max-width: 480px) {
+  span.hero-meta__item {
+    flex-basis: 100%;
+    justify-content: center;
+  }
 }
 
 /* The sidebar carries the same signal for anyone who scrolled past the hero. */
