@@ -142,6 +142,11 @@
 	var clickMenu = function() {
 
 		$('#navbar a:not([class="external"])').click(function(event){
+			// The links point at real #section fragments, so a click with a
+			// modifier (open in a new tab or window) is left to the browser.
+			if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button) {
+				return;
+			}
 			var section = $(this).data('nav-section'),
 				navbar = $('#navbar');
 
@@ -172,6 +177,14 @@
 		$el.each(function(){
 			$(this).find('a[data-nav-section="'+section+'"]').closest('li').addClass('active');
 		});
+
+		// Keep the language switch on the section being read, so switching
+		// mid-page lands in the same place (/#projects -> /vi/#projects).
+		// Both pages use the same section ids, so this works both ways.
+		var langLink = document.querySelector('.lang-switch a');
+		if (langLink && section) {
+			langLink.hash = section === 'home' ? '' : section;
+		}
 
 	};
 

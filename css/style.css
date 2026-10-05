@@ -377,7 +377,6 @@ body.offcanvas {
   padding: 0; }
 
 .colorlib-experience,
-.colorlib-skills,
 .colorlib-education,
 .colorlib-blog,
 .colorlib-work,
@@ -391,7 +390,6 @@ body.offcanvas {
   display: block; }
   @media screen and (max-width: 768px) {
     .colorlib-experience,
-    .colorlib-skills,
     .colorlib-education,
     .colorlib-blog,
     .colorlib-work,
@@ -2371,7 +2369,6 @@ h1.hero-name,
 
 /* Section Styles */
 .colorlib-about,
-.colorlib-skills,
 .colorlib-techstack,
 .colorlib-code,
 .colorlib-education,
@@ -2387,7 +2384,6 @@ h1.hero-name,
 
 /* Subtle animated gradient for sections */
 .colorlib-about::before,
-.colorlib-skills::before,
 .colorlib-education::before,
 .colorlib-experience::before,
 .colorlib-work::before {
@@ -2415,7 +2411,6 @@ h1.hero-name,
 }
 
 .colorlib-about > *,
-.colorlib-skills > *,
 .colorlib-education > *,
 .colorlib-experience > *,
 .colorlib-work > * {
@@ -2587,140 +2582,169 @@ h1.hero-name,
   border-bottom: 1px solid var(--border-color);
 }
 
-.tech-item {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 25px 15px;
-  text-align: center;
-  transition: all 0.3s ease;
-  margin-bottom: 20px;
+/* Sections are addressable (/#experience, /vi/#projects). A deep link
+   lands 55px above the section, where the nav's scroll lands too, so on a
+   phone the section label does not open under the fixed menu button. */
+section[data-section] {
+  scroll-margin-top: 55px;
 }
 
-@media (hover: hover) {
-  .tech-item:hover {
-    border-color: var(--accent-primary);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px var(--glow-color);
-  }
+/* Tech Stack as grouped chip rows. It used to be 24 tiles of icon, name
+   and self-rated level, followed by a separate Skills Overview of six
+   percentage bars; together they pushed Experience and Projects four
+   screens down. A label column and a wrapping row of chips per group says
+   the same thing in a few lines. */
+.stack-groups {
+  margin: 0 0 10px;
 }
 
-.tech-item i {
-  font-size: 48px;
-  color: var(--text-secondary);
-  margin-bottom: 15px;
-  display: block;
-  transition: all 0.3s ease;
+.stack-group {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 10px 24px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
-@media (hover: hover) {
-  .tech-item:hover i {
-    color: var(--accent-primary);
-  }
+.stack-group:first-child {
+  border-top: 1px solid var(--border-color);
 }
 
-.tech-item .tech-name {
-  display: block;
-  color: var(--text-primary);
-  font-weight: 500;
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-.tech-item .tech-level {
-  display: block;
-  color: var(--accent-secondary);
-  font-size: 11px;
+.stack-group dt {
+  color: var(--text-muted);
   font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  line-height: 1.5;
   text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
-/* Skills Cards */
-.skills-cards {
+.stack-group dd {
+  margin: 0;
+}
+
+.stack-chips {
   display: flex;
   flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.skill-card {
-  background: var(--bg-secondary);
+.stack-chips li {
+  padding: 4px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* The three the page is about: C++, Qt and QML. */
+.stack-chips li.is-core {
+  border-color: rgba(88, 166, 255, 0.55);
+  color: var(--accent-primary);
+}
+
+/* Skills with the project each one was used on, in place of the old
+   percentage bars: a reader can check a fact, not a "90%". */
+.stack-evidence {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stack-evidence li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 6px 14px;
+  align-content: start;
+  padding: 18px 20px;
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 30px 25px;
-  margin-bottom: 30px;
-  transition: all 0.3s ease;
-  height: 100%;
-  /* A column, so the description can take up the slack and the bars line
-     up across a row however long each card's text runs. */
-  display: flex;
-  flex-direction: column;
+  background: var(--bg-card);
 }
 
-@media (hover: hover) {
-  .skill-card:hover {
-    border-color: var(--accent-primary);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  }
-}
-
-.skill-card .skill-icon {
-  width: 60px;
-  height: 60px;
-  background: var(--bg-tertiary);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.skill-card .skill-icon i {
-  font-size: 28px;
+.stack-evidence i {
+  grid-row: span 2;
   color: var(--accent-primary);
+  font-size: 24px;
+  line-height: 1.2;
 }
 
-.skill-card h3 {
+.stack-evidence h4 {
+  margin: 0;
   color: var(--text-primary);
-  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
   font-weight: 600;
-  margin-bottom: 10px;
+  line-height: 1.5;
 }
 
-.skill-card p {
-  color: var(--text-muted);
-  font-size: 13px;
-  line-height: 1.6;
-  margin-bottom: 20px;
+.stack-evidence p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.65;
 }
 
-/* From two columns up, the description takes the card's slack so the bars
-   line up across a row however long each card's text runs. A single
-   column has no row to line up with. */
-@media screen and (min-width: 768px) {
-  .skill-card p {
-    flex-grow: 1;
+.stack-evidence p strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+@media screen and (max-width: 768px) {
+  .stack-group {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    padding: 12px 0;
+  }
+
+  .stack-chips {
+    gap: 6px;
+  }
+
+  .stack-chips li {
+    padding: 3px 10px;
+    font-size: 13px;
+  }
+
+  .stack-evidence {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  /* Icon beside the name only, so the text gets the card's full width. */
+  .stack-evidence li {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 6px 10px;
+    align-items: center;
+    padding: 14px 16px;
+  }
+
+  .stack-evidence i {
+    grid-row: auto;
+    font-size: 20px;
+  }
+
+  .stack-evidence p {
+    grid-column: 1 / -1;
   }
 }
 
-.skill-bar {
-  height: 6px;
-  background: var(--bg-tertiary);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-
-.skill-progress {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-  border-radius: 3px;
-  transition: width 1s ease;
-}
-
-.skill-percent {
-  color: var(--accent-primary);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  font-weight: 500;
+@media print {
+  .stack-chips li,
+  .stack-evidence li {
+    border-color: #ccc !important;
+    background: #fff !important;
+  }
 }
 
 /* Code Snippets Section */
@@ -3279,14 +3303,6 @@ code[class*="language-"] {
   .about-highlights {
     grid-template-columns: 1fr;
   }
-
-  .tech-item {
-    padding: 20px 10px;
-  }
-
-  .tech-item i {
-    font-size: 36px;
-  }
 }
 
 /* Remove old slider styles conflict */
@@ -3312,10 +3328,6 @@ body.offcanvas #colorlib-aside {
 
   .colorlib-narrow-content {
     padding: 0 30px;
-  }
-
-  .skill-card {
-    padding: 25px 20px;
   }
 
   .project-card {
@@ -3453,49 +3465,6 @@ body.offcanvas #colorlib-aside {
   .tech-category {
     font-size: 16px !important;
     margin: 25px 0 15px 0 !important;
-  }
-
-  .tech-item {
-    padding: 15px 10px;
-    margin-bottom: 15px;
-  }
-
-  .tech-item i {
-    font-size: 32px !important;
-    margin-bottom: 10px;
-  }
-
-  .tech-item .tech-name {
-    font-size: 12px;
-  }
-
-  .tech-item .tech-level {
-    font-size: 10px;
-  }
-
-  /* Skills Cards Mobile */
-  .skill-card {
-    padding: 20px 15px;
-    margin-bottom: 20px;
-  }
-
-  .skill-card .skill-icon {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 15px;
-  }
-
-  .skill-card .skill-icon i {
-    font-size: 24px;
-  }
-
-  .skill-card h3 {
-    font-size: 14px;
-  }
-
-  .skill-card p {
-    font-size: 12px;
-    margin-bottom: 15px;
   }
 
   /* Project Cards Mobile */
@@ -3698,19 +3667,6 @@ body.offcanvas #colorlib-aside {
 
   .colorlib-heading {
     font-size: 24px !important;
-  }
-
-  .tech-item i {
-    font-size: 28px !important;
-  }
-
-  .skill-card {
-    padding: 15px;
-  }
-
-  .skill-card .skill-icon {
-    width: 45px;
-    height: 45px;
   }
 
   .project-info h3 {
@@ -4707,13 +4663,6 @@ h1.hero-name,
   .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label ul {
     padding-left: 1.1em;
   }
-}
-
-/* Tech Stack below 992px: the category headings are not floated there, so
-   after an odd number of tiles one rode up beside the last tile (at 390px
-   "Frameworks & Libraries" sat next to QML, its rule drawn through it). */
-.tech-grid > .col-md-12 {
-  clear: both;
 }
 
 /* ==========================================================================
