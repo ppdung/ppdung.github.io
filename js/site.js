@@ -36,7 +36,11 @@
 			expandSidebar: 'Expand sidebar',
 			consentUnset: 'You have not chosen yet, so Google Analytics runs without cookies.',
 			consentGranted: 'You allowed analytics cookies in this browser.',
-			consentDenied: 'You declined, so Google Analytics is off in this browser.'
+			consentDenied: 'You declined, so Google Analytics is off in this browser.',
+			previous: 'Previous',
+			previousLabel: 'Previous project: {name}',
+			next: 'Next',
+			nextLabel: 'Next project: {name}'
 		},
 		vi: {
 			showFewer: '- Thu gọn',
@@ -47,7 +51,11 @@
 			expandSidebar: 'Mở rộng thanh bên',
 			consentUnset: 'Bạn chưa chọn, nên Google Analytics đang chạy mà không dùng cookie.',
 			consentGranted: 'Bạn đã cho phép cookie thống kê trên trình duyệt này.',
-			consentDenied: 'Bạn đã từ chối, nên Google Analytics đã tắt trên trình duyệt này.'
+			consentDenied: 'Bạn đã từ chối, nên Google Analytics đã tắt trên trình duyệt này.',
+			previous: 'Trước',
+			previousLabel: 'Dự án trước: {name}',
+			next: 'Tiếp',
+			nextLabel: 'Dự án tiếp theo: {name}'
 		}
 	};
 	var T = STRINGS[(root.getAttribute('lang') || 'en').slice(0, 2)] || STRINGS.en;
@@ -127,6 +135,21 @@
 	var dialogs = { open: function () {}, close: function () {} };
 	var analytics = { choice: function () { return null; }, choose: function () {} };
 	var revealNow = function () {};
+
+	// The language switch opens the other page where this one is: on the
+	// open project dialog (/#project-deepkds -> /vi/#project-deepkds), or
+	// else on the section being read (/#projects -> /vi/#projects). Both
+	// pages share the section ids and the project keys. Every switch on the
+	// page follows: the sidebar's, and the copy inside an open dialog.
+	var langHash = { section: '', project: '' };
+
+	function syncLangHash() {
+		var name = langHash.project ? 'project-' + langHash.project : langHash.section;
+		var hash = name ? '#' + name : '';
+		each(doc.querySelectorAll('.lang-switch a, .project-modal__lang'), function (a) {
+			if (a.hash !== hash) { a.hash = name; }
+		});
+	}
 
 	// ------------------------------------------------------------------
 	// Reveal on scroll
@@ -535,7 +558,8 @@
 			e.preventDefault();
 			// Focus is about to move to the section, so neither the dialog nor
 			// the menu should hand it back to the control that opened them.
-			if (link.hasAttribute('data-modal-goto')) { dialogs.close(false); }
+			// The dialog goes at once rather than fading: the jump starts now.
+			if (link.hasAttribute('data-modal-goto')) { dialogs.close(false, true); }
 			menu.close(false);
 			goToSection(name);
 		});
@@ -558,7 +582,6 @@
 		if (!sections.length || !('IntersectionObserver' in window)) { return; }
 
 		var navItems = doc.querySelectorAll('#navbar li');
-		var langLink = doc.querySelector('.lang-switch a');
 		var inBand = [];
 		var current = null;
 		var viewed = {};
@@ -575,7 +598,8 @@
 
 			// Switching language mid-page lands on the same section
 			// (/#projects -> /vi/#projects); both pages share the ids.
-			if (langLink) { langLink.hash = name === 'home' ? '' : name; }
+			langHash.section = name === 'home' ? '' : name;
+			syncLangHash();
 
 			window.clearTimeout(dwellTimer);
 			if (!viewed[name]) {
@@ -895,7 +919,8 @@
 	// longer sends its own copies of those: each was being counted twice.
 	// The YouTube iframe API is no longer loaded either (the embeds dropped
 	// enablejsapi=1, which is what made gtag load it at page start). What
-	// is left is what GA cannot see on its own.
+	// is left is what GA cannot see on its own. A video's play button
+	// counts itself (initVideos), and so do the project dialogs.
 	// ------------------------------------------------------------------
 	function initAnalytics() {
 		// Which of the three CV links was used. A distinct name, because GA's
@@ -917,122 +942,453 @@
 			if (!a) { return; }
 			track('contact_click', { method: a.protocol === 'tel:' ? 'phone' : 'email' });
 		});
+	}
 
-		// A click into one of the project videos. The player is a cross-origin
-		// frame, so the page only learns of it as focus leaving the window for
-		// that frame. Once per video per visit.
-		var videosSeen = {};
-		window.addEventListener('blur', function () {
-			window.setTimeout(function () {
-				var frame = doc.activeElement;
-				if (!frame || frame.tagName !== 'IFRAME' || !frame.closest('.project-video')) { return; }
-				var id = frame.id || frame.src;
-				if (videosSeen[id]) { return; }
-				videosSeen[id] = true;
-				track('select_content', { content_type: 'video', content_id: id });
-			}, 0);
+	// ------------------------------------------------------------------
+	// Project videos: a poster until the play button is pressed
+	//
+	// Each video is a button holding a poster stored on this site
+	// (images/yt-<id>.*), so a visit that never plays one sends nothing to
+	// YouTube: no players (about 1.3 MB for the four, measured when they were
+	// lazy embeds), no thumbnails, no cookies.
+	// Pressing play puts the privacy-enhanced player in its place, playing,
+	// with focus on it so Space and the arrow keys work it. The embed URL
+	// carries no enablejsapi, which would have GA4 load YouTube's iframe API
+	// and count every play a second time. Without this script the button
+	// does nothing, and the "Watch on YouTube" link beside it still works.
+	// ------------------------------------------------------------------
+	function initVideos() {
+		each(doc.querySelectorAll('.yt-facade[data-yt-id]'), function (button) {
+			button.addEventListener('click', function () {
+				var id = button.getAttribute('data-yt-id');
+				var frame = doc.createElement('iframe');
+				frame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1';
+				// The button is named "Play video: <title>"; the player is
+				// named by the title alone.
+				frame.title = (button.getAttribute('aria-label') || '').replace(/^[^:]*:\s*/, '');
+				// fullscreen in allow rather than an allowfullscreen attribute
+				// as well, which only earns a console warning.
+				frame.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+				if (button.id) { frame.id = button.id; }
+				button.parentNode.replaceChild(frame, button);
+				try { frame.focus(); } catch (e) { /* focus is a nicety here */ }
+				track('select_content', { content_type: 'video', content_id: frame.id || id });
+			});
 		});
 	}
 
 	// ------------------------------------------------------------------
-	// Project detail dialogs
+	// Dialogs: the eight project dialogs and the privacy note
+	//
+	// While one is open, everything else on the page is inert: Tab, a
+	// screen reader's cursor and a stray click cannot reach what is behind
+	// it. Tab and Shift+Tab are not left to the browser either. They step
+	// through the dialog's own controls and wrap at either end, so the trap
+	// holds in Safari too, whose default Tab skips links: the old trap
+	// waited for focus to reach the last link, which there it never did.
+	// Focus goes first to the dialog's text, a focusable scroll region, so
+	// the arrow keys, Page Down and Space scroll it at once (the dialog
+	// itself used to take focus, and they did nothing). Escape, the close
+	// button and the backdrop close it, with a short fade that mirrors the
+	// opening one, and focus goes back to the button that opened it.
+	//
+	// A project dialog has an address, #project-<key>, with the key from its
+	// modal-<key> id (the same on both pages). Opening one from its button
+	// adds a history entry, so Back -- a phone's back gesture too -- closes
+	// the dialog instead of leaving the site, and closing it any other way
+	// steps back over that entry, so no stale #project- address is left to
+	// reopen it. A link to /#project-deepkds or /vi/#project-deepkds opens
+	// that dialog, and the language switch keeps it. Previous and Next step
+	// through the projects in page order and replace the entry rather than
+	// add to it, so one Back still closes the dialog. The privacy note keeps
+	// its own #privacy address and adds no entry.
 	// ------------------------------------------------------------------
 	function initDialogs() {
 		var openModal = null;
 		var lastTrigger = null;
-		var FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+		var closingModal = null;
+		var closeTimer = null;
+		var madeInert = [];
+		var linkedOnLoad = false;
+		var backPending = false;
+		var CLOSE_MS = 160;
+		var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+		var history = window.history;
+		var canPush = !!(history && history.pushState && history.replaceState);
 
-		function focusable(modal) {
-			// offsetParent is null for position:fixed elements, so it cannot be
-			// used as the visibility test here -- check the box instead.
-			return Array.prototype.filter.call(modal.querySelectorAll(FOCUSABLE), function (el) {
-				var r = el.getBoundingClientRect();
-				return r.width > 0 && r.height > 0;
+		// The projects, in page order, from their "Project details" buttons.
+		var projects = [];
+
+		function byKey(key) {
+			for (var i = 0; i < projects.length; i++) {
+				if (projects[i].key === key) { return projects[i]; }
+			}
+			return null;
+		}
+
+		function byModal(modal) {
+			for (var i = 0; i < projects.length; i++) {
+				if (projects[i].modal === modal) { return projects[i]; }
+			}
+			return null;
+		}
+
+		each(doc.querySelectorAll('[data-project-modal]'), function (button) {
+			var key = button.getAttribute('data-project-modal');
+			var modal = doc.getElementById('modal-' + key);
+			if (!modal || byKey(key)) { return; }
+			var heading = modal.querySelector('h2');
+			projects.push({
+				key: key,
+				modal: modal,
+				button: button,
+				// "Project details: DeepKDS" -> "DeepKDS"
+				name: (button.getAttribute('aria-label') || '').replace(/^[^:]*:\s*/, '') ||
+					(heading ? heading.textContent.trim() : key)
 			});
+		});
+
+		function projectFromAddress() {
+			var match = /^#project-([\w-]+)$/.exec(window.location.hash);
+			return match ? byKey(match[1]) : null;
+		}
+
+		function plainAddress() {
+			return window.location.pathname + window.location.search;
+		}
+
+		// True when the current history entry is one this script added for
+		// a project dialog, so going back from it stays on this page.
+		function onOwnEntry() {
+			var state = canPush ? history.state : null;
+			return !!(state && state.project);
+		}
+
+		// --- Everything behind the dialog -----------------------------
+		function setPageInert(on) {
+			if (!on) {
+				madeInert.forEach(function (el) { el.removeAttribute('inert'); });
+				madeInert = [];
+				return;
+			}
+			each(body.children, function (el) {
+				if (el.classList.contains('project-modal') || el.tagName === 'SCRIPT' || el.hasAttribute('inert')) { return; }
+				el.setAttribute('inert', '');
+				madeInert.push(el);
+			});
+		}
+
+		// --- Focus ------------------------------------------------------
+		function focusables(modal) {
+			return Array.prototype.filter.call(modal.querySelectorAll(FOCUSABLE), function (el) {
+				return el.getClientRects().length > 0 && !el.closest('[inert]');
+			});
+		}
+
+		// The control Tab or Shift+Tab moves to. From something in the
+		// dialog that is not in that list -- the dialog box itself after a
+		// click on its header, a heading -- it carries on from there.
+		function stepFrom(items, current, forward) {
+			var n = items.length;
+			var i = items.indexOf(current);
+			if (i !== -1) { return items[(i + (forward ? 1 : n - 1)) % n]; }
+			if (current && current !== openModal && openModal.contains(current)) {
+				var j;
+				if (forward) {
+					for (j = 0; j < n; j++) {
+						if (current.compareDocumentPosition(items[j]) & 4) { return items[j]; }
+					}
+				} else {
+					for (j = n - 1; j >= 0; j--) {
+						if (current.compareDocumentPosition(items[j]) & 2) { return items[j]; }
+					}
+				}
+			}
+			return forward ? items[0] : items[n - 1];
+		}
+
+		function focusInto(modal) {
+			var text = modal.querySelector('.project-modal__body');
+			if (text) { text.scrollTop = 0; }
+			var target = text || modal;
+			try { target.focus({ preventScroll: true }); } catch (e) { target.focus(); }
+			if (doc.activeElement !== target) { modal.focus(); }
+		}
+
+		// Back to the button that opened the dialog. After Previous / Next,
+		// or a dialog opened from a link, that is the card of the project
+		// last read, which may be off screen: it is brought to the middle
+		// while the dialog fades, and shown at once if it was waiting to
+		// fade in.
+		function bringIntoView(el) {
+			var box = el.getBoundingClientRect();
+			var viewportHeight = window.innerHeight || root.clientHeight;
+			if (box.top >= 0 && box.bottom <= viewportHeight) { return; }
+			var section = el.closest('section');
+			if (section) { revealNow(section); }
+			var y = window.pageYOffset || root.scrollTop || 0;
+			window.scrollTo({ top: Math.max(0, Math.round(y + box.top - (viewportHeight - box.height) / 2)), behavior: 'auto' });
+		}
+
+		function focusTrigger(el) {
+			try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
+			bringIntoView(el);
+			// When Back closed the dialog, the browser puts back the scroll
+			// position it saved for that entry just after popstate, over the
+			// one set here; so it is set again once that is done.
+			window.setTimeout(function () { bringIntoView(el); }, 0);
+		}
+
+		// --- The language switch inside a project dialog -----------------
+		// The sidebar's switch is behind the dialog, and inert with the rest
+		// of the page, so an open project dialog carries a copy of it beside
+		// its close button (before it, as it is drawn: Tab follows the eye).
+		var langSource = doc.querySelector('.lang-switch a');
+		var langLink = null;
+		if (langSource && projects.length) {
+			langLink = langSource.cloneNode(true);
+			langLink.className = 'project-modal__lang';
+			projects.forEach(function (p) { p.modal.classList.add('project-modal--lang'); });
+		}
+
+		function placeLangLink(p) {
+			var closeButton = p.modal.querySelector('.project-modal__close');
+			if (langLink && closeButton) { closeButton.parentNode.insertBefore(langLink, closeButton); }
+		}
+
+		// --- Previous and Next -------------------------------------------
+		// Named after the project they lead to; the first and last wrap
+		// round, so every dialog has both.
+		function addSteps(p, index) {
+			var footer = p.modal.querySelector('.project-modal__footer');
+			if (!footer || projects.length < 2) { return; }
+			var nav = doc.createElement('div');
+			nav.className = 'project-modal__steps';
+			[-1, 1].forEach(function (offset) {
+				var target = projects[(index + offset + projects.length) % projects.length];
+				var forward = offset > 0;
+				var button = doc.createElement('button');
+				button.type = 'button';
+				button.className = 'project-modal__step project-modal__step--' + (forward ? 'next' : 'prev');
+				// The word is hidden on phones, where only the chevron shows; the
+				// name always says which project it leads to.
+				var text = doc.createElement('span');
+				text.className = 'project-modal__step-text';
+				text.textContent = forward ? T.next : T.previous;
+				button.appendChild(text);
+				button.setAttribute('aria-label', (forward ? T.nextLabel : T.previousLabel).replace('{name}', target.name));
+				button.title = target.name;
+				button.addEventListener('click', function () { switchTo(target); });
+				nav.appendChild(button);
+			});
+			footer.appendChild(nav);
+		}
+
+		projects.forEach(addSteps);
+
+		// --- Opening and closing -----------------------------------------
+		function show(modal, straightFromAnother) {
+			// From one dialog straight to another the backdrop is already
+			// there; only the panel comes in.
+			modal.classList.toggle('is-switching', !!straightFromAnother);
+			modal.hidden = false;
+			var p = byModal(modal);
+			if (p) { placeLangLink(p); }
+			langHash.project = p ? p.key : '';
+			syncLangHash();
 		}
 
 		function open(modal, trigger) {
 			if (!modal) { return; }
-			if (openModal) { close(false); }
+			finishClosing();
+			if (modal === openModal) { return; }
 
-			lastTrigger = trigger || null;
+			if (openModal) {
+				openModal.hidden = true;
+				show(modal, true);
+			} else {
+				// Replace the scrollbar with padding so the page behind does
+				// not shift sideways when overflow is hidden.
+				var gap = window.innerWidth - root.clientWidth;
+				if (gap > 0) { body.style.paddingRight = gap + 'px'; }
+				body.classList.add('modal-open');
+				setPageInert(true);
+				show(modal, false);
+			}
 			openModal = modal;
-
-			// Replace the scrollbar with padding so the page behind does not
-			// shift sideways when overflow is hidden.
-			var gap = window.innerWidth - root.clientWidth;
-			if (gap > 0) { body.style.paddingRight = gap + 'px'; }
-			body.classList.add('modal-open');
-
-			modal.hidden = false;
-			// Focus the dialog itself rather than its first control, so the
-			// title is announced and nothing starts out visually highlighted.
-			modal.focus();
+			lastTrigger = trigger || null;
+			focusInto(modal);
 		}
 
-		function close(returnFocus) {
-			if (!openModal) { return; }
-			var closing = openModal;
-			closing.hidden = true;
-			openModal = null;
-			body.classList.remove('modal-open');
-			body.style.paddingRight = '';
-			// A dialog opened from its own link (/#privacy) gives the address
-			// back without the fragment.
-			if (closing.id && window.location.hash === '#' + closing.id && window.history && window.history.replaceState) {
-				window.history.replaceState(null, '', window.location.pathname + window.location.search);
+		function finishClosing() {
+			if (!closingModal) { return; }
+			window.clearTimeout(closeTimer);
+			closingModal.hidden = true;
+			closingModal.classList.remove('is-closing');
+			closingModal.removeAttribute('inert');
+			closingModal = null;
+			if (!openModal) {
+				body.classList.remove('modal-open');
+				body.style.paddingRight = '';
 			}
+		}
+
+		// Closes the dialog where it stands. requestClose() below is what the
+		// close button, the backdrop and Escape call.
+		function close(returnFocus, instant) {
+			if (!openModal) { return; }
+			finishClosing();
+			var closing = openModal;
+			var trigger = lastTrigger;
+			var p = byModal(closing);
+			openModal = null;
+			lastTrigger = null;
+			linkedOnLoad = false;
+			backPending = false;
+
+			// The page comes back before focus does: an inert button cannot
+			// take focus.
+			setPageInert(false);
+			langHash.project = '';
+			syncLangHash();
+
+			// Its address goes with it (#privacy, or a #project- address that
+			// has no entry of its own to step back over).
+			var hash = window.location.hash;
+			if (canPush && (hash === '#' + closing.id || (p && hash === '#project-' + p.key))) {
+				history.replaceState(null, '', plainAddress());
+			}
+
 			// The control that opened the dialog may be gone by now (the
 			// consent notice hides once a choice is made in the privacy note),
 			// or there was none (/#privacy). Focus then goes to the section
 			// being read rather than to <body>.
 			if (returnFocus !== false) {
-				if (lastTrigger && lastTrigger.getClientRects().length) { lastTrigger.focus(); }
+				if (trigger && trigger.getClientRects().length) { focusTrigger(trigger); }
 				else { focusReadingPosition(); }
 			}
-			lastTrigger = null;
+
+			closingModal = closing;
+			if (instant || reducedMotion.matches) { finishClosing(); return; }
+			// A timer, not animationend: under reduced motion, or in a
+			// background tab, that event may never come.
+			closing.setAttribute('inert', '');
+			closing.classList.add('is-closing');
+			closeTimer = window.setTimeout(finishClosing, CLOSE_MS);
+		}
+
+		function requestClose() {
+			if (!openModal || backPending) { return; }
+			var p = byModal(openModal);
+			if (p && onOwnEntry()) {
+				// popstate, below, does the closing. A second Escape before it
+				// arrives must not go back a second time, off the site; and
+				// should it never arrive, the dialog closes anyway.
+				var waiting = openModal;
+				backPending = true;
+				history.back();
+				window.setTimeout(function () {
+					if (backPending && openModal === waiting) { close(); }
+				}, 500);
+				return;
+			}
+			close();
+		}
+
+		function switchTo(p) {
+			if (!openModal || openModal === p.modal) { return; }
+			open(p.modal, p.button);
+			if (canPush) {
+				history.replaceState(onOwnEntry() ? { project: p.key } : null, '', '#project-' + p.key);
+			}
+			track('select_content', { content_type: 'project', item_id: p.key });
 		}
 
 		dialogs = { open: open, close: close };
 
-		each(doc.querySelectorAll('[data-project-modal]'), function (button) {
-			button.addEventListener('click', function () {
-				var key = button.getAttribute('data-project-modal');
-				var modal = doc.getElementById('modal-' + key);
-				if (!modal) { return; }
-				open(modal, button);
-				track('select_content', { content_type: 'project', item_id: key });
+		// --- Wiring ------------------------------------------------------
+		projects.forEach(function (p) {
+			p.button.addEventListener('click', function () {
+				open(p.modal, p.button);
+				if (canPush) {
+					if (onOwnEntry()) { history.replaceState({ project: p.key }, '', '#project-' + p.key); }
+					else { history.pushState({ project: p.key }, '', '#project-' + p.key); }
+				}
+				track('select_content', { content_type: 'project', item_id: p.key });
 			});
 		});
 
 		each(doc.querySelectorAll('[data-modal-close]'), function (el) {
-			el.addEventListener('click', function (e) { e.preventDefault(); close(); });
+			el.addEventListener('click', function (e) { e.preventDefault(); requestClose(); });
 		});
 
+		// Capture phase, so nothing else on the page sees a Tab while a
+		// dialog is open.
 		doc.addEventListener('keydown', function (e) {
 			if (!openModal) { return; }
 
 			if (e.key === 'Escape' || e.key === 'Esc') {
 				e.preventDefault();
-				close();
+				requestClose();
 				return;
 			}
 
-			// Keep Tab inside the dialog.
-			if (e.key !== 'Tab') { return; }
-			var items = focusable(openModal);
-			if (!items.length) { return; }
-			var first = items[0];
-			var last = items[items.length - 1];
+			if (e.key !== 'Tab' || e.altKey || e.ctrlKey || e.metaKey) { return; }
+			e.preventDefault();
+			var items = focusables(openModal);
+			if (!items.length) { focusInto(openModal); return; }
+			stepFrom(items, doc.activeElement, !e.shiftKey).focus();
+		}, true);
 
-			if (e.shiftKey && doc.activeElement === first) {
-				e.preventDefault();
-				last.focus();
-			} else if (!e.shiftKey && doc.activeElement === last) {
-				e.preventDefault();
-				first.focus();
+		// Back and Forward, and a #project- address typed or pasted while
+		// the page is open.
+		function fromHistory() {
+			backPending = false;
+			var p = projectFromAddress();
+			if (p) {
+				if (openModal !== p.modal) { open(p.modal, p.button); }
+				return;
 			}
-		});
+			if (openModal && byModal(openModal)) { close(); }
+		}
+		window.addEventListener('popstate', fromHistory);
+		window.addEventListener('hashchange', fromHistory);
+
+		// A link to a project (/#project-deepkds) opens its dialog. Its
+		// history entry waits for the visitor's first tap, click or key:
+		// Chrome skips, on Back, entries a page added before anyone touched
+		// it, which would send Back off the site again. Until then the
+		// dialog closes in place, and Back goes where it always went.
+		var ACTIVATION = ['pointerdown', 'pointerup', 'mousedown', 'touchend', 'keydown', 'click'];
+
+		function addEntryOnActivation() {
+			if (!linkedOnLoad) { stopWaiting(); return; }
+			var activation = navigator.userActivation;
+			if (activation && !activation.isActive) { return; }
+			stopWaiting();
+			linkedOnLoad = false;
+			var p = openModal && byModal(openModal);
+			if (!p || !canPush || onOwnEntry()) { return; }
+			history.replaceState(null, '', plainAddress());
+			history.pushState({ project: p.key }, '', '#project-' + p.key);
+		}
+
+		function stopWaiting() {
+			ACTIVATION.forEach(function (type) { window.removeEventListener(type, addEntryOnActivation, true); });
+		}
+
+		var linked = projectFromAddress();
+		if (linked) {
+			open(linked.modal, linked.button);
+			track('select_content', { content_type: 'project', item_id: linked.key });
+			if (canPush) {
+				// A reload keeps the entry's old state; it is the page's own
+				// again only once the visitor acts.
+				history.replaceState(null, '', window.location.href);
+				linkedOnLoad = true;
+				ACTIVATION.forEach(function (type) { window.addEventListener(type, addEntryOnActivation, true); });
+			}
+		}
 	}
 
 	// ------------------------------------------------------------------
@@ -1203,6 +1559,7 @@
 		run('typing', initTyping);
 		run('ambient motion', initAmbientMotion);
 		run('lazy backgrounds', initLazyBackgrounds);
+		run('videos', initVideos);
 		run('dialogs', initDialogs);
 		run('consent', initConsent);
 		run('section links', initSectionLinks);

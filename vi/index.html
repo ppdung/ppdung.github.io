@@ -8,13 +8,14 @@
 	     which js/site.js loads after the page has loaded; styles come only from
 	     this site. Nothing inline runs, so neither needs 'unsafe-inline'
 	     (the JSON-LD blocks below are data, not scripts). The contact form
-	     may post only to its own Formspree form, frames only to YouTube's
-	     privacy-enhanced player, and i.ytimg.com is for video thumbnails.
+	     may post only to its own Formspree form, and frames only to YouTube's
+	     privacy-enhanced player, which loads when a video's play button is
+	     pressed (the posters are images on this site).
 	     connect-src allows 'self' so that tools fetching /robots.txt from
 	     the page (Lighthouse's SEO audit, PageSpeed Insights) are not refused.
 	     Anything new the page loads must be added here, on both pages: see
 	     README.md, "Privacy, analytics and the Content Security Policy". -->
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' https://i.ytimg.com https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src 'self' https://formspree.io/f/mdaanwpo https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; form-action https://formspree.io/f/mdaanwpo; base-uri 'none'; object-src 'none'">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src 'self' https://formspree.io/f/mdaanwpo https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; form-action https://formspree.io/f/mdaanwpo; base-uri 'none'; object-src 'none'">
 	<meta name="referrer" content="strict-origin-when-cross-origin">
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -653,13 +654,20 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-ordereat" src="https://www.youtube-nocookie.com/embed/MYV4o1dTdbk?si=jKQjP-pE1AQBAaWa" title="Video demo OrderEAT, hệ thống gọi món trên máy tính bảng" loading="lazy" allowfullscreen></iframe>
+									<button type="button" class="yt-facade" id="video-ordereat" data-yt-id="MYV4o1dTdbk" aria-label="Phát video: Demo OrderEAT, hệ thống gọi món trên máy tính bảng">
+										<picture>
+											<source srcset="../images/yt-MYV4o1dTdbk.webp" type="image/webp">
+											<img src="../images/yt-MYV4o1dTdbk.jpg" alt="" width="480" height="270" loading="lazy" decoding="async">
+										</picture>
+										<span class="yt-facade__play" aria-hidden="true"></span>
+									</button>
 								</div>
 								<div class="project-info">
 									<h3>OrderEAT &ndash; Hệ thống gọi món trên máy tính bảng</h3>
 									<p>Ứng dụng kiosk tự phục vụ và máy tính bảng, triển khai tại Seoul, xây từ repository trống cho Windows và Android. Luồng gọi món chạy dưới dạng máy trạng thái tường minh, còn thanh toán thẻ nằm sau một tầng nhà cung cấp cắm-thay-được gồm bốn PG được nối vào và tám VAN &mdash; nên thêm một cửa hàng mới chỉ là viết thêm subclass chứ không phải viết lại.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="ordereat" aria-haspopup="dialog" aria-label="Chi tiết dự án: OrderEAT"><i class="icon-flow-children" aria-hidden="true"></i> Chi tiết dự án</button>
+										<a href="https://www.youtube.com/watch?v=MYV4o1dTdbk" target="_blank" rel="noopener" aria-label="Xem trên YouTube: OrderEAT"><i class="icon-video" aria-hidden="true"></i> Xem trên YouTube</a>
 									</div>
 									<div class="project-tags">
 										<span class="tag">C++/Qt/QML</span>
@@ -677,13 +685,20 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-qualcomm" src="https://www.youtube-nocookie.com/embed/srL3h80J9yY" title="Video demo robot di động tại Qualcomm Vietnam Innovation Challenge" loading="lazy" allowfullscreen></iframe>
+									<button type="button" class="yt-facade" id="video-qualcomm" data-yt-id="srL3h80J9yY" aria-label="Phát video: Demo robot di động tại Qualcomm Vietnam Innovation Challenge">
+										<picture>
+											<source srcset="../images/yt-srL3h80J9yY.webp" type="image/webp">
+											<img src="../images/yt-srL3h80J9yY.jpg" alt="" width="480" height="270" loading="lazy" decoding="async">
+										</picture>
+										<span class="yt-facade__play" aria-hidden="true"></span>
+									</button>
 								</div>
 								<div class="project-info">
 									<h3>Qualcomm Vietnam Innovation Challenge 2022</h3>
 									<p>Robot phục vụ tự hành trong nhà cho nhà hàng. Tôi dẫn dắt nhóm ba người đưa sản phẩm vào Top 10 cuộc thi khởi nghiệp toàn quốc của Qualcomm, và trình bày trước nhà đầu tư tại vòng chung kết.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="qvic" aria-haspopup="dialog" aria-label="Chi tiết dự án: Qualcomm Vietnam Innovation Challenge 2022"><i class="icon-flow-children" aria-hidden="true"></i> Chi tiết dự án</button>
+										<a href="https://www.youtube.com/watch?v=srL3h80J9yY" target="_blank" rel="noopener" aria-label="Xem trên YouTube: Qualcomm Vietnam Innovation Challenge 2022"><i class="icon-video" aria-hidden="true"></i> Xem trên YouTube</a>
 									</div>
 									<div class="project-tags">
 										<span class="tag">ROS</span>
@@ -700,13 +715,20 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-manipulator" src="https://www.youtube-nocookie.com/embed/6zFjGb3t2Cc" title="Video demo robot di động tích hợp cánh tay, gắp và đặt vật" loading="lazy" allowfullscreen></iframe>
+									<button type="button" class="yt-facade" id="video-manipulator" data-yt-id="6zFjGb3t2Cc" aria-label="Phát video: Demo robot di động tích hợp cánh tay, gắp và đặt vật">
+										<picture>
+											<source srcset="../images/yt-6zFjGb3t2Cc.webp" type="image/webp">
+											<img src="../images/yt-6zFjGb3t2Cc.jpg" alt="" width="480" height="270" loading="lazy" decoding="async">
+										</picture>
+										<span class="yt-facade__play" aria-hidden="true"></span>
+									</button>
 								</div>
 								<div class="project-info">
 									<h3>Robot di động tích hợp cánh tay</h3>
 									<p>Luận văn thạc sĩ. Xe tự hành mang cánh tay 5 bậc tự do để hàng vừa di chuyển vừa được gắp mà không cần người ở hai đầu &mdash; nhưng cánh tay chỉ với tới vật nếu xe đỗ đủ chính xác, mà chỉ riêng SLAM thì không đỗ chính xác được đến vậy. Một camera stereo bám marker hiệu chỉnh đoạn tiếp cận cuối, kéo sai số đỗ từ khoảng 9&nbsp;cm xuống khoảng 3&nbsp;cm.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="manipulator" aria-haspopup="dialog" aria-label="Chi tiết dự án: Robot di động tích hợp cánh tay"><i class="icon-flow-children" aria-hidden="true"></i> Chi tiết dự án</button>
+										<a href="https://www.youtube.com/watch?v=6zFjGb3t2Cc" target="_blank" rel="noopener" aria-label="Xem trên YouTube: Robot di động tích hợp cánh tay"><i class="icon-video" aria-hidden="true"></i> Xem trên YouTube</a>
 									</div>
 									<div class="project-tags">
 										<span class="tag">ROS</span>
@@ -724,13 +746,20 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-scara" src="https://www.youtube-nocookie.com/embed/NhR2n_e45Ps" title="Video demo robot SCARA teaching-less dùng thị giác máy tính" loading="lazy" allowfullscreen></iframe>
+									<button type="button" class="yt-facade" id="video-scara" data-yt-id="NhR2n_e45Ps" aria-label="Phát video: Demo robot SCARA teaching-less dùng thị giác máy tính">
+										<picture>
+											<source srcset="../images/yt-NhR2n_e45Ps.webp" type="image/webp">
+											<img src="../images/yt-NhR2n_e45Ps.jpg" alt="" width="480" height="270" loading="lazy" decoding="async">
+										</picture>
+										<span class="yt-facade__play" aria-hidden="true"></span>
+									</button>
 								</div>
 								<div class="project-info">
 									<h3>Robot SCARA teaching-less</h3>
 									<p>Luận văn tốt nghiệp: dạy robot bằng cách làm mẫu cho nó xem, thay vì rà tay tới từng điểm. Một cặp camera công nghiệp stereo theo dõi marker quang học trong không gian 3D, hiệu chuẩn hand-eye gắn hệ toạ độ camera với gốc robot, và các tư thế thu được truyền sang cánh tay qua TCP &mdash; nên một công việc được định nghĩa bằng cách di chuyển marker qua nó.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="scara" aria-haspopup="dialog" aria-label="Chi tiết dự án: Robot SCARA teaching-less"><i class="icon-flow-children" aria-hidden="true"></i> Chi tiết dự án</button>
+										<a href="https://www.youtube.com/watch?v=NhR2n_e45Ps" target="_blank" rel="noopener" aria-label="Xem trên YouTube: Robot SCARA teaching-less"><i class="icon-video" aria-hidden="true"></i> Xem trên YouTube</a>
 									</div>
 									<div class="project-tags">
 										<span class="tag">C++</span>
@@ -1043,6 +1072,13 @@
 
 	     The content is real markup rather than a JS template so it stays in the
 	     page source for search engines and still reads without JavaScript.
+
+	     Each one has an address, #project-<key>, the key being the part of its
+	     id after "modal-" (the same keys on both pages): /#project-deepkds
+	     opens the DeepKDS dialog. js/site.js adds the Previous / Next buttons
+	     (in the order of the "Project details" buttons above) and the language
+	     switch to each one. The text block is a focusable, named region, so
+	     the keyboard can scroll it.
 	     ========================================================================== -->
 
 	<div class="project-modal" id="modal-deepkds" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-deepkds-title" hidden>
@@ -1054,7 +1090,7 @@
 				<h2 id="modal-deepkds-title">DeepKDS &mdash; Hệ thống màn hình bếp không phụ thuộc POS</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Chi tiết dự án">
 				<dl class="project-facts">
 					<div><dt>Vai trò</dt><dd>Kiến trúc sư kiêm lập trình viên chính, từ repository trống</dd></div>
 					<div><dt>Thời gian</dt><dd>02/2025 &ndash; nay</dd></div>
@@ -1122,7 +1158,7 @@
 				<h2 id="modal-deepdid-title">DeepDID &mdash; Màn hình thông tin số</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Chi tiết dự án">
 				<dl class="project-facts">
 					<div><dt>Vai trò</dt><dd>Kiến trúc sư kiêm lập trình viên chính, từ repository trống</dd></div>
 					<div><dt>Thời gian</dt><dd>03/2025 &ndash; nay</dd></div>
@@ -1184,7 +1220,7 @@
 				<h2 id="modal-pharmacy-title">Smart Pharmacy &mdash; Kiosk bán thuốc tự động</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Chi tiết dự án">
 				<dl class="project-facts">
 					<div><dt>Vai trò</dt><dd>Xây sản phẩm trên nền tảng kiosk mà tôi đã viết cho một sản phẩm trước đó</dd></div>
 					<div><dt>Thời gian</dt><dd>2024</dd></div>
@@ -1243,7 +1279,7 @@
 				<h2 id="modal-qvic-title">Qualcomm Vietnam Innovation Challenge 2022</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Chi tiết dự án">
 				<dl class="project-facts">
 					<div><dt>Vai trò</dt><dd>Trưởng nhóm &mdash; lập kế hoạch phát triển, xử lý vấn đề kỹ thuật, trình bày với nhà đầu tư</dd></div>
 					<div><dt>Thời gian</dt><dd>03/2022 &ndash; 02/2023</dd></div>
@@ -1300,7 +1336,7 @@
 				<h2 id="modal-scara-title">Robot SCARA teaching-less</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Chi tiết dự án">
 				<dl class="project-facts">
 					<div><dt>Tên đề tài</dt><dd>Phát triển phương pháp teaching tự động dùng stereo camera cho robot SCARA</dd></div>
 					<div><dt>Chương trình</dt><dd>Cử nhân Kỹ thuật Điều khiển &amp; Tự động hoá, HCMUT &mdash; GPA 8,12/10</dd></div>
@@ -1364,7 +1400,7 @@
 				<h2 id="modal-manipulator-title">Cánh tay robot di động với Marker-Vision Tracking</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Chi tiết dự án">
 				<dl class="project-facts">
 					<div><dt>Tên đề tài</dt><dd>Thiết kế hệ thống cánh tay robot di động ứng dụng thuật toán Marker-Vision Tracking</dd></div>
 					<div><dt>Chương trình</dt><dd>Thạc sĩ Kỹ thuật Điều khiển &amp; Tự động hoá, HCMUT &mdash; GPA 8,46/10</dd></div>
@@ -1433,7 +1469,7 @@
 				<h2 id="modal-agent-title">Smartcast Agent &mdash; Middleware tích hợp POS</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Chi tiết dự án">
 				<dl class="project-facts">
 					<div><dt>Vai trò</dt><dd>Tiếp nhận mã nguồn từ team leader trước và là người duy nhất bảo trì từ đó tới nay</dd></div>
 					<div><dt>Thời gian</dt><dd>08/2024 &ndash; nay</dd></div>
@@ -1485,7 +1521,7 @@
 				<h2 id="modal-ordereat-title">OrderEAT &mdash; Hệ thống gọi món trên máy tính bảng</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Chi tiết dự án">
 				<dl class="project-facts">
 						<div><dt>Vai trò</dt><dd>Thiết kế và hiện thực từ đầu</dd></div>
 						<div><dt>Thời gian</dt><dd>05/2023 &ndash; 08/2024</dd></div>
@@ -1553,7 +1589,7 @@
 				<h2 id="privacy-title">Quyền riêng tư</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Chi tiết về quyền riêng tư">
 				<div class="project-modal__section">
 					<h3>Thống kê truy cập</h3>
 					<p>Google Analytics 4 thống kê lượt truy cập trang này: các mục được xem và trang được cuộn tới đâu, những gì được nhấn (CV, chi tiết dự án, video, liên kết liên hệ và liên kết ra ngoài), biểu mẫu liên hệ có gửi được hay không (không gồm nội dung tin nhắn), cùng trình duyệt, loại thiết bị và vị trí gần đúng của mỗi lượt truy cập. Các tính năng quảng cáo của công cụ này luôn tắt.</p>
@@ -1567,7 +1603,7 @@
 
 				<div class="project-modal__section">
 					<h3>Video</h3>
-					<p>Video dự án được nhúng từ youtube-nocookie.com, chế độ bảo mật nâng cao của YouTube: YouTube không lưu cookie nào cho tới khi bạn phát video. Từ lúc đó, chính sách quyền riêng tư của Google được áp dụng.</p>
+					<p>Mỗi video dự án chỉ hiện một ảnh tĩnh lưu ngay trên trang này cho tới khi bạn bấm phát, nên trước đó trình duyệt không gửi yêu cầu nào tới YouTube. Video bạn phát được tải từ youtube-nocookie.com, chế độ bảo mật nâng cao của YouTube, và từ lúc đó chính sách quyền riêng tư của Google được áp dụng.</p>
 				</div>
 
 				<div class="project-modal__section">

@@ -13,3 +13,14 @@
   background-image: image-set(url(../images/master-graduation.webp) type("image/webp"),
                               url(../images/master-graduation.jpg) type("image/jpeg"));
 }
+
+/* The project videos are play buttons that js/site.js turns into YouTube
+   players. Without it they cannot play, so they show only their poster;
+   the "Watch on YouTube" link beside each one still works. */
+.yt-facade {
+  cursor: default;
+}
+
+.yt-facade__play {
+  display: none;
+}

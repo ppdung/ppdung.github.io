@@ -35,6 +35,7 @@ images/
   about.jpg           Full portrait, used as the JSON-LD Person image
   og-cover.jpg        1200x630 social preview card (og:image / twitter:image)
   deepkds.*, deepdid.*, master-graduation.*   Project and education photos
+  yt-<video id>.*     Posters for the four project videos (WebP + JPEG)
   favicon.ico         The icon the pages link to (16, 32 and 48 px)
 favicon.ico           Copy of images/favicon.ico for clients that ask for /favicon.ico
 apple-touch-icon.png  180x180 home-screen icon
@@ -54,8 +55,9 @@ wording for that language.
 
 - **Content.** Sections, ids, classes and `data-*` hooks are identical in both
   files; only the text differs. Section ids (`about`, `experience`,
-  `projects`, `tech-stack`, `education`, `contact`) are part of the URLs
-  people share, so keep them the same in both.
+  `projects`, `tech-stack`, `education`, `contact`) and project dialog keys
+  (`#project-deepkds` and so on, see "Project dialogs" below) are part of
+  the URLs people share, so keep them the same in both.
 - **Paths.** The EN page uses `css/...`, `images/...`; the VI page, one folder
   down, uses `../css/...`, `../images/...`. Absolute `https://ppdung.github.io/`
   URLs (canonical, hreflang, og:image, JSON-LD) are the same in both.
@@ -105,6 +107,42 @@ wording for that language.
 - **Reveal-on-scroll never hides content by itself.** `js/site.js` hides only
   boxes it has measured to be below the fold, so if the script does not load,
   everything is simply visible.
+- **Project dialogs.** Each `<div class="project-modal" id="modal-<key>">`
+  opens from the card button with `data-project-modal="<key>"` and has the
+  address `#project-<key>`: `/#project-deepkds` and `/vi/#project-deepkds`
+  open the DeepKDS dialog, so a single project can be sent to someone.
+  `js/site.js` (`initDialogs`) does the rest:
+  - Opening one from its button adds a history entry, so Back (a phone's
+    back gesture too) closes it rather than leaving the site; the close
+    button, the backdrop and Escape step back over that entry, so no stale
+    address is left. A dialog opened from a link gets its entry on the
+    visitor's first tap, click or key (Chrome skips, on Back, entries a page
+    added before anyone touched it); until then it closes in place. The
+    privacy note (`#privacy`) adds no entry.
+  - Previous and Next buttons go through the projects in the order of the
+    card buttons, wrapping round, and replace the entry, so one Back still
+    closes the dialog. The dialog also carries a copy of the language switch,
+    which opens the same dialog on the other page; the sidebar's switch keeps
+    the `#project-` address too. Closing returns focus to the card of the
+    project last shown.
+  - While a dialog is open the rest of the page is `inert`, and Tab and
+    Shift+Tab step through the dialog's own controls and wrap (handled in
+    script, so it holds in Safari, whose default Tab skips links). Focus
+    starts on the text, `.project-modal__body`, a named region with
+    `tabindex="0"`, so the arrow keys, Page Down and Space scroll it. Closing
+    fades out over 160 ms, or at once under reduced motion.
+  - A new project needs only the card button and the dialog markup, in both
+    files. In a lab run, opening, switching and closing dialogs sent GA4 no
+    extra `page_view` (the address changes only in its fragment).
+- **Project videos.** Each is a `<button class="yt-facade" data-yt-id="...">`
+  with a poster and the name "Play video: <title>"; `initVideos` replaces it
+  with the `youtube-nocookie.com` player, playing, on a click, so nothing is
+  requested from YouTube before then. The posters are YouTube's
+  `hqdefault.jpg` for each video, cropped from 480x360 to the 480x270 picture
+  inside its letterbox bars and saved as WebP and JPEG without metadata. A
+  "Watch on YouTube" link beside each card works without JavaScript, and in
+  in-app browsers that block embeds. Leave `enablejsapi` off the embed URL:
+  with it, GA4 loads YouTube's iframe API and counts each play twice.
 - **The social card** (`images/og-cover.jpg`) is an HTML page rendered in
   headless Chrome at 1200x630 and saved as JPEG at quality 85 (about 80 KB).
   It shows the portrait, name, title and one line already on the page. Keep
@@ -125,8 +163,9 @@ wording for that language.
 **Google Analytics 4** (`G-0586HR4EGC`) has enhanced measurement on, which
 already records page views, scrolls, outbound clicks and file downloads.
 `js/site.js` adds only what enhanced measurement cannot see: `cv_download`
-(`link_location`), `contact_click` (`method`), `select_content` (project
-dialogs and videos), `section_view` (`section_name`), `generate_lead` and
+(`link_location`), `contact_click` (`method`), `select_content` (a project
+dialog opened from its button, from a link or with Previous / Next, and a
+video's play button), `section_view` (`section_name`), `generate_lead` and
 `form_submit_error` for the contact form. Every call goes through `track()`,
 which does nothing if the analytics setup did not run.
 
@@ -177,9 +216,10 @@ There is no GA snippet in the HTML. `js/site.js` (`initGtag`) does it all:
 **The privacy note** (`#privacy`, a dialog linked from the consent notice and
 from the foot of Contact; `/#privacy` opens it) says what is collected and
 where it goes: GA4, Formspree for the contact form, YouTube's privacy-enhanced
-embeds, and GitHub Pages' IP logging. It must match what the site does. A new
-third-party service, a new analytics event that collects something new, or a
-change to the cookies means updating it on both pages.
+player once a video is played, and GitHub Pages' IP logging. It must match
+what the site does. A new third-party service, a new analytics event that
+collects something new, or a change to the cookies means updating it on both
+pages.
 
 **Content Security Policy.** GitHub Pages cannot send headers, so each page
 carries the policy in a `<meta http-equiv="Content-Security-Policy">` right
@@ -190,10 +230,10 @@ after `<meta charset>`. It is the same on `index.html` and `vi/index.html`:
 | `default-src` | `'self'` | everything not listed (the manifest, for one) |
 | `script-src` | `'self'`, `www.googletagmanager.com` | `js/site.js`, gtag.js |
 | `style-src` | `'self'` | the stylesheets in `css/` |
-| `img-src` | `'self'`, `i.ytimg.com`, `*.google-analytics.com`, `*.googletagmanager.com` | site images, video thumbnails, GA |
+| `img-src` | `'self'`, `*.google-analytics.com`, `*.googletagmanager.com` | site images (the video posters among them), GA |
 | `font-src` | `'self'` | `fonts/` |
 | `connect-src` | `'self'`, `formspree.io/f/mdaanwpo`, `*.google-analytics.com`, `*.analytics.google.com`, `*.googletagmanager.com` | `/robots.txt` as Lighthouse and PageSpeed Insights fetch it from the page (without `'self'` their SEO audit fails, 92 instead of 100; crawlers are not affected), the contact form's fetch, GA hits |
-| `frame-src` | `www.youtube-nocookie.com` | the project videos |
+| `frame-src` | `www.youtube-nocookie.com` | a project video, once its play button is pressed |
 | `form-action` | `formspree.io/f/mdaanwpo` | the form without JavaScript |
 | `base-uri`, `object-src` | `'none'` | |
 
@@ -256,5 +296,5 @@ Bootstrap's CSS and the fonts are vendored and marked `linguist-vendored` in
 SIL Open Font License (`fonts/*/OFL.txt`), so the pages make no requests to
 Google Fonts. There is no third-party JavaScript apart from Google Analytics,
 which loads only as described above. The contact form posts to Formspree;
-the project videos are YouTube embeds in privacy-enhanced mode
-(youtube-nocookie.com).
+the project videos are YouTube's privacy-enhanced player
+(youtube-nocookie.com), loaded only when a play button is pressed.

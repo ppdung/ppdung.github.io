@@ -8,13 +8,14 @@
 	     which js/site.js loads after the page has loaded; styles come only from
 	     this site. Nothing inline runs, so neither needs 'unsafe-inline'
 	     (the JSON-LD blocks below are data, not scripts). The contact form
-	     may post only to its own Formspree form, frames only to YouTube's
-	     privacy-enhanced player, and i.ytimg.com is for video thumbnails.
+	     may post only to its own Formspree form, and frames only to YouTube's
+	     privacy-enhanced player, which loads when a video's play button is
+	     pressed (the posters are images on this site).
 	     connect-src allows 'self' so that tools fetching /robots.txt from
 	     the page (Lighthouse's SEO audit, PageSpeed Insights) are not refused.
 	     Anything new the page loads must be added here, on both pages: see
 	     README.md, "Privacy, analytics and the Content Security Policy". -->
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' https://i.ytimg.com https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src 'self' https://formspree.io/f/mdaanwpo https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; form-action https://formspree.io/f/mdaanwpo; base-uri 'none'; object-src 'none'">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src 'self' https://formspree.io/f/mdaanwpo https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; form-action https://formspree.io/f/mdaanwpo; base-uri 'none'; object-src 'none'">
 	<meta name="referrer" content="strict-origin-when-cross-origin">
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -652,13 +653,20 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-ordereat" src="https://www.youtube-nocookie.com/embed/MYV4o1dTdbk?si=jKQjP-pE1AQBAaWa" title="OrderEAT tablet ordering system demo" loading="lazy" allowfullscreen></iframe>
+									<button type="button" class="yt-facade" id="video-ordereat" data-yt-id="MYV4o1dTdbk" aria-label="Play video: OrderEAT tablet ordering system demo">
+										<picture>
+											<source srcset="images/yt-MYV4o1dTdbk.webp" type="image/webp">
+											<img src="images/yt-MYV4o1dTdbk.jpg" alt="" width="480" height="270" loading="lazy" decoding="async">
+										</picture>
+										<span class="yt-facade__play" aria-hidden="true"></span>
+									</button>
 								</div>
 								<div class="project-info">
 									<h3>OrderEAT - Tablet Ordering System</h3>
 									<p>Self-order kiosk and tablet application launched in Seoul, built from an empty repository for Windows and Android. The order flow runs as an explicit state machine, and card payment sits behind a pluggable vendor layer covering four wired PG providers and eight VANs, so a new store is onboarded with a subclass rather than a rewrite.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="ordereat" aria-haspopup="dialog" aria-label="Project details: OrderEAT"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
+										<a href="https://www.youtube.com/watch?v=MYV4o1dTdbk" target="_blank" rel="noopener" aria-label="Watch on YouTube: OrderEAT"><i class="icon-video" aria-hidden="true"></i> Watch on YouTube</a>
 									</div>
 									<div class="project-tags">
 										<span class="tag">C++/Qt/QML</span>
@@ -676,13 +684,20 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-qualcomm" src="https://www.youtube-nocookie.com/embed/srL3h80J9yY" title="Qualcomm Vietnam Innovation Challenge mobile robot demo" loading="lazy" allowfullscreen></iframe>
+									<button type="button" class="yt-facade" id="video-qualcomm" data-yt-id="srL3h80J9yY" aria-label="Play video: Qualcomm Vietnam Innovation Challenge mobile robot demo">
+										<picture>
+											<source srcset="images/yt-srL3h80J9yY.webp" type="image/webp">
+											<img src="images/yt-srL3h80J9yY.jpg" alt="" width="480" height="270" loading="lazy" decoding="async">
+										</picture>
+										<span class="yt-facade__play" aria-hidden="true"></span>
+									</button>
 								</div>
 								<div class="project-info">
 									<h3>Qualcomm Vietnam Innovation Challenge 2022</h3>
 									<p>Autonomous indoor service robot for restaurants. I led the three-person team that took it into the Top 10 of Qualcomm&rsquo;s national startup challenge, and pitched it to investors at the finale.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="qvic" aria-haspopup="dialog" aria-label="Project details: Qualcomm Vietnam Innovation Challenge 2022"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
+										<a href="https://www.youtube.com/watch?v=srL3h80J9yY" target="_blank" rel="noopener" aria-label="Watch on YouTube: Qualcomm Vietnam Innovation Challenge 2022"><i class="icon-video" aria-hidden="true"></i> Watch on YouTube</a>
 									</div>
 									<div class="project-tags">
 										<span class="tag">ROS</span>
@@ -699,13 +714,20 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-manipulator" src="https://www.youtube-nocookie.com/embed/6zFjGb3t2Cc" title="Mobile manipulator robot pick-and-place demo" loading="lazy" allowfullscreen></iframe>
+									<button type="button" class="yt-facade" id="video-manipulator" data-yt-id="6zFjGb3t2Cc" aria-label="Play video: Mobile manipulator robot pick-and-place demo">
+										<picture>
+											<source srcset="images/yt-6zFjGb3t2Cc.webp" type="image/webp">
+											<img src="images/yt-6zFjGb3t2Cc.jpg" alt="" width="480" height="270" loading="lazy" decoding="async">
+										</picture>
+										<span class="yt-facade__play" aria-hidden="true"></span>
+									</button>
 								</div>
 								<div class="project-info">
 									<h3>Mobile Manipulator Robot</h3>
 									<p>Master&rsquo;s thesis. An AGV carries a 5-DOF arm so goods move and get picked without a person at either end &mdash; but the arm can only reach an object if the base parks accurately, and SLAM navigation alone does not park that well. A stereo camera tracking a marker corrects the final approach, cutting parking error from about 9&nbsp;cm to about 3&nbsp;cm.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="manipulator" aria-haspopup="dialog" aria-label="Project details: Mobile Manipulator Robot"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
+										<a href="https://www.youtube.com/watch?v=6zFjGb3t2Cc" target="_blank" rel="noopener" aria-label="Watch on YouTube: Mobile Manipulator Robot"><i class="icon-video" aria-hidden="true"></i> Watch on YouTube</a>
 									</div>
 									<div class="project-tags">
 										<span class="tag">ROS</span>
@@ -723,13 +745,20 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-scara" src="https://www.youtube-nocookie.com/embed/NhR2n_e45Ps" title="Teaching-less SCARA robot computer vision demo" loading="lazy" allowfullscreen></iframe>
+									<button type="button" class="yt-facade" id="video-scara" data-yt-id="NhR2n_e45Ps" aria-label="Play video: Teaching-less SCARA robot computer vision demo">
+										<picture>
+											<source srcset="images/yt-NhR2n_e45Ps.webp" type="image/webp">
+											<img src="images/yt-NhR2n_e45Ps.jpg" alt="" width="480" height="270" loading="lazy" decoding="async">
+										</picture>
+										<span class="yt-facade__play" aria-hidden="true"></span>
+									</button>
 								</div>
 								<div class="project-info">
 									<h3>Teaching-less SCARA Robot</h3>
 									<p>Bachelor&rsquo;s thesis: teach a robot by showing it, not by jogging it to every point. A stereo pair of industrial cameras tracks optical markers in 3D, hand-eye calibration ties camera space to the robot base, and the resulting poses stream to the arm over TCP &mdash; so a task is defined by moving a marker through it.</p>
 									<div class="project-links">
 										<button type="button" class="project-details-btn" data-project-modal="scara" aria-haspopup="dialog" aria-label="Project details: Teaching-less SCARA Robot"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
+										<a href="https://www.youtube.com/watch?v=NhR2n_e45Ps" target="_blank" rel="noopener" aria-label="Watch on YouTube: Teaching-less SCARA Robot"><i class="icon-video" aria-hidden="true"></i> Watch on YouTube</a>
 									</div>
 									<div class="project-tags">
 										<span class="tag">C++</span>
@@ -1042,6 +1071,13 @@
 
 	     The content is real markup rather than a JS template so it stays in the
 	     page source for search engines and still reads without JavaScript.
+
+	     Each one has an address, #project-<key>, the key being the part of its
+	     id after "modal-" (the same keys on both pages): /#project-deepkds
+	     opens the DeepKDS dialog. js/site.js adds the Previous / Next buttons
+	     (in the order of the "Project details" buttons above) and the language
+	     switch to each one. The text block is a focusable, named region, so
+	     the keyboard can scroll it.
 	     ========================================================================== -->
 
 	<div class="project-modal" id="modal-deepkds" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modal-deepkds-title" hidden>
@@ -1053,7 +1089,7 @@
 				<h2 id="modal-deepkds-title">DeepKDS &mdash; POS-independent Kitchen Display System</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Project details">
 				<dl class="project-facts">
 					<div><dt>My role</dt><dd>Architect and lead developer, from an empty repository</dd></div>
 					<div><dt>Period</dt><dd>Feb 2025 &ndash; present</dd></div>
@@ -1121,7 +1157,7 @@
 				<h2 id="modal-deepdid-title">DeepDID &mdash; Digital Information Display</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Project details">
 				<dl class="project-facts">
 					<div><dt>My role</dt><dd>Architect and lead developer, from an empty repository</dd></div>
 					<div><dt>Period</dt><dd>Mar 2025 &ndash; present</dd></div>
@@ -1183,7 +1219,7 @@
 				<h2 id="modal-pharmacy-title">Smart Pharmacy &mdash; Self-service Kiosk</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Project details">
 				<dl class="project-facts">
 					<div><dt>My role</dt><dd>Built the product on a kiosk platform I had written for a previous product</dd></div>
 					<div><dt>Period</dt><dd>2024</dd></div>
@@ -1242,7 +1278,7 @@
 				<h2 id="modal-qvic-title">Qualcomm Vietnam Innovation Challenge 2022</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Project details">
 				<dl class="project-facts">
 					<div><dt>My role</dt><dd>Team Leader &mdash; development planning, technical problem-solving, investor pitch</dd></div>
 					<div><dt>Period</dt><dd>Mar 2022 &ndash; Feb 2023</dd></div>
@@ -1299,7 +1335,7 @@
 				<h2 id="modal-scara-title">Teaching-less SCARA Robot</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Project details">
 				<dl class="project-facts">
 					<div><dt>Full title</dt><dd>Development of automatic teaching method using stereo camera for SCARA robot</dd></div>
 					<div><dt>Program</dt><dd>B.Eng. Control Engineering &amp; Automation, HCMUT &mdash; GPA 8.12/10</dd></div>
@@ -1363,7 +1399,7 @@
 				<h2 id="modal-manipulator-title">Mobile Manipulator with Marker-Vision Tracking</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Project details">
 				<dl class="project-facts">
 					<div><dt>Full title</dt><dd>Design mobile manipulator system using Marker-Vision Tracking algorithm</dd></div>
 					<div><dt>Program</dt><dd>M.Eng. Control Engineering &amp; Automation, HCMUT &mdash; GPA 8.46/10</dd></div>
@@ -1432,7 +1468,7 @@
 				<h2 id="modal-agent-title">Smartcast Agent &mdash; POS Integration Middleware</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Project details">
 				<dl class="project-facts">
 					<div><dt>My role</dt><dd>Took the codebase over from the previous team leader and have been its sole maintainer since</dd></div>
 					<div><dt>Period</dt><dd>Aug 2024 &ndash; present</dd></div>
@@ -1484,7 +1520,7 @@
 				<h2 id="modal-ordereat-title">OrderEAT &mdash; Tablet Ordering System</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Project details">
 				<dl class="project-facts">
 						<div><dt>My role</dt><dd>Designed and implemented from inception</dd></div>
 						<div><dt>Period</dt><dd>May 2023 &ndash; Aug 2024</dd></div>
@@ -1552,7 +1588,7 @@
 				<h2 id="privacy-title">Privacy note</h2>
 			</header>
 
-			<div class="project-modal__body">
+			<div class="project-modal__body" tabindex="0" role="region" aria-label="Privacy details">
 				<div class="project-modal__section">
 					<h3>Visit statistics</h3>
 					<p>Google Analytics 4 counts visits to this site: the sections viewed and how far the page is scrolled, what is clicked (the CV, project details, videos, contact and outbound links), whether the contact form was sent (not what it said), and each visit&rsquo;s browser, device type and approximate location. Its advertising features are always off.</p>
@@ -1566,7 +1602,7 @@
 
 				<div class="project-modal__section">
 					<h3>Videos</h3>
-					<p>The project videos are embedded from youtube-nocookie.com, YouTube&rsquo;s privacy-enhanced mode, which sets no YouTube cookies until you play a video. From then on, Google&rsquo;s privacy policy applies.</p>
+					<p>The project videos show a still image stored on this site until you press play, so nothing is requested from YouTube before then. The video you play comes from youtube-nocookie.com, YouTube&rsquo;s privacy-enhanced mode, and from then on Google&rsquo;s privacy policy applies.</p>
 				</div>
 
 				<div class="project-modal__section">
