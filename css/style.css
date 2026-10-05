@@ -2469,6 +2469,19 @@ h1.hero-name,
   z-index: 1;
 }
 
+/* "Last updated" stamp at the foot of Contact. Quiet on purpose: it answers
+   "is this current?" without competing with the form above it. */
+.site-updated {
+  clear: both;
+  margin: 48px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
 /* Headings */
 .heading-meta {
   color: var(--accent-primary);
@@ -2605,6 +2618,10 @@ h1.hero-name,
   margin-bottom: 30px;
   transition: all 0.3s ease;
   height: 100%;
+  /* A column, so the description can take up the slack and the bars line
+     up across a row however long each card's text runs. */
+  display: flex;
+  flex-direction: column;
 }
 
 .skill-card:hover {
@@ -2640,6 +2657,7 @@ h1.hero-name,
   font-size: 13px;
   line-height: 1.6;
   margin-bottom: 20px;
+  flex-grow: 1;
 }
 
 .skill-bar {
