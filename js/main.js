@@ -4,37 +4,12 @@
 
 
 
-	var isMobile = {
-		Android: function() {
-			return navigator.userAgent.match(/Android/i);
-		},
-			BlackBerry: function() {
-			return navigator.userAgent.match(/BlackBerry/i);
-		},
-			iOS: function() {
-			return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-		},
-			Opera: function() {
-			return navigator.userAgent.match(/Opera Mini/i);
-		},
-			Windows: function() {
-			return navigator.userAgent.match(/IEMobile/i);
-		},
-			any: function() {
-			return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-		}
-	};
-
-	var fullHeight = function() {
-
-		if ( !isMobile.any() ) {
-			$('.js-fullheight').css('height', $(window).height());
-			$(window).resize(function(){
-				$('.js-fullheight').css('height', $(window).height());
-			});
-		}
-
-	};
+	// The hero used to be pinned to the window height in JS (fullHeight, on
+	// desktop user agents only). In a short window -- 400% zoom on a laptop
+	// is 320x180 CSS px -- the content was centred in a box smaller than
+	// itself and the name and role spilled off the top, out of reach. CSS
+	// now sizes it: .hero-content has min-height:100vh and grows with its
+	// content.
 
 
 	// Reveal-on-scroll.
@@ -226,7 +201,6 @@
 
 	// Document on load.
 	$(function(){
-		fullHeight();
 		revealOnScroll();
 		burgerMenu();
 		clickMenu();

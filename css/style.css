@@ -1487,7 +1487,10 @@ body.offcanvas {
   --accent-tertiary: #f78166;
   --text-primary: #e6edf3;
   --text-secondary: #8b949e;
-  --text-muted: #6e7681;
+  /* The darkest grey in this family that still reaches 4.5:1 on
+     --bg-tertiary, the lightest surface muted text sits on (stat labels,
+     form placeholders). #6e7681 managed only 3.3-3.8:1. */
+  --text-muted: #848d97;
   --border-color: #30363d;
   --glow-color: rgba(88, 166, 255, 0.4);
   --glow-green: rgba(65, 205, 82, 0.4);
@@ -1628,10 +1631,13 @@ p {
   background-position: center;
 }
 
-#colorlib-aside .author-img:hover {
-  border-color: var(--accent-secondary);
-  box-shadow: 0 0 30px rgba(65, 205, 82, 0.4);
-  transform: scale(1.05);
+/* The photo is not a link, so it only changes colour under a pointer and
+   does not grow as if it could be pressed. */
+@media (hover: hover) {
+  #colorlib-aside .author-img:hover {
+    border-color: var(--accent-secondary);
+    box-shadow: 0 0 30px rgba(65, 205, 82, 0.4);
+  }
 }
 
 /* #colorlib-logo is a <div>, not an <h1>, so the page has a single h1 (the
@@ -2339,7 +2345,25 @@ h1.hero-name,
   transition: all 0.3s ease;
 }
 
-.hero-tech-icons i:hover {
+/* Only the GitHub mark is a link, so only it reacts to the pointer. The C++,
+   Qt and Linux marks used to grow and glow as well, which made them look
+   clickable when they are not. The padding gives the link a tap target of
+   28px or more at every width; the negative margin keeps the row spacing. */
+.hero-tech-icons a {
+  display: inline-flex;
+  padding: 4px;
+  margin: -4px;
+  border-radius: 6px;
+  color: inherit;
+}
+
+.hero-tech-icons a:hover,
+.hero-tech-icons a:focus-visible {
+  text-shadow: none;
+}
+
+.hero-tech-icons a:hover i,
+.hero-tech-icons a:focus-visible i {
   color: var(--accent-primary);
   transform: scale(1.2);
   filter: drop-shadow(0 0 10px var(--glow-color));
@@ -2531,9 +2555,14 @@ h1.hero-name,
   transition: all 0.3s ease;
 }
 
-.highlight-item:hover {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 15px rgba(88, 166, 255, 0.2);
+/* Cards and tiles that open nothing keep a quiet highlight under a mouse,
+   but no movement, and none at all on touch, where a tap would leave it
+   stuck on. */
+@media (hover: hover) {
+  .highlight-item:hover {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 15px rgba(88, 166, 255, 0.2);
+  }
 }
 
 .highlight-item i {
@@ -2568,10 +2597,11 @@ h1.hero-name,
   margin-bottom: 20px;
 }
 
-.tech-item:hover {
-  border-color: var(--accent-primary);
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px var(--glow-color);
+@media (hover: hover) {
+  .tech-item:hover {
+    border-color: var(--accent-primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px var(--glow-color);
+  }
 }
 
 .tech-item i {
@@ -2582,9 +2612,10 @@ h1.hero-name,
   transition: all 0.3s ease;
 }
 
-.tech-item:hover i {
-  color: var(--accent-primary);
-  transform: scale(1.1);
+@media (hover: hover) {
+  .tech-item:hover i {
+    color: var(--accent-primary);
+  }
 }
 
 .tech-item .tech-name {
@@ -2624,9 +2655,11 @@ h1.hero-name,
   flex-direction: column;
 }
 
-.skill-card:hover {
-  border-color: var(--accent-primary);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+@media (hover: hover) {
+  .skill-card:hover {
+    border-color: var(--accent-primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .skill-card .skill-icon {
@@ -2879,10 +2912,13 @@ code[class*="language-"] {
   transition: all 0.3s ease;
 }
 
-.project-card:hover {
-  border-color: var(--accent-primary);
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+/* Only the buttons and links inside a card do anything, so the card itself
+   no longer lifts as if the whole of it were a button. */
+@media (hover: hover) {
+  .project-card:hover {
+    border-color: var(--accent-primary);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .project-video {
@@ -4541,4 +4577,197 @@ body.modal-open {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85em;
   white-space: nowrap;
+}
+
+/* ==========================================================================
+   Sidebar on tablets and short laptop screens
+   ========================================================================== */
+
+/* 769-992px (iPad portrait, a window snapped to half a 1920px screen): the
+   content already spans the full width here, so the fixed 300px sidebar sat
+   on top of its left third. Below 993px the sidebar now waits off-canvas
+   behind the hamburger, as it does on phones. A sidebar collapsed on a wider
+   screen still has to open from the hamburger, so .collapsed only moves it
+   out of view here and no longer makes it transparent. */
+@media screen and (max-width: 992px) {
+  #colorlib-aside {
+    -webkit-transform: translateX(-300px);
+    transform: translateX(-300px);
+  }
+
+  #colorlib-aside.collapsed {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .colorlib-nav-toggle {
+    visibility: visible;
+  }
+
+  .sidebar-toggle {
+    display: none;
+  }
+}
+
+/* The hero name sat right of centre: a left:50% / translateX(-50%) pair was
+   stacked on the flex centring it already had, which pushed it 32px right on
+   desktop and 125-190px right between 769 and 992px, where the hero now has
+   the full width. The flex column centres it on its own. Its side margins
+   are zeroed rather than auto because auto margins stop centring an item
+   wider than its column (993-1100px), which then overflows only to the
+   right; with plain centring it overflows evenly on both sides. */
+h1.hero-name,
+#colorlib-hero .hero-name,
+.slider-text-inner h1.hero-name {
+  left: auto !important;
+  transform: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Short screens. A 1366x768 laptop leaves about 657px of viewport, and the
+   eight 55px menu links were squeezed between the profile and the social
+   icons and spilled over both: "Home" printed over the location, and
+   "Projects" or "Contact" sat under the icons where it could not be clicked.
+   The menu no longer shrinks below its own height, so when even the compact
+   version below does not fit, the sidebar scrolls instead of overlapping. */
+@media screen and (max-height: 860px) {
+  #colorlib-aside {
+    overflow-y: auto !important;
+  }
+
+  #colorlib-aside > nav#colorlib-main-menu {
+    flex: 1 0 auto !important;
+  }
+
+  #colorlib-aside #colorlib-main-menu .collapse {
+    height: auto !important;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-height: 860px) {
+  #colorlib-aside {
+    padding-top: 1.2em !important;
+    padding-bottom: 1.2em !important;
+  }
+
+  #colorlib-aside .author-img {
+    width: 84px !important;
+    height: 84px !important;
+    margin-bottom: 0.8em !important;
+  }
+
+  #colorlib-aside .text-center {
+    margin-bottom: 0.6em !important;
+  }
+
+  #colorlib-aside #colorlib-main-menu ul li a {
+    padding: 0.5em 1.2em !important;
+    font-size: 1em !important;
+  }
+}
+
+/* The open menu's close "X" was black on the dark page, about 1.1:1. */
+.colorlib-nav-toggle.active i::before,
+.colorlib-nav-toggle.active i::after {
+  background: var(--text-primary);
+}
+
+/* ==========================================================================
+   Experience on phones
+   The timeline rail, dots and arrow took 164px off the left of every card,
+   leaving 15-19 characters a line at 360-390px and stretching Experience to
+   11-14 screens. The cards now use the same width as every other section;
+   the dates in each heading carry the order.
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+  .timeline-centered:before {
+    display: none;
+  }
+
+  .timeline-centered .timeline-entry {
+    margin-left: 0;
+  }
+
+  .timeline-centered .timeline-entry .timeline-entry-inner {
+    margin-left: 0;
+  }
+
+  .timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon,
+  .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label:after,
+  .timeline-centered .timeline-entry.begin {
+    display: none;
+  }
+
+  .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label {
+    margin-left: 0;
+    padding: 1.1em 1em;
+  }
+
+  .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label ul {
+    padding-left: 1.1em;
+  }
+}
+
+/* Tech Stack below 992px: the category headings are not floated there, so
+   after an odd number of tiles one rode up beside the last tile (at 390px
+   "Frameworks & Libraries" sat next to QML, its rule drawn through it). */
+.tech-grid > .col-md-12 {
+  clear: both;
+}
+
+/* ==========================================================================
+   Keyboard focus on every control
+   The shared ring in the Accessibility block never reached the sidebar's
+   icon links (an ID-level outline:none), the .btn buttons (outline:none
+   !important), the hamburger or the form fields, so a keyboard user lost
+   track of focus on Download CV, Contact Me, the social profiles and Send
+   Message. :focus-visible still keeps mouse clicks free of rings.
+   ========================================================================== */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible,
+.form-control:focus-visible {
+  outline: 2px solid var(--accent-primary) !important;
+  outline-offset: 2px !important;
+}
+
+/* Fields already turn their border blue on focus; the ring sits flush
+   against it, so the two read as one thicker edge. */
+.form-control:focus-visible {
+  outline-offset: 0 !important;
+}
+
+/* The hamburger hugs the top-left corner, where a ring drawn outside it
+   would be cut off by the edge of the screen. */
+.colorlib-nav-toggle:focus-visible {
+  outline-offset: -6px !important;
+}
+
+/* Contact Me is drawn in green, so its ring is too. */
+.hero-buttons .btn-contact:focus-visible {
+  outline-color: var(--accent-secondary) !important;
+}
+
+#colorlib-aside .colorlib-footer ul li a:focus-visible {
+  color: var(--accent-primary) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+/* Button states that fell below 4.5:1. Bootstrap's .btn-primary turned Send
+   Message's text white on #44a4f2 (2.7:1) when hovered or focused, and its
+   forced #44a4f2 background put Download CV's blue hover text on blue
+   (1.1:1). Download CV now hovers to the outline look it was written with. */
+.btn-send-message:hover,
+.btn-send-message:focus,
+.btn-send-message:active {
+  color: var(--bg-primary) !important;
+}
+
+.hero-buttons .btn-cv:hover {
+  background: transparent !important;
+  border-color: var(--accent-primary) !important;
+  color: var(--accent-primary);
 }
