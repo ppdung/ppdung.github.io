@@ -11,7 +11,7 @@ are served as separate pages so each is indexable on its own.
 ## Layout
 
 ```
-index.html          English site — content, structured data, all page behaviour
+index.html          English site — content and structured data
 vi/index.html       Vietnamese site — separate URL, paired via hreflang
 404.html            Not-found page
 css/
@@ -19,10 +19,7 @@ css/
   icons.css         Subsetted icomoon + devicon glyph definitions
   bootstrap.css     Vendored: grid, collapse and panel only
 js/
-  main.js           Reveal-on-scroll, nav, off-canvas menu
-  jquery.min.js     Vendored, required by Bootstrap's collapse
-  bootstrap.min.js  Vendored
-  jquery.waypoints.min.js  Vendored, drives nav section highlighting
+  site.js           All page behaviour, shared by both languages. No libraries.
 fonts/
   icomoon/          21 glyphs, subsetted from the full icomoon set
   devicon/          17 glyphs, subsetted from devicon
@@ -45,10 +42,13 @@ CV_PhamPhuocDung.pdf
     --output-file=fonts/devicon/devicon.woff2 --layout-features='' --no-hinting
   ```
   The codepoints in use are listed in `css/icons.css`.
-- **Content is hidden until revealed on scroll**, gated behind a `js-reveal`
-  class set by a script in `<head>`. A failsafe drops that class after three
-  seconds if `js/main.js` has not loaded, so a broken script cannot leave the
-  page blank.
+- **Behaviour lives in `js/site.js`, once, for both pages.** The only text in
+  it that differs by language is the `STRINGS` table at the top, keyed by
+  `<html lang>`. Each feature starts inside its own try/catch, so one failing
+  cannot stop the others.
+- **Reveal-on-scroll never hides content by itself.** `js/site.js` hides only
+  boxes it has measured to be below the fold, so if the script does not load,
+  everything is simply visible.
 
 ## Running it locally
 
@@ -67,6 +67,7 @@ GitHub Pages builds from `main`, root path. Pushing to `main` deploys.
 
 ## Third-party
 
-Bootstrap, jQuery and the icon fonts are vendored and marked
+Bootstrap's CSS and the icon fonts are vendored and marked
 `linguist-vendored` in `.gitattributes`. Inter and JetBrains Mono are loaded
-from Google Fonts. Typed.js comes from cdnjs.
+from Google Fonts. There is no third-party JavaScript apart from Google
+Analytics.

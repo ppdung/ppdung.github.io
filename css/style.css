@@ -221,12 +221,14 @@ figure {
   max-width: 1170px;
   margin: 0 auto; }
 
+/* Only the off-canvas slide (a transform) is animated. A transition on every
+   property also animated the width when the desktop sidebar collapsed, which
+   laid the whole page out again on each frame for half a second. */
 #colorlib-main {
   width: calc(100% - 300px);
   float: right;
-  -webkit-transition: 0.5s;
-  -o-transition: 0.5s;
-  transition: 0.5s; }
+  -webkit-transition: -webkit-transform 0.5s;
+  transition: transform 0.5s; }
   @media screen and (max-width: 768px) {
     #colorlib-main {
       width: 100%;
@@ -454,7 +456,17 @@ body.offcanvas {
 .fancy-collapse-panel .panel-default > .panel-heading {
   padding: 0; }
 
-.panel-heading a {
+/* Education disclosure buttons. The first lines undo the browser button
+   styling, so they look as the Bootstrap collapse links did. */
+.panel-heading .panel-toggle {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  line-height: inherit;
+  text-align: left;
+  cursor: pointer;
   padding: 20px 25px;
   display: block;
   width: 100%;
@@ -480,7 +492,7 @@ body.offcanvas {
   box-shadow: none !important;
   border: none; }
 
-.panel-heading a:after {
+.panel-heading .panel-toggle:after {
   font-family: "icomoon";
   content: "\e115";
   content: "\e115" / "";
@@ -492,11 +504,11 @@ body.offcanvas {
   line-height: 1;
   margin-top: -7px; }
 
-.panel-heading a.collapsed:after {
+.panel-heading .panel-toggle[aria-expanded="false"]:after {
   content: "\e114";
   content: "\e114" / ""; }
 
-.panel-heading a.collapsed {
+.panel-heading .panel-toggle[aria-expanded="false"] {
   background: #f2f3f7;
   border: 1px solid #e6e6e6 !important;
   color: #333333; }
@@ -1380,7 +1392,17 @@ body.offcanvas {
   -o-transform: rotateZ(-45deg);
   transform: rotateZ(-45deg); }
 
+/* The hamburger is a <button>; the first lines undo the browser's button
+   styling so it keeps the 70x67 box the old link had. */
 .colorlib-nav-toggle {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  line-height: inherit;
+  color: inherit;
   position: fixed;
   left: -5px;
   top: 0px;
@@ -1427,40 +1449,45 @@ body.offcanvas {
   padding: 10px !important; }
 
 /* Reveal-on-scroll.
-   Gated on .js-reveal, set by a one-line script at the top of <head>, so the
-   page is never left blank for a reader without JavaScript. Transitions
-   rather than keyframes: they are cheap, compositor-friendly, and can be
-   interrupted, which matters when someone flings the page downward. */
-.js-reveal .animate-box {
-  opacity: 0;
-  transform: translateY(24px);
+   Nothing is hidden by markup or CSS alone. js/site.js adds .reveal-armed
+   only to boxes it has seen are entirely below the fold, so a reader whose
+   script never arrives gets every box as it is. Transitions rather than
+   keyframes: they are cheap, compositor-friendly, and can be interrupted,
+   which matters when someone flings the page downward. */
+.reveal-armed {
   transition: opacity 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
               transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.js-reveal .animate-box[data-animate-effect="fadeInLeft"] {
+.reveal-armed:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.reveal-armed[data-animate-effect="fadeInLeft"]:not(.is-visible) {
   transform: translateX(-28px);
 }
 
-.js-reveal .animate-box[data-animate-effect="fadeInRight"] {
+.reveal-armed[data-animate-effect="fadeInRight"]:not(.is-visible) {
   transform: translateX(28px);
 }
 
-.js-reveal .animate-box[data-animate-effect="fadeIn"] {
+.reveal-armed[data-animate-effect="fadeIn"]:not(.is-visible) {
   transform: none;
 }
 
-.js-reveal .animate-box.is-visible {
-  opacity: 1;
-  transform: none;
+/* Boxes the reader jumped past, or the section a nav link lands on, appear
+   at once rather than fading in after arrival. */
+.reveal-armed.reveal-instant {
+  transition: none;
 }
 
 /* Nothing is hidden when motion is unwelcome, so a failed or slow reveal can
    never cost this reader the content. */
 @media (prefers-reduced-motion: reduce) {
-  .js-reveal .animate-box,
-  .js-reveal .animate-box[data-animate-effect="fadeInLeft"],
-  .js-reveal .animate-box[data-animate-effect="fadeInRight"] {
+  .reveal-armed,
+  .reveal-armed:not(.is-visible),
+  .reveal-armed[data-animate-effect]:not(.is-visible) {
     opacity: 1;
     transform: none;
     transition: none;
@@ -1494,9 +1521,54 @@ body.offcanvas {
   --glow-green: rgba(65, 205, 82, 0.4);
 }
 
+/* A stand-in for Inter while it loads, or if it never does: Arial, or
+   Roboto on Android, scaled to Inter's letter widths (ascent and descent
+   are Inter's, divided by the same 104%). With the narrower system font the
+   hero tagline wrapped onto one line fewer, so when Inter arrived the
+   vertically centred hero moved by half a line: a 0.07 layout shift on a
+   412px phone. At 104% the tagline wraps as Inter does from 320 to 1440px,
+   in both languages. */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('ArialMT'), local('Roboto'), local('Roboto-Regular');
+  font-weight: 100 549;
+  size-adjust: 104%;
+  ascent-override: 93%;
+  descent-override: 23%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Roboto Bold'), local('Roboto-Bold');
+  font-weight: 550 900;
+  size-adjust: 104%;
+  ascent-override: 93%;
+  descent-override: 23%;
+  line-gap-override: 0%;
+}
+
+/* The same for JetBrains Mono. Most systems' default monospace is already
+   0.6em a letter, as JetBrains Mono is; Windows' Consolas is 0.55em, so the
+   hero's availability line wrapped differently before and after the font
+   arrived. Consolas at 109% has JetBrains Mono's letter width. */
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Consolas');
+  font-weight: 100 549;
+  size-adjust: 109%;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Consolas Bold'), local('Consolas-Bold');
+  font-weight: 550 900;
+  size-adjust: 109%;
+}
+
 /* Base Dark Theme */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 400;
   font-size: 15px;
   line-height: 1.8;
@@ -1511,7 +1583,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', sans-serif;
   font-weight: 600;
 }
 
@@ -1649,7 +1721,7 @@ p {
 
 #colorlib-aside #colorlib-logo a {
   color: var(--text-primary) !important;
-  font-family: 'JetBrains Mono', monospace !important;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace !important;
   font-size: 1.4em !important;
   font-weight: 600 !important;
   letter-spacing: -0.5px;
@@ -1667,7 +1739,7 @@ p {
 
 #colorlib-aside .position-text {
   color: var(--accent-primary) !important;
-  font-family: 'JetBrains Mono', monospace !important;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace !important;
   font-size: 0.95em !important;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -1721,13 +1793,15 @@ p {
   display: block;
   padding: 1.1em 1.2em !important;
   color: var(--text-secondary) !important;
-  font-family: 'Inter', sans-serif !important;
+  font-family: 'Inter', 'Inter Fallback', sans-serif !important;
   font-size: 1.15em !important;
   font-weight: 500 !important;
   text-transform: none !important;
   letter-spacing: 0.5px !important;
   border-radius: 8px;
-  transition: all 0.3s ease !important;
+  /* Colour only. Animating every property also animated the padding that
+     shifts the current section's link, a layout change on each frame. */
+  transition: color 0.3s ease, background-color 0.3s ease !important;
   position: relative;
   overflow: hidden;
 }
@@ -1737,12 +1811,12 @@ p {
   position: absolute;
   left: 0;
   top: 50%;
-  transform: translateY(-50%);
   width: 3px;
-  height: 0;
+  height: 60%;
   background: var(--accent-primary);
   border-radius: 0 2px 2px 0;
-  transition: height 0.3s ease;
+  transform: translateY(-50%) scaleY(0);
+  transition: transform 0.3s ease;
 }
 
 #colorlib-aside #colorlib-main-menu ul li a::after {
@@ -1752,11 +1826,10 @@ p {
 #colorlib-aside #colorlib-main-menu ul li a:hover {
   color: var(--text-primary) !important;
   background: rgba(88, 166, 255, 0.1);
-  padding-left: 1.5em !important;
 }
 
 #colorlib-aside #colorlib-main-menu ul li a:hover::before {
-  height: 60%;
+  transform: translateY(-50%) scaleY(1);
 }
 
 #colorlib-aside #colorlib-main-menu ul li.active a {
@@ -1766,7 +1839,7 @@ p {
 }
 
 #colorlib-aside #colorlib-main-menu ul li.active a::before {
-  height: 60%;
+  transform: translateY(-50%) scaleY(1);
   background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary));
 }
 
@@ -1856,15 +1929,26 @@ p {
   pointer-events: auto;
 }
 
+/* The main column takes the sidebar's width when it is collapsed. This used
+   to be set as an inline width from script, because the selector here named
+   a .container-wrap that is the sidebar's parent, not its sibling, and so
+   never matched. */
 @media screen and (min-width: 769px) {
-  #colorlib-aside.collapsed ~ .container-wrap #colorlib-main {
+  #colorlib-aside.collapsed ~ #colorlib-main {
     width: 100%;
     margin-left: 0;
   }
 }
 
-/* Sidebar Toggle Button */
+/* Sidebar Toggle Button. A <button>, so it takes focus and answers Enter
+   and Space; the first lines undo the browser's button styling. */
 .sidebar-toggle {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
   position: fixed;
   left: 300px;
   top: 50%;
@@ -1937,7 +2021,7 @@ p {
 
 #colorlib-aside #colorlib-logo a {
   color: var(--text-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-weight: 600;
 }
 
@@ -1955,7 +2039,7 @@ p {
 
 #colorlib-aside #colorlib-main-menu ul li a {
   color: var(--text-secondary);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', sans-serif;
   transition: all 0.3s ease;
 }
 
@@ -2184,11 +2268,15 @@ p {
   }
 }
 
+/* The hero fills the first screen. svh is the viewport with a phone's
+   browser toolbars showing, so the whole hero is on screen at load; 100vh
+   is the fallback for browsers without it. No script sizes it. */
 .hero-content {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  min-height: 100svh;
   position: relative;
   z-index: 2;
 }
@@ -2217,7 +2305,7 @@ p {
   display: block;
   font-size: 16px;
   color: var(--accent-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   margin-bottom: 10px;
   letter-spacing: 2px;
 }
@@ -2259,19 +2347,25 @@ h1.hero-name,
 .hero-typing {
   font-size: 24px;
   color: var(--accent-secondary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   margin-bottom: 20px;
   min-height: 40px;
 }
 
-#typed-strings {
-  display: none;
+/* The visible role line. The heading's real text is the visually hidden
+   .hero-roles list; this span is aria-hidden and starts on the first role.
+   While js/site.js types (once, under five seconds) it shows a caret, placed
+   outside the text's box so the centred line does not shift when it goes. */
+.hero-typed {
+  position: relative;
 }
 
-.typed-cursor {
+.hero-typed.is-typing::after {
+  content: "|";
+  content: "|" / "";
+  position: absolute;
+  left: 100%;
   color: var(--accent-primary);
-  /* Inter is no longer requested at 300 or below; 100 only ever resolved to
-     the nearest available face anyway, and this is a single "|" glyph. */
   font-weight: 400;
 }
 
@@ -2300,7 +2394,7 @@ h1.hero-name,
 
 .hero-buttons .btn {
   padding: 12px 28px !important;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', sans-serif;
   font-size: 14px;
   font-weight: 500;
   border-radius: 8px;
@@ -2496,7 +2590,7 @@ h1.hero-name,
   padding-top: 16px;
   border-top: 1px solid var(--border-color);
   color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 12px;
   letter-spacing: 0.5px;
 }
@@ -2504,14 +2598,14 @@ h1.hero-name,
 /* Headings */
 .heading-meta {
   color: var(--accent-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 12px;
   letter-spacing: 3px;
 }
 
 .colorlib-heading {
   color: var(--text-primary);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', sans-serif;
   font-weight: 700;
 }
 
@@ -2613,7 +2707,7 @@ section[data-section] {
 
 .stack-group dt {
   color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 1.5px;
@@ -2682,7 +2776,7 @@ section[data-section] {
 .stack-evidence h4 {
   margin: 0;
   color: var(--text-primary);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', sans-serif;
   font-size: 15px;
   font-weight: 600;
   line-height: 1.5;
@@ -2778,7 +2872,7 @@ section[data-section] {
   padding: 4px 10px;
   border-radius: 4px;
   font-size: 11px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-weight: 500;
 }
 
@@ -2795,7 +2889,7 @@ section[data-section] {
 }
 
 .code-block pre code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 13px;
   line-height: 1.6;
 }
@@ -2817,18 +2911,18 @@ code[class*="language-"] {
 .token.punctuation { color: #d4d4d4 !important; }
 
 /* Education Section - Panel/Accordion */
-.panel-heading a {
+.panel-heading .panel-toggle {
   background-color: var(--accent-primary);
   color: var(--bg-primary);
 }
 
-.panel-heading a.collapsed {
+.panel-heading .panel-toggle[aria-expanded="false"] {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color) !important;
   color: var(--text-primary);
 }
 
-.panel-heading a.collapsed:hover {
+.panel-heading .panel-toggle[aria-expanded="false"]:hover {
   background: var(--bg-tertiary);
 }
 
@@ -2884,7 +2978,7 @@ code[class*="language-"] {
   opacity: 1;
   filter: none;
   color: var(--accent-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 13px;
   letter-spacing: 0.5px;
 }
@@ -2911,7 +3005,7 @@ code[class*="language-"] {
 
 .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label .timeline-project a {
   color: var(--accent-secondary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 13px;
   border-bottom: 1px dotted var(--accent-secondary);
 }
@@ -2996,7 +3090,7 @@ code[class*="language-"] {
   z-index: 1;
   right: 16px;
   bottom: 12px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 11px;
   color: var(--text-muted);
 }
@@ -3038,7 +3132,7 @@ code[class*="language-"] {
 .project-stats .stat b {
   display: block;
   color: var(--accent-secondary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 15px;
   font-weight: 600;
   line-height: 1.2;
@@ -3065,7 +3159,7 @@ code[class*="language-"] {
   align-items: center;
   gap: 6px;
   color: var(--accent-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 12px;
   transition: color 0.2s ease;
 }
@@ -3095,7 +3189,7 @@ code[class*="language-"] {
   padding: 4px 10px;
   border-radius: 4px;
   font-size: 11px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
 }
 
 /* Contact Section */
@@ -3695,7 +3789,7 @@ body.offcanvas #colorlib-aside {
   border-radius: 0 0 6px 6px;
   background: var(--bg-secondary);
   color: var(--accent-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 13px;
   text-decoration: none;
   transition: top 0.2s ease;
@@ -3740,10 +3834,11 @@ textarea:focus-visible,
     display: none !important;
   }
 
-  /* animate-box starts at opacity 0 and is revealed by a scroll waypoint.
-     With animations disabled that reveal may never land, so pin it visible. */
+  /* site.js does not hide anything under reduced motion; this pins boxes
+     visible should the setting change while the page is open. */
   .animate-box {
     opacity: 1 !important;
+    transform: none !important;
   }
 }
 
@@ -3751,16 +3846,20 @@ textarea:focus-visible,
    Reading aids for a long single-page layout
    ============================================ */
 
-/* Progress bar showing how far through the page you are. */
+/* Progress bar showing how far through the page you are. Full width and
+   scaled, so a scroll frame changes a transform rather than a width and
+   does not lay the page out again. */
 .read-progress {
   position: fixed;
   z-index: 9998;
   top: 0;
   left: 0;
-  width: 0;
+  width: 100%;
   height: 3px;
   background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-  transition: width 0.1s linear;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  will-change: transform;
   pointer-events: none;
 }
 
@@ -3821,7 +3920,7 @@ textarea:focus-visible,
   border-radius: 6px;
   background: transparent;
   color: var(--accent-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 12px;
   cursor: pointer;
   transition: border-color 0.2s ease, background 0.2s ease;
@@ -3893,9 +3992,15 @@ textarea:focus-visible,
   .animate-box,
   .panel-collapse {
     opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
     height: auto !important;
     display: block !important;
     visibility: visible !important;
+  }
+
+  .hero-typed::after {
+    display: none !important;
   }
 
   .timeline-label ul li.is-collapsed { display: list-item !important; }
@@ -3936,7 +4041,7 @@ textarea:focus-visible,
   border-radius: 999px;
   background: rgba(65, 205, 82, 0.08);
   color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 12.5px;
   letter-spacing: 0.2px;
 }
@@ -4036,7 +4141,7 @@ a.hero-meta__item:focus-visible {
   display: block;
   margin-top: 4px;
   color: var(--accent-secondary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 10.5px;
   letter-spacing: 0.3px;
 }
@@ -4080,7 +4185,7 @@ a.hero-meta__item:focus-visible {
   border-radius: 6px;
   background: transparent;
   color: var(--accent-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 12px;
   letter-spacing: 0.03em;
   cursor: pointer;
@@ -4172,7 +4277,7 @@ a.hero-meta__item:focus-visible {
 .project-modal__eyebrow {
   margin: 0 0 6px;
   color: var(--accent-secondary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -4207,7 +4312,7 @@ a.hero-meta__item:focus-visible {
 .project-facts dt {
   margin-bottom: 3px;
   color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.09em;
@@ -4292,7 +4397,7 @@ a.hero-meta__item:focus-visible {
   align-items: center;
   gap: 7px;
   color: var(--accent-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 13px;
 }
 
@@ -4466,7 +4571,7 @@ body.modal-open {
   border-radius: 5px;
   background: rgba(1, 4, 9, 0.78);
   color: var(--text-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 11px;
   letter-spacing: 0.04em;
 }
@@ -4514,7 +4619,7 @@ body.modal-open {
 }
 
 .lang-code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -4530,7 +4635,7 @@ body.modal-open {
   border-radius: 4px;
   background: var(--bg-tertiary);
   color: var(--accent-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 0.85em;
   white-space: nowrap;
 }
@@ -4693,6 +4798,13 @@ button:focus-visible,
    would be cut off by the edge of the screen. */
 .colorlib-nav-toggle:focus-visible {
   outline-offset: -6px !important;
+}
+
+/* Section headings take focus after a section jump (js/site.js), so the
+   next Tab continues from that section. A jump made with the mouse shows no
+   ring there; one made from the keyboard shows the usual ring. */
+[tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* Contact Me is drawn in green, so its ring is too. */
