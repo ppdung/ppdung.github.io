@@ -5,14 +5,16 @@
 	<!-- Content Security Policy. GitHub Pages cannot send headers, so this is
 	     a meta tag, which cannot carry frame-ancestors or violation reports.
 	     Scripts run only from this site (js/site.js) and Google Analytics,
-	     which js/site.js loads once the page is idle; styles come only from
+	     which js/site.js loads after the page has loaded; styles come only from
 	     this site. Nothing inline runs, so neither needs 'unsafe-inline'
 	     (the JSON-LD blocks below are data, not scripts). The contact form
 	     may post only to its own Formspree form, frames only to YouTube's
 	     privacy-enhanced player, and i.ytimg.com is for video thumbnails.
+	     connect-src allows 'self' so that tools fetching /robots.txt from
+	     the page (Lighthouse's SEO audit, PageSpeed Insights) are not refused.
 	     Anything new the page loads must be added here, on both pages: see
 	     README.md, "Privacy, analytics and the Content Security Policy". -->
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' https://i.ytimg.com https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src https://formspree.io/f/mdaanwpo https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; form-action https://formspree.io/f/mdaanwpo; base-uri 'none'; object-src 'none'">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' https://i.ytimg.com https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src 'self' https://formspree.io/f/mdaanwpo https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; form-action https://formspree.io/f/mdaanwpo; base-uri 'none'; object-src 'none'">
 	<meta name="referrer" content="strict-origin-when-cross-origin">
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -161,10 +163,15 @@
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
+	<!-- Without JavaScript: the master's-panel photo, which js/site.js
+	     otherwise sets once the panel is near. A stylesheet rather than an
+	     inline <style>, which the Content Security Policy would refuse. -->
+	<noscript><link rel="stylesheet" href="css/noscript.css"></noscript>
 	<!-- Every behaviour on the page, shared by both languages, including
 	     Google Analytics: js/site.js sets the consent defaults, then loads
-	     gtag.js once the page is idle or first used. Deferred: it downloads
-	     alongside the CSS and runs once the document is parsed. -->
+	     gtag.js on the first tap, key or scroll, or a few seconds after the
+	     page has loaded. Deferred: it downloads alongside the CSS and runs
+	     once the document is parsed. -->
 	<script defer src="js/site.js"></script>
 
 	</head>
@@ -173,10 +180,14 @@
 	<!-- Analytics consent notice. js/site.js shows it until a choice is made
 	     and remembers the choice in this browser. Without JavaScript it stays
 	     hidden, and Google Analytics never loads either. A div with a region
-	     role rather than a <section>, which the theme pads on phones. -->
+	     role rather than a <section>, which the theme pads on phones. It is
+	     one short line and the buttons (a bar along the bottom on phones, a
+	     strip in the bottom-right corner on wider screens), so it stays below
+	     the hero's buttons. The title only names the region for screen
+	     readers. -->
 	<div class="consent" id="consent" role="region" aria-labelledby="consent-title" hidden>
-		<p class="consent__title" id="consent-title">Analytics cookies</p>
-		<p class="consent__text">This site counts visits with Google Analytics. Its cookies are set only if you allow them.</p>
+		<p class="consent__title sr-only" id="consent-title">Analytics cookies</p>
+		<p class="consent__text">Google Analytics sets cookies only if you allow it.</p>
 		<div class="consent__actions">
 			<button type="button" class="consent-btn" data-consent="granted">Allow</button>
 			<button type="button" class="consent-btn" data-consent="denied">Decline</button>
@@ -199,7 +210,7 @@
 			<div class="text-center">
 				<picture class="author-img">
 					<source srcset="images/avatar.webp" type="image/webp">
-					<img src="images/avatar.jpg" alt="Pham Phuoc Dung, C++/Qt software engineer" width="400" height="505" decoding="async">
+					<img src="images/avatar.jpg" alt="Pham Phuoc Dung, C++/Qt software engineer" width="400" height="505" loading="lazy" decoding="async">
 				</picture>
 				<div id="colorlib-logo"><a href="./">Pham Phuoc Dung</a></div>
 				<span class="position"><span class="position-text">C++ &amp; Qt Developer</span></span>
@@ -261,7 +272,7 @@
 										<h1 class="hero-name">Pham Phuoc Dung</h1>
 										<h2 class="hero-typing">
 											<span data-nosnippet>
-												<span class="hero-roles sr-only"><span>C++ Developer</span>, <span>Qt/QML Developer</span>, <span>Robotics Engineer</span>, <span>Software Architect</span></span>
+												<span class="hero-roles sr-only"><span>C++ Developer</span>, <span>Qt/QML Developer</span>, <span>Robotics Engineer</span></span>
 												<span class="hero-typed" aria-hidden="true">C++ Developer</span>
 											</span>
 										</h2>
@@ -342,7 +353,7 @@
 											</div>
 											<div class="highlight-item">
 												<i class="icon-cog" aria-hidden="true"></i>
-												<span>Embedded Linux C++ (Raspberry Pi)</span>
+												<span>C++ on Embedded Linux (Raspberry Pi)</span>
 											</div>
 											<div class="highlight-item">
 												<i class="icon-video" aria-hidden="true"></i>
@@ -1357,7 +1368,7 @@
 					<div><dt>Full title</dt><dd>Design mobile manipulator system using Marker-Vision Tracking algorithm</dd></div>
 					<div><dt>Program</dt><dd>M.Eng. Control Engineering &amp; Automation, HCMUT &mdash; GPA 8.46/10</dd></div>
 					<div><dt>Supervisor</dt><dd>Dr. Nguyen Hoang Giap</dd></div>
-					<div><dt>Period</dt><dd>Sep &ndash; Dec 2022, defended January 2023</dd></div>
+					<div><dt>Period</dt><dd>Sep &ndash; Dec 2022, defended Jan 2023</dd></div>
 					<div><dt>Core stack</dt><dd>ROS on Ubuntu, C++, Python, Qt, OpenCV / ArUco</dd></div>
 					<div><dt>Hardware</dt><dd>Differential-drive AGV, 5-DOF arm, LiDAR, stereo tracking camera, RGB-D camera, BLDC drives, embedded PC</dd></div>
 				</dl>

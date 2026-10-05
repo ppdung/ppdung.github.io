@@ -1,0 +1,15 @@
+/* ==========================================================================
+   Loaded only when JavaScript is off (a <noscript> link in the head of / and
+   /vi/), so none of this reaches a normal visit.
+
+   The master's-panel photo is normally set by js/site.js once the panel
+   comes near the viewport (.bg-ready, see "Lazy CSS backgrounds"). Without
+   the script it never would be, so it is set here instead, from the start.
+   The URLs are relative to this file, so both pages share it.
+   ========================================================================== */
+
+.panel--master .panel-body::before {
+  background-image: url(../images/master-graduation.jpg);
+  background-image: image-set(url(../images/master-graduation.webp) type("image/webp"),
+                              url(../images/master-graduation.jpg) type("image/jpeg"));
+}

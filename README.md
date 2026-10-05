@@ -20,6 +20,7 @@ css/
   style.css           The theme. Hand-edited; this is the source of truth.
   fonts.css           Inter + JetBrains Mono @font-face rules (also used by 404.html)
   404.css             The not-found page's own styles (a file, so its CSP needs no inline CSS)
+  noscript.css        Loaded only with JavaScript off (<noscript> in each head): the master's-panel photo
   icons.css           Subsetted icomoon + devicon glyph definitions
   bootstrap.css       Vendored Bootstrap 3.3.5, trimmed to the rules the pages use
 js/
@@ -70,8 +71,10 @@ wording for that language.
   the `STRINGS` table at the top, keyed by `<html lang>`.
 - **Dates.** When the content changes, update all three together: the
   "Last updated" line at the foot of Contact, `dateModified` in the
-  `ProfilePage` JSON-LD of both pages, and `<lastmod>` in `sitemap.xml`. A
-  date nobody maintains is worse than none.
+  `ProfilePage` JSON-LD of both pages, and `<lastmod>` of the two page
+  `<url>` entries in `sitemap.xml`. The CV's own entry there follows the CV,
+  not the pages (see the CV bullet below). A date nobody maintains is worse
+  than none.
 
 ## Notes for anyone editing this
 
@@ -89,7 +92,9 @@ wording for that language.
   Chrome; `css/fonts.css` keeps Google's unicode-ranges but declares latin-ext
   before vietnamese, so a Vietnamese letter never pulls in the 83 KB latin-ext
   file. Replacing them with another version means retuning the
-  `Inter Fallback` metrics in the same file.
+  `Inter Fallback` and `JetBrains Mono Fallback` metrics in the same file:
+  local system fonts scaled to the same letter width, so text wraps the same
+  before and after the real font arrives.
 - **`css/bootstrap.css` is trimmed.** Only rules that apply somewhere on `/`
   or `/vi/` are left (found with Chrome's CSS rule-usage tracking over every
   width, menu, dialog, panel, form state, print and reduced motion). Markup
@@ -112,7 +117,8 @@ wording for that language.
   and Keywords again (in both the Info dictionary and the XMP packet, with a
   full rewrite rather than an incremental save) and confirm with
   `pdftotext -enc UTF-8` that the text is unchanged. Use only keywords that
-  appear in the CV itself.
+  appear in the CV itself. Then set the CV's `<lastmod>` in `sitemap.xml` to
+  the export date; a page edit alone does not change it.
 
 ## Privacy, analytics and the Content Security Policy
 
@@ -129,28 +135,44 @@ There is no GA snippet in the HTML. `js/site.js` (`initGtag`) does it all:
 - **Consent Mode v2.** `ad_storage`, `ad_user_data` and `ad_personalization`
   are always denied, and Google signals and ad personalisation are off in the
   config. `analytics_storage` is denied until the visitor clicks Allow.
-- **Consent notice.** A small card in the bottom corner (`#consent`) asks once.
-  The answer is kept in `localStorage` (`analyticsConsent`: `granted` or
-  `denied`), so it holds for both languages.
+- **Consent notice.** One short line with Allow, Decline and a link to the
+  privacy note (`#consent`) asks once: a strip in the bottom-right corner
+  from 769px, a bar along the bottom on phones. It is kept low enough to
+  stay below the hero's Download CV and Contact Me buttons at 390x844,
+  820x1180, 1366x657 and 1440x900, in both languages; recheck that if its
+  text gets longer. On short phones (375x667, 320x640) the hero reaches the
+  bottom of the screen and the bar still covers the lower part of Contact
+  Me until a choice is made. After a choice, keyboard focus moves to the
+  heading of the section being read, not to `<body>`. The answer is kept in
+  `localStorage` (`analyticsConsent`: `granted` or `denied`), so it holds for
+  both languages.
   - Undecided: GA4 sends cookieless pings, so visits are counted but returning
     browsers are not recognised.
   - Allow: the `_ga` cookies are set, for 13 months (`cookie_expires`).
-  - Decline: gtag.js is never loaded, the `ga-disable-G-0586HR4EGC` flag is
-    set, and any `_ga` cookies are deleted.
-- **Late loading.** gtag.js (about 175 KB) loads once the page has loaded and
-  gone idle, or on the first tap, key or scroll. Events from before then wait
-  in `dataLayer`.
+  - Decline: gtag.js is not loaded if it has not been already, the
+    `ga-disable-G-0586HR4EGC` flag is set so nothing recorded after declining
+    is sent (an event GA had already queued may still go out once, without
+    cookies), and any `_ga` cookies are deleted.
+- **Late loading.** gtag.js (about 175 KB) loads on the first tap, key or
+  scroll, or four seconds after the page has loaded, whichever comes first.
+  Its start-up is three long tasks on a mid-range phone; loaded as soon as the
+  page went idle, they fell in the first seconds of reading and counted
+  against Total Blocking Time. Events from before then wait in `dataLayer`.
 - **The trade-off.** A site this size is far below GA4's thresholds for
   modelling cookieless traffic, so returning-visitor and session figures, and
   most CV-download and lead attribution, will cover only visitors who click
-  Allow. Visitors who leave within a second or so of the page loading, without
-  touching it, are not counted.
+  Allow. Visitors who leave within about four seconds of the page loading,
+  without tapping, typing or scrolling, are not counted.
 - **Search Console.** If ownership was verified with the Google Analytics
   method, that check needs the tag in `<head>`, which is gone. Switch to the
   HTML-file method (a `google*.html` file at the root) before it lapses.
 - **Lab runs.** Lighthouse and local testing send hits from `localhost`. Add a
-  hostname filter in GA, or block `*google-analytics.com/g/collect*` while
-  testing.
+  hostname filter in GA. Blocking `*/g/collect*` while testing works, but a
+  blocked hit makes gtag retry through `www.google.com/g/collect`, which the
+  policy below refuses, so the console shows a CSP error that a real visit
+  does not. Answering the hits locally (DevTools request overrides, or CDP
+  `Fetch` with a 204) avoids both. A Lighthouse run ends about when gtag.js
+  arrives, four seconds after load, before it has sent anything.
 
 **The privacy note** (`#privacy`, a dialog linked from the consent notice and
 from the foot of Contact; `/#privacy` opens it) says what is collected and
@@ -170,13 +192,14 @@ after `<meta charset>`. It is the same on `index.html` and `vi/index.html`:
 | `style-src` | `'self'` | the stylesheets in `css/` |
 | `img-src` | `'self'`, `i.ytimg.com`, `*.google-analytics.com`, `*.googletagmanager.com` | site images, video thumbnails, GA |
 | `font-src` | `'self'` | `fonts/` |
-| `connect-src` | `formspree.io/f/mdaanwpo`, `*.google-analytics.com`, `*.analytics.google.com`, `*.googletagmanager.com` | the contact form's fetch, GA hits |
+| `connect-src` | `'self'`, `formspree.io/f/mdaanwpo`, `*.google-analytics.com`, `*.analytics.google.com`, `*.googletagmanager.com` | `/robots.txt` as Lighthouse and PageSpeed Insights fetch it from the page (without `'self'` their SEO audit fails, 92 instead of 100; crawlers are not affected), the contact form's fetch, GA hits |
 | `frame-src` | `www.youtube-nocookie.com` | the project videos |
 | `form-action` | `formspree.io/f/mdaanwpo` | the form without JavaScript |
 | `base-uri`, `object-src` | `'none'` | |
 
 - **Nothing inline.** No inline `<script>`, `<style>`, `style="..."` attribute
-  or `on...=` handler runs. Styling goes in `css/`, behaviour in
+  or `on...=` handler runs, `<noscript>` included (it links
+  `css/noscript.css` instead). Styling goes in `css/`, behaviour in
   `js/site.js`. Setting `element.style.x` from script is fine; that is not
   inline CSS. The JSON-LD blocks are data, not scripts, and are not affected.
 - **Adding something.** Anything new the pages load from another site (an

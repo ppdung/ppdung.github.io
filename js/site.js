@@ -94,6 +94,32 @@
 		}
 	}
 
+	// Focus without scrolling, for a heading or another element outside the
+	// Tab order: tabindex=-1 makes it focusable, and css/style.css shows no
+	// ring there unless the move came from the keyboard.
+	function focusQuietly(el) {
+		if (!el) { return; }
+		if (!el.hasAttribute('tabindex')) { el.setAttribute('tabindex', '-1'); }
+		try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
+	}
+
+	// Where focus goes when the control that had it disappears -- a button
+	// in the consent notice once a choice is made, or a dialog's opener that
+	// has gone. Left alone it fell to <body>: screen readers lost their place,
+	// and some browsers start Tab again from the top of the page. This is the
+	// heading of the section being read (the one whose top has passed 30% of
+	// the viewport), so the next Tab carries on from there. It reads layout,
+	// so it runs on a click or a key, never while the page starts up.
+	function focusReadingPosition() {
+		var sections = doc.querySelectorAll('section[data-section]');
+		var line = (window.innerHeight || root.clientHeight) * 0.3;
+		var current = sections[0] || null;
+		each(sections, function (s) {
+			if (s.getBoundingClientRect().top <= line) { current = s; }
+		});
+		if (current) { focusQuietly(current.querySelector('h1, h2') || current); }
+	}
+
 	// Features talk to each other through these; each is replaced with the
 	// real thing when its feature starts, so a feature that failed to start
 	// leaves a harmless stub behind.
@@ -183,6 +209,23 @@
 
 		var roles = Array.prototype.map.call(items, function (s) { return s.textContent.trim(); });
 		var sequence = roles.slice(1).concat(roles[0]);
+
+		// The line is centred, so every letter added or erased used to move
+		// the whole line sideways: about 70 small layout shifts a run. It is
+		// now typed over an invisible copy of the resting text, starting where
+		// that text starts and growing to the right (css/style.css,
+		// .hero-typed-box), so a letter never moves the ones before it. The
+		// copy holds the same text in the same place, so putting it in moves
+		// nothing either.
+		var box = doc.createElement('span');
+		var sizer = doc.createElement('span');
+		box.className = 'hero-typed-box';
+		sizer.className = 'hero-typed-sizer';
+		sizer.textContent = out.textContent;
+		out.parentNode.insertBefore(box, out);
+		box.appendChild(sizer);
+		box.appendChild(out);
+
 		var START_DELAY = 1200;
 		var HOLD = 450;
 		var ERASE_STEP = 4;   // letters removed per step
@@ -304,10 +347,17 @@
 			if (hidden) { aside.setAttribute('inert', ''); } else { aside.removeAttribute('inert'); }
 		}
 
+		// On the off-canvas layout the sidebar photo is not fetched until the
+		// menu is about to open (css/style.css, "Sidebar photo"): most phone
+		// visits never open it. A press or keyboard focus on the button starts
+		// the download a moment before the menu slides in.
+		function wakeAvatar() { aside.classList.add('avatar-ready'); }
+
 		function setOpen(open, returnFocus) {
 			// Read focus before inert is applied: making the sidebar inert
 			// blurs whatever inside it had focus.
 			var focusInside = aside.contains(doc.activeElement);
+			if (open) { wakeAvatar(); }
 			body.classList.toggle('offcanvas', open);
 			if (toggle) {
 				toggle.classList.toggle('active', open);
@@ -325,6 +375,8 @@
 
 		if (toggle) {
 			toggle.addEventListener('click', function () { setOpen(!isOpen(), true); });
+			toggle.addEventListener('pointerdown', wakeAvatar);
+			toggle.addEventListener('focus', wakeAvatar);
 		}
 
 		doc.addEventListener('keydown', function (e) {
@@ -459,11 +511,7 @@
 		var top = target.getBoundingClientRect().top + (window.pageYOffset || root.scrollTop || 0) - margin;
 		window.scrollTo({ top: Math.max(0, Math.round(top)), behavior: scrollBehavior() });
 
-		var heading = target.querySelector('h1, h2');
-		if (heading) {
-			if (!heading.hasAttribute('tabindex')) { heading.setAttribute('tabindex', '-1'); }
-			try { heading.focus({ preventScroll: true }); } catch (e) { heading.focus(); }
-		}
+		focusQuietly(target.querySelector('h1, h2'));
 
 		// The address bar shows the section picked, ready to copy or share.
 		if (window.history && window.history.replaceState) {
@@ -692,7 +740,9 @@
 	// only hides them once the toggle exists -- without JS nothing is lost.
 	// ------------------------------------------------------------------
 	function initContributionToggles() {
-		var KEEP_VISIBLE = 4;
+		// Two bullets a role on phones, where Experience alone ran to about
+		// seven screens and Projects began ten screens down; four elsewhere.
+		var KEEP_VISIBLE = media('(max-width: 768px)').matches ? 2 : 4;
 		each(doc.querySelectorAll('.timeline-label > ul'), function (list, idx) {
 			var items = Array.prototype.slice.call(list.children);
 			if (items.length <= KEEP_VISIBLE + 2) { return; }
@@ -743,9 +793,12 @@
 	// declines gets no Google Analytics at all, and its cookies are removed.
 	//
 	// gtag.js (about 175 KB) used to load from <head>, alongside the CSS a
-	// phone needs for its first paint. It now waits for the page to load and
-	// go idle, or for the first tap, key or scroll, whichever comes first.
-	// Events sent before then wait in dataLayer and go out with it.
+	// phone needs for its first paint. It now waits for the first tap, key or
+	// scroll, or for four seconds after the page has loaded, whichever comes
+	// first. Its start-up is three long tasks on a mid-range phone; loaded as
+	// soon as the page went idle, about a second after load, they landed in
+	// the first seconds a visitor starts to read and tap. Events sent before
+	// then wait in dataLayer and go out with it.
 	//
 	// This starts before every other feature, so no event can reach
 	// dataLayer ahead of the consent defaults.
@@ -758,6 +811,7 @@
 		if (choice !== 'granted' && choice !== 'denied') { choice = null; }
 		var requested = false;
 		var TRIGGERS = ['pointerdown', 'keydown', 'touchstart', 'scroll'];
+		var AFTER_LOAD_MS = 4000;
 
 		window.dataLayer = window.dataLayer || [];
 		// gtag.js reads each call's arguments object, so the stub pushes
@@ -793,10 +847,8 @@
 			doc.head.appendChild(script);
 		}
 
-		function whenIdle() {
-			if ('requestIdleCallback' in window) { window.requestIdleCallback(load, { timeout: 3000 }); }
-			else { window.setTimeout(load, 1500); }
-		}
+		// A visitor who never taps, types or scrolls is still counted.
+		function afterLoad() { window.setTimeout(load, AFTER_LOAD_MS); }
 
 		// GA's 'auto' cookie domain stops at this host (github.io is a public
 		// suffix), so the cookies go with or without a domain attribute.
@@ -831,8 +883,8 @@
 		each(TRIGGERS, function (type) {
 			window.addEventListener(type, load, { capture: true, passive: true });
 		});
-		if (doc.readyState === 'complete') { whenIdle(); }
-		else { window.addEventListener('load', whenIdle); }
+		if (doc.readyState === 'complete') { afterLoad(); }
+		else { window.addEventListener('load', afterLoad); }
 	}
 
 	// ------------------------------------------------------------------
@@ -930,9 +982,14 @@
 			if (closing.id && window.location.hash === '#' + closing.id && window.history && window.history.replaceState) {
 				window.history.replaceState(null, '', window.location.pathname + window.location.search);
 			}
-			// The control that opened the dialog may be gone by now: the
-			// consent notice hides once a choice is made in the privacy note.
-			if (returnFocus !== false && lastTrigger && lastTrigger.getClientRects().length) { lastTrigger.focus(); }
+			// The control that opened the dialog may be gone by now (the
+			// consent notice hides once a choice is made in the privacy note),
+			// or there was none (/#privacy). Focus then goes to the section
+			// being read rather than to <body>.
+			if (returnFocus !== false) {
+				if (lastTrigger && lastTrigger.getClientRects().length) { lastTrigger.focus(); }
+				else { focusReadingPosition(); }
+			}
 			lastTrigger = null;
 		}
 
@@ -1005,16 +1062,30 @@
 			});
 		}
 
-		// While the notice is up, the back-to-top button sits above it:
-		// --consent-space in css/style.css, kept to the notice's height by
-		// a ResizeObserver, which reports after layout instead of forcing it.
+		// While the notice is up, the back-to-top button sits above it and
+		// Contact ends with room to scroll clear of it: --consent-space in
+		// css/style.css, kept to the notice's height by a ResizeObserver,
+		// which reports after layout instead of forcing it. The value is set
+		// on those two elements alone. Set on the root, where every element
+		// inherits it, it made the browser restyle the whole page (about 800
+		// elements, 45 ms on a throttled phone) just after start-up.
+		var spaceUsers = [doc.getElementById('to-top'), doc.querySelector('.colorlib-contact')];
+
+		function setSpace(value) {
+			each(spaceUsers, function (el) {
+				if (!el) { return; }
+				if (value) { el.style.setProperty('--consent-space', value); }
+				else { el.style.removeProperty('--consent-space'); }
+			});
+		}
+
 		function showNotice() {
 			notice.hidden = false;
 			if (!('ResizeObserver' in window)) { return; }
 			spaceObserver = new ResizeObserver(function (entries) {
 				var size = entries[0].borderBoxSize;
 				var height = size ? (size[0] || size).blockSize : notice.offsetHeight;
-				root.style.setProperty('--consent-space', Math.ceil(height + 12) + 'px');
+				setSpace(Math.ceil(height + 12) + 'px');
 			});
 			spaceObserver.observe(notice);
 		}
@@ -1023,14 +1094,18 @@
 			if (!notice || notice.hidden) { return; }
 			notice.hidden = true;
 			if (spaceObserver) { spaceObserver.disconnect(); spaceObserver = null; }
-			root.style.removeProperty('--consent-space');
+			setSpace(null);
 		}
 
 		each(doc.querySelectorAll('[data-consent]'), function (button) {
 			button.addEventListener('click', function () {
+				// Read before the notice hides: hiding it takes focus away
+				// from the button that was pressed.
+				var focusInNotice = !!notice && notice.contains(doc.activeElement);
 				analytics.choose(button.getAttribute('data-consent'));
 				render();
 				hideNotice();
+				if (focusInNotice) { focusReadingPosition(); }
 			});
 		});
 

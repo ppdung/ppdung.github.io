@@ -1558,6 +1558,40 @@ h1.hero-name,
   font-weight: 400;
 }
 
+/* While it types, js/site.js puts the line in a box sized by an invisible
+   copy of the resting text (.hero-typed-sizer) and draws the typed text
+   over it from the left. The box sits where the centred line always sat;
+   longer roles run on to the right of it. With the text centred, each
+   letter moved the whole line, about 70 small layout shifts a run. */
+.hero-typed-box {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hero-typed-sizer {
+  visibility: hidden;
+}
+
+.hero-typed-box .hero-typed {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* In the box the caret is painted rather than laid out: a bar in the
+   padding after the text, where the "|" glyph sat. As a positioned ::after
+   it was a box of its own that moved with every letter, and each move still
+   counted as a (tiny) layout shift. */
+.hero-typed-box .hero-typed.is-typing {
+  padding-right: 1ch;
+  background: linear-gradient(var(--accent-primary), var(--accent-primary)) no-repeat right calc(0.3em - 1px) top / 2px 0.95em;
+}
+
+.hero-typed-box .hero-typed.is-typing::after {
+  content: none;
+}
+
 /* Override slider-text-inner để căn giữa */
 .slider-text-inner {
   display: flex !important;
@@ -2436,6 +2470,14 @@ section[data-section] {
   color: var(--accent-tertiary);
 }
 
+/* The email address in the error message: its blue sits on the error's
+   orange at 1:1 luminance contrast, so the underline is what marks it as a
+   link (WCAG 1.4.1). */
+.form-status a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* Mobile Navigation Toggle */
 .colorlib-nav-toggle i,
 .colorlib-nav-toggle i::before,
@@ -3258,6 +3300,40 @@ a.hero-meta__item:focus-visible {
   object-fit: cover;
 }
 
+/* The ring is the frame's 4px border. The photo's rounded edge is
+   anti-aliased against what lies behind it, the dark sidebar, which left a
+   faint dark hairline between photo and ring at 1x. A 2px ring in the
+   border's colour is drawn over that seam, covering 1px of border and 1px
+   of photo. Drawn over the photo rather than under it as a background, it
+   leaves no coloured disc showing while the photo loads. */
+#colorlib-aside .author-img::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--accent-primary);
+  pointer-events: none;
+  transition: box-shadow 0.3s ease;
+}
+
+@media (hover: hover) {
+  #colorlib-aside .author-img:hover::after {
+    box-shadow: inset 0 0 0 2px var(--accent-secondary);
+  }
+}
+
+/* Sidebar photo on the off-canvas layout (992px and below): not fetched
+   until the menu is about to open, when js/site.js adds .avatar-ready. The
+   <img> is loading="lazy", and a lazy image that is not displayed is not
+   loaded; off-canvas but displayed, it was close enough to the screen to
+   load at once. The frame keeps its size and ring. Without JavaScript the
+   menu cannot be opened, so nothing is lost. */
+@media screen and (max-width: 992px) {
+  #colorlib-aside:not(.avatar-ready) .author-img img {
+    display: none;
+  }
+}
+
 /* ==========================================================================
    Project detail dialogs
 
@@ -3547,29 +3623,39 @@ body.modal-open {
 /* ==========================================================================
    Analytics consent notice and privacy note
 
-   The notice is a small card in the bottom corner, never a wall: the page
+   The notice is one short line and its buttons, never a wall: the page
    behind it stays usable. js/site.js shows it until Allow or Decline is
    picked, and lifts the back-to-top button above it (--consent-space).
    Allow and Decline look the same on purpose, so neither is the easy way
-   out. The card sits under the dialogs (10000) and the reading aids, and
+   out. The notice sits under the dialogs (10000) and the reading aids, and
    hides while the off-canvas menu is open instead of peeking out beside it.
+
+   It is kept low enough never to reach the hero's Download CV and Contact
+   Me buttons: from 769px a single row in the bottom-right corner (about
+   52px tall), on phones a bar along the bottom (about 90px, its line of
+   text unbroken in both languages from 360px). The card it replaced was
+   160-180px tall; it covered Contact Me at 390x844 and 1366x657, and a
+   Project details button at 1440x900.
    ========================================================================== */
 
 .consent {
   position: fixed;
   right: 24px;
-  bottom: 24px;
+  bottom: 12px;
   z-index: 9996;
-  width: 360px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
   max-width: calc(100vw - 48px);
-  padding: 16px 18px 18px;
+  padding: 7px 8px 7px 18px;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   background: var(--bg-secondary);
   box-shadow: 0 12px 32px rgba(1, 4, 9, 0.55);
   color: var(--text-secondary);
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 1.4;
   animation: consentIn 0.25s ease-out;
 }
 
@@ -3592,15 +3678,8 @@ body.offcanvas .consent {
   to   { opacity: 1; transform: none; }
 }
 
-.consent__title {
-  margin: 0 0 4px;
-  color: var(--text-primary);
-  font-size: 15px;
-  font-weight: 600;
-}
-
 .consent__text {
-  margin: 0 0 14px;
+  margin: 0;
 }
 
 .consent__actions {
@@ -3608,6 +3687,10 @@ body.offcanvas .consent {
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
+}
+
+.consent .consent__actions {
+  gap: 8px;
 }
 
 .consent-btn {
@@ -3626,6 +3709,11 @@ body.offcanvas .consent {
   transition: background 0.2s ease, color 0.2s ease;
 }
 
+.consent .consent-btn {
+  min-width: 88px;
+  min-height: 36px;
+}
+
 .consent-btn[aria-pressed="true"] {
   background: var(--accent-primary);
   color: var(--bg-primary);
@@ -3640,6 +3728,11 @@ body.offcanvas .consent {
   text-underline-offset: 3px;
 }
 
+.consent .consent__more {
+  margin-right: 8px;
+  padding-left: 4px;
+}
+
 @media (hover: hover) {
   .consent-btn:hover {
     background: var(--accent-primary);
@@ -3651,16 +3744,57 @@ body.offcanvas .consent {
   }
 }
 
-@media (max-width: 480px) {
+/* Touch screens get full-size buttons, the tablet row included. */
+@media (pointer: coarse) {
+  .consent .consent-btn {
+    min-height: 44px;
+  }
+}
+
+/* Phones: a bar along the bottom edge, the line of text above the buttons. */
+@media (max-width: 768px) {
   .consent {
-    right: 12px;
-    bottom: 12px;
-    left: 12px;
-    width: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    gap: 6px 8px;
     max-width: none;
-    padding: 14px 16px 16px;
+    padding: 8px 16px 10px;
+    border-width: 1px 0 0;
+    border-radius: 0;
+    box-shadow: 0 -8px 24px rgba(1, 4, 9, 0.45);
+    font-size: 13px;
   }
 
+  .consent__text,
+  .consent .consent__actions {
+    flex: 1 1 100%;
+  }
+
+  .consent .consent-btn {
+    min-height: 44px;
+  }
+
+  .consent .consent__more {
+    margin-right: 0;
+  }
+}
+
+/* The narrowest phones: slimmer buttons keep the privacy link on their row. */
+@media (max-width: 360px) {
+  .consent {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .consent .consent-btn {
+    min-width: 0;
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+}
+
+@media (max-width: 480px) {
   .consent-btn {
     min-height: 44px;
   }
@@ -3891,6 +4025,33 @@ body.offcanvas .consent {
   line-height: 1;
 }
 
+/* On touch screens each footer button, the language switch among them,
+   answers taps in a box of at least 40x40px centred on it, while it keeps
+   its 28-38px look. The buttons are 16px or more apart, so the boxes never
+   overlap. The switch's overflow:hidden would clip its box, and nothing in
+   it overflows, so it is lifted here. */
+@media (pointer: coarse) {
+  #colorlib-aside .colorlib-footer ul li a {
+    position: relative;
+  }
+
+  #colorlib-aside .colorlib-footer ul li a::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    min-width: 40px;
+    height: 100%;
+    min-height: 40px;
+    transform: translate(-50%, -50%);
+  }
+
+  #colorlib-aside .colorlib-footer ul li.lang-switch a {
+    overflow: visible;
+  }
+}
+
 /* Inline code inside project dialogs: Bootstrap's default is a light box with
    red text, which fights the dark theme. */
 .project-modal code,
@@ -4060,9 +4221,10 @@ button:focus-visible,
 }
 
 /* The hamburger hugs the top-left corner, where a ring drawn outside it
-   would be cut off by the edge of the screen. */
+   would be cut off by the edge of the screen. The button starts 5px left of
+   the screen, so the ring is drawn 8px inside it to show both its pixels. */
 .colorlib-nav-toggle:focus-visible {
-  outline-offset: -6px !important;
+  outline-offset: -8px !important;
 }
 
 /* Section headings take focus after a section jump (js/site.js), so the

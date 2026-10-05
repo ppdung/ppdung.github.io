@@ -5,20 +5,22 @@
 	<!-- Content Security Policy. GitHub Pages cannot send headers, so this is
 	     a meta tag, which cannot carry frame-ancestors or violation reports.
 	     Scripts run only from this site (js/site.js) and Google Analytics,
-	     which js/site.js loads once the page is idle; styles come only from
+	     which js/site.js loads after the page has loaded; styles come only from
 	     this site. Nothing inline runs, so neither needs 'unsafe-inline'
 	     (the JSON-LD blocks below are data, not scripts). The contact form
 	     may post only to its own Formspree form, frames only to YouTube's
 	     privacy-enhanced player, and i.ytimg.com is for video thumbnails.
+	     connect-src allows 'self' so that tools fetching /robots.txt from
+	     the page (Lighthouse's SEO audit, PageSpeed Insights) are not refused.
 	     Anything new the page loads must be added here, on both pages: see
 	     README.md, "Privacy, analytics and the Content Security Policy". -->
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' https://i.ytimg.com https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src https://formspree.io/f/mdaanwpo https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; form-action https://formspree.io/f/mdaanwpo; base-uri 'none'; object-src 'none'">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' https://i.ytimg.com https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src 'self' https://formspree.io/f/mdaanwpo https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; form-action https://formspree.io/f/mdaanwpo; base-uri 'none'; object-src 'none'">
 	<meta name="referrer" content="strict-origin-when-cross-origin">
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Phạm Phước Dũng — Lập trình viên C++ / Qt, TP. Hồ Chí Minh</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Lập trình viên C++/Qt, hơn 5 năm kinh nghiệm. Kỹ sư chính của DeepKDS, màn hình bếp tại hơn 5.000 cửa hàng Hàn Quốc (theo SMARTCAST). Sẵn sàng remote hoặc chuyển nơi làm việc." />
+	<meta name="description" content="Hơn 5 năm lập trình C++/Qt. Kỹ sư chính của DeepKDS, màn hình bếp tại hơn 5.000 cửa hàng Hàn Quốc (theo SMARTCAST). Sẵn sàng remote hoặc chuyển nơi làm việc." />
 	<meta name="keywords" content="lập trình viên C++, lập trình viên Qt, lập trình QML, kỹ sư phần mềm, kỹ sư phần mềm nhúng, lập trình nhúng, lập trình đa nền tảng, phần mềm POS, hệ thống màn hình bếp, ZeroMQ, RabbitMQ, WebRTC, kỹ sư robot, ROS, SLAM, Embedded Linux, Raspberry Pi, TP Hồ Chí Minh, tuyển dụng C++, lap trinh vien C++, ky su phan mem nhung" />
 	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 	<meta name="author" content="Pham Phuoc Dung" />
@@ -162,10 +164,15 @@
 	<link rel="stylesheet" href="../css/bootstrap.css">
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="../css/style.css">
+	<!-- Without JavaScript: the master's-panel photo, which js/site.js
+	     otherwise sets once the panel is near. A stylesheet rather than an
+	     inline <style>, which the Content Security Policy would refuse. -->
+	<noscript><link rel="stylesheet" href="../css/noscript.css"></noscript>
 	<!-- Every behaviour on the page, shared by both languages, including
 	     Google Analytics: js/site.js sets the consent defaults, then loads
-	     gtag.js once the page is idle or first used. Deferred: it downloads
-	     alongside the CSS and runs once the document is parsed. -->
+	     gtag.js on the first tap, key or scroll, or a few seconds after the
+	     page has loaded. Deferred: it downloads alongside the CSS and runs
+	     once the document is parsed. -->
 	<script defer src="../js/site.js"></script>
 
 	</head>
@@ -174,10 +181,14 @@
 	<!-- Analytics consent notice. js/site.js shows it until a choice is made
 	     and remembers the choice in this browser. Without JavaScript it stays
 	     hidden, and Google Analytics never loads either. A div with a region
-	     role rather than a <section>, which the theme pads on phones. -->
+	     role rather than a <section>, which the theme pads on phones. It is
+	     one short line and the buttons (a bar along the bottom on phones, a
+	     strip in the bottom-right corner on wider screens), so it stays below
+	     the hero's buttons. The title only names the region for screen
+	     readers. -->
 	<div class="consent" id="consent" role="region" aria-labelledby="consent-title" hidden>
-		<p class="consent__title" id="consent-title">Cookie thống kê</p>
-		<p class="consent__text">Trang này thống kê lượt truy cập bằng Google Analytics. Cookie của công cụ này chỉ được lưu khi bạn cho phép.</p>
+		<p class="consent__title sr-only" id="consent-title">Cookie thống kê</p>
+		<p class="consent__text">Google Analytics chỉ lưu cookie khi bạn cho phép.</p>
 		<div class="consent__actions">
 			<button type="button" class="consent-btn" data-consent="granted">Cho phép</button>
 			<button type="button" class="consent-btn" data-consent="denied">Từ chối</button>
@@ -200,7 +211,7 @@
 			<div class="text-center">
 				<picture class="author-img">
 					<source srcset="../images/avatar.webp" type="image/webp">
-					<img src="../images/avatar.jpg" alt="Phạm Phước Dũng, lập trình viên C++/Qt" width="400" height="505" decoding="async">
+					<img src="../images/avatar.jpg" alt="Phạm Phước Dũng, lập trình viên C++/Qt" width="400" height="505" loading="lazy" decoding="async">
 				</picture>
 				<div id="colorlib-logo"><a href="./">Phạm Phước Dũng</a></div>
 				<span class="position"><span class="position-text">Lập trình viên C++ &amp; Qt</span></span>
@@ -262,7 +273,7 @@
 										<h1 class="hero-name">Phạm Phước Dũng</h1>
 										<h2 class="hero-typing">
 											<span data-nosnippet>
-												<span class="hero-roles sr-only"><span>Lập trình viên C++</span>, <span>Lập trình viên Qt/QML</span>, <span>Kỹ sư Robotics</span>, <span>Kiến trúc sư phần mềm</span></span>
+												<span class="hero-roles sr-only"><span>Lập trình viên C++</span>, <span>Lập trình viên Qt/QML</span>, <span>Kỹ sư Robotics</span></span>
 												<span class="hero-typed" aria-hidden="true">Lập trình viên C++</span>
 											</span>
 										</h2>
@@ -1191,7 +1202,7 @@
 					<h3>Tôi đã xây gì</h3>
 					<ul class="project-detail-list">
 						<li><strong>Tái sử dụng nền tảng chứ không phải sản phẩm.</strong> Phần khung kiosk, ngăn xếp thanh toán và framework máy trạng thái lấy từ hệ thống gọi món trên máy tính bảng tôi đã xây trước đó. Luồng bán hàng nhà thuốc, tích hợp back-end và giao diện là của riêng sản phẩm này &mdash; đó là lý do sản phẩm không người trực thứ hai ra được trong khoảng thời gian ngắn hơn hẳn sản phẩm đầu.</li>
-						<li><strong>Giao dịch bán hàng là một máy trạng thái.</strong> Hai mươi trạng thái có tên sau một interface duy nhất (State pattern), gồm chờ, màn hình mở đầu, chọn nhóm và chọn món, chọn tuỳ chọn, xác nhận đơn bốn bước, chọn hình thức thanh toán, xử lý thẻ, chia hoá đơn, thành công, thất bại, huỷ, hoàn tiền, quản trị và kiểm tra môi trường. Không người trực nghĩa là không ai ở đó để gỡ một màn hình bị treo, nên mỗi bước là một chỗ máy có thể đang đứng, chứ không phải một nhánh if bên trong hàm.</li>
+						<li><strong>Giao dịch bán hàng là một máy trạng thái.</strong> Hai mươi trạng thái có tên sau một interface duy nhất (State pattern), trong đó có chờ, màn hình mở đầu, chọn nhóm và chọn món, chọn tuỳ chọn, xác nhận đơn bốn bước, chọn hình thức thanh toán, xử lý thẻ, chia hoá đơn, thành công, thất bại, huỷ, hoàn tiền, quản trị và kiểm tra môi trường. Không người trực nghĩa là không ai ở đó để gỡ một màn hình bị treo, nên mỗi bước là một chỗ máy có thể đang đứng, chứ không phải một nhánh if bên trong hàm.</li>
 						<li><strong>Thanh toán thẻ cho cả thị trường Hàn Quốc.</strong> Thanh toán thẻ nằm sau một lớp cơ sở trừu tượng và Factory pattern, phủ bốn nhà cung cấp PG (KICC, KIS, NICE, SMARTRO), cùng nhà cung cấp thứ năm (KOCES) đã hiện thực trên cùng lớp cơ sở, và một tầng thứ hai cùng kiểu cho tám VAN (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). Nhà thuốc giữ nguyên nhà cung cấp họ đang dùng.</li>
 						<li><strong>Tiền mặt, kể cả tiền thối.</strong> Bộ nhận tiền giấy và tiền xu điều khiển qua cổng serial với máy trạng thái riêng &mdash; nghỉ, khởi tạo, nhận tiền, rút, xả, trả lại, cùng hai nhánh riêng cho huỷ-trả và lỗi-trả &mdash; kèm bộ nhả tiền để trả tiền thối. Một cái máy đang giữ tờ tiền của khách mà không có ai bên cạnh thì phải biết chính xác nó đang ở trạng thái nào và trả tiền lại bằng cách nào.</li>
 						<li><strong>Những cách thanh toán còn lại.</strong> Ví điện tử và các phương thức QR, thẻ trong ứng dụng, và thẻ giao thông T-money thông qua SDK của nhà cung cấp.</li>
