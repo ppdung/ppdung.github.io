@@ -1738,9 +1738,14 @@ h1.hero-name,
 }
 
 /* "Last updated" stamp at the foot of Contact. Quiet on purpose: it answers
-   "is this current?" without competing with the form above it. */
+   "is this current?" without competing with the form above it. The privacy
+   note link follows it on the left, clear of the back-to-top button. */
 .site-updated {
   clear: both;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 20px;
   margin: 48px 0 0;
   padding-top: 16px;
   border-top: 1px solid var(--border-color);
@@ -2381,8 +2386,10 @@ section[data-section] {
   cursor: not-allowed;
 }
 
+/* Hidden until js/site.js shows it while the form is sending. It used to be
+   hidden by an inline style, which the Content-Security-Policy now refuses. */
 .btn-loading {
-  display: inline-flex;
+  display: none;
   align-items: center;
   gap: 8px;
 }
@@ -2394,6 +2401,16 @@ section[data-section] {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* The contact form's honeypot field (_gotcha): off screen, and already out
+   of the tab order and the accessibility tree in the markup. */
+.form-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
 }
 
 /* Form Status Messages */
@@ -2908,7 +2925,8 @@ textarea:focus-visible,
   position: fixed;
   z-index: 9997;
   right: 26px;
-  bottom: 26px;
+  /* --consent-space: the consent notice's height while it is up (js/site.js) */
+  bottom: calc(26px + var(--consent-space, 0px));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2945,7 +2963,7 @@ textarea:focus-visible,
 @media screen and (max-width: 768px) {
   .to-top {
     right: 16px;
-    bottom: 16px;
+    bottom: calc(16px + var(--consent-space, 0px));
     width: 40px;
     height: 40px;
   }
@@ -3015,7 +3033,9 @@ textarea:focus-visible,
   .project-video,
   .bullets-toggle,
   .colorlib-contact .contact-cv,
-  #colorlib-aside .colorlib-footer a[download] {
+  #colorlib-aside .colorlib-footer a[download],
+  .consent,
+  .site-updated__privacy {
     display: none !important;
   }
 
@@ -3521,6 +3541,171 @@ body.modal-open {
   .project-modal,
   .project-details-btn {
     display: none !important;
+  }
+}
+
+/* ==========================================================================
+   Analytics consent notice and privacy note
+
+   The notice is a small card in the bottom corner, never a wall: the page
+   behind it stays usable. js/site.js shows it until Allow or Decline is
+   picked, and lifts the back-to-top button above it (--consent-space).
+   Allow and Decline look the same on purpose, so neither is the easy way
+   out. The card sits under the dialogs (10000) and the reading aids, and
+   hides while the off-canvas menu is open instead of peeking out beside it.
+   ========================================================================== */
+
+.consent {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9996;
+  width: 360px;
+  max-width: calc(100vw - 48px);
+  padding: 16px 18px 18px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  box-shadow: 0 12px 32px rgba(1, 4, 9, 0.55);
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.55;
+  animation: consentIn 0.25s ease-out;
+}
+
+.consent[hidden],
+body.offcanvas .consent {
+  display: none;
+}
+
+/* Room at the end of the page while the notice is up, so the last lines
+   (the "Privacy note" link among them) can scroll clear of it. Inside
+   Contact, so its background runs on to the bottom. */
+.colorlib-contact::after {
+  content: "";
+  display: block;
+  height: var(--consent-space, 0px);
+}
+
+@keyframes consentIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.consent__title {
+  margin: 0 0 4px;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.consent__text {
+  margin: 0 0 14px;
+}
+
+.consent__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.consent-btn {
+  min-width: 96px;
+  min-height: 38px;
+  padding: 6px 16px;
+  border: 1px solid var(--accent-primary);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent-primary);
+  font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.consent-btn[aria-pressed="true"] {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+.consent__more {
+  margin-left: auto;
+  padding: 4px 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .consent-btn:hover {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+  }
+
+  .consent__more:hover {
+    color: var(--accent-primary);
+  }
+}
+
+@media (max-width: 480px) {
+  .consent {
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: auto;
+    max-width: none;
+    padding: 14px 16px 16px;
+  }
+
+  .consent-btn {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .consent {
+    animation: none;
+  }
+}
+
+/* The privacy note: a project dialog, narrower, with room between its
+   paragraphs (the project dialogs have one paragraph per section). */
+.project-modal--narrow .project-modal__dialog {
+  max-width: 640px;
+}
+
+.project-modal--narrow .project-modal__section > p + p {
+  margin-top: 12px;
+}
+
+.privacy-choice {
+  margin: 14px 0 16px;
+}
+
+/* Its link at the foot of Contact, next to "Last updated". */
+.site-updated__privacy {
+  display: inline-block;
+  padding: 4px 0;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .site-updated__privacy:hover {
+    color: var(--accent-primary);
+  }
+}
+
+/* On a phone the link gets a line of its own: at the end of the stamp it
+   ran under the back-to-top button at the foot of the page. */
+@media (max-width: 480px) {
+  .site-updated > span {
+    flex-basis: 100%;
   }
 }
 

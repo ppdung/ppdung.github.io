@@ -3,8 +3,11 @@
 
    No libraries. This replaces jQuery 2.1.4, Bootstrap 3.3.5's JS, Waypoints,
    Typed.js from cdnjs, the old main.js, and a 470-line inline block that was
-   copied into both pages and had started to drift. The only text that
-   differs between the languages is in STRINGS below.
+   copied into both pages and had started to drift. It also loads Google
+   Analytics, which used to be an inline snippet in <head>: the pages run no
+   inline script at all, which is what lets their Content-Security-Policy
+   refuse it. The only text that differs between the languages is in
+   STRINGS below.
 
    Each feature is set up on its own, inside its own try/catch, so one that
    fails -- a missing element, an API an old browser lacks -- cannot take the
@@ -30,7 +33,10 @@
 			formSent: '✓ Message sent successfully! I will get back to you soon.',
 			formFailed: '✗ Failed to send message. Please try again or email me at ',
 			collapseSidebar: 'Collapse sidebar',
-			expandSidebar: 'Expand sidebar'
+			expandSidebar: 'Expand sidebar',
+			consentUnset: 'You have not chosen yet, so Google Analytics runs without cookies.',
+			consentGranted: 'You allowed analytics cookies in this browser.',
+			consentDenied: 'You declined, so Google Analytics is off in this browser.'
 		},
 		vi: {
 			showFewer: '- Thu gọn',
@@ -38,7 +44,10 @@
 			formSent: '✓ Đã gửi tin nhắn! Tôi sẽ phản hồi sớm nhất có thể.',
 			formFailed: '✗ Gửi không thành công. Vui lòng thử lại hoặc email trực tiếp cho tôi qua ',
 			collapseSidebar: 'Thu gọn thanh bên',
-			expandSidebar: 'Mở rộng thanh bên'
+			expandSidebar: 'Mở rộng thanh bên',
+			consentUnset: 'Bạn chưa chọn, nên Google Analytics đang chạy mà không dùng cookie.',
+			consentGranted: 'Bạn đã cho phép cookie thống kê trên trình duyệt này.',
+			consentDenied: 'Bạn đã từ chối, nên Google Analytics đã tắt trên trình duyệt này.'
 		}
 	};
 	var T = STRINGS[(root.getAttribute('lang') || 'en').slice(0, 2)] || STRINGS.en;
@@ -76,7 +85,9 @@
 		set: function (k, v) { try { window.localStorage.setItem(k, v); } catch (e) { /* not fatal */ } }
 	};
 
-	// GA4. No-ops when gtag is missing (ad blockers, offline, file://).
+	// GA4. Calls made before gtag.js arrives wait in dataLayer and go out
+	// with it; if this file's analytics setup failed, gtag is missing and
+	// this does nothing.
 	function track(name, params) {
 		if (typeof window.gtag === 'function') {
 			window.gtag('event', name, params || {});
@@ -87,7 +98,8 @@
 	// real thing when its feature starts, so a feature that failed to start
 	// leaves a harmless stub behind.
 	var menu = { isOpen: function () { return false; }, close: function () {}, syncInert: function () {} };
-	var dialogs = { close: function () {} };
+	var dialogs = { open: function () {}, close: function () {} };
+	var analytics = { choice: function () { return null; }, choose: function () {} };
 	var revealNow = function () {};
 
 	// ------------------------------------------------------------------
@@ -721,7 +733,110 @@
 	}
 
 	// ------------------------------------------------------------------
-	// Analytics
+	// Google Analytics: consent defaults first, then the tag, once the page
+	// is up
+	//
+	// Consent Mode v2. The three advertising signals are denied for good,
+	// and analytics cookies stay denied until the visitor allows them in the
+	// consent notice. Until then GA4 sends cookieless pings, which count the
+	// visit without recognising the browser next time. A visitor who
+	// declines gets no Google Analytics at all, and its cookies are removed.
+	//
+	// gtag.js (about 175 KB) used to load from <head>, alongside the CSS a
+	// phone needs for its first paint. It now waits for the page to load and
+	// go idle, or for the first tap, key or scroll, whichever comes first.
+	// Events sent before then wait in dataLayer and go out with it.
+	//
+	// This starts before every other feature, so no event can reach
+	// dataLayer ahead of the consent defaults.
+	// ------------------------------------------------------------------
+	var GA_ID = 'G-0586HR4EGC';
+	var CONSENT_KEY = 'analyticsConsent';
+
+	function initGtag() {
+		var choice = store.get(CONSENT_KEY);
+		if (choice !== 'granted' && choice !== 'denied') { choice = null; }
+		var requested = false;
+		var TRIGGERS = ['pointerdown', 'keydown', 'touchstart', 'scroll'];
+
+		window.dataLayer = window.dataLayer || [];
+		// gtag.js reads each call's arguments object, so the stub pushes
+		// arguments itself rather than a copy.
+		window.gtag = function () { window.dataLayer.push(arguments); };
+		window['ga-disable-' + GA_ID] = choice === 'denied';
+
+		window.gtag('consent', 'default', {
+			ad_storage: 'denied',
+			ad_user_data: 'denied',
+			ad_personalization: 'denied',
+			analytics_storage: choice === 'granted' ? 'granted' : 'denied',
+			// An Allow clicked before gtag.js arrives is queued behind the
+			// page_view; this lets that page_view go out with it.
+			wait_for_update: 500
+		});
+		window.gtag('js', new Date());
+		window.gtag('config', GA_ID, {
+			allow_google_signals: false,
+			allow_ad_personalization_signals: false,
+			// 13 months in every browser, as the privacy note says. GA's own
+			// default is two years, which Chrome cuts to 400 days anyway.
+			cookie_expires: 395 * 24 * 60 * 60
+		});
+
+		function load() {
+			each(TRIGGERS, function (type) { window.removeEventListener(type, load, true); });
+			if (requested || choice === 'denied') { return; }
+			requested = true;
+			var script = doc.createElement('script');
+			script.async = true;
+			script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+			doc.head.appendChild(script);
+		}
+
+		function whenIdle() {
+			if ('requestIdleCallback' in window) { window.requestIdleCallback(load, { timeout: 3000 }); }
+			else { window.setTimeout(load, 1500); }
+		}
+
+		// GA's 'auto' cookie domain stops at this host (github.io is a public
+		// suffix), so the cookies go with or without a domain attribute.
+		function removeCookies() {
+			var host = window.location.hostname;
+			try {
+				each((doc.cookie || '').split(';'), function (pair) {
+					var name = pair.split('=')[0].trim();
+					if (!/^_ga(_|$)/.test(name)) { return; }
+					var expired = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+					doc.cookie = expired;
+					if (host) { doc.cookie = expired + '; domain=' + host; }
+				});
+			} catch (e) { /* cookies blocked: there are none to remove */ }
+		}
+
+		analytics = {
+			choice: function () { return choice; },
+			choose: function (next) {
+				choice = next === 'granted' ? 'granted' : 'denied';
+				store.set(CONSENT_KEY, choice);
+				window['ga-disable-' + GA_ID] = choice === 'denied';
+				window.gtag('consent', 'update', { analytics_storage: choice });
+				if (choice === 'granted') { load(); } else { removeCookies(); }
+			}
+		};
+
+		if (choice === 'denied') {
+			removeCookies();
+			return;
+		}
+		each(TRIGGERS, function (type) {
+			window.addEventListener(type, load, { capture: true, passive: true });
+		});
+		if (doc.readyState === 'complete') { whenIdle(); }
+		else { window.addEventListener('load', whenIdle); }
+	}
+
+	// ------------------------------------------------------------------
+	// Analytics events
 	//
 	// GA4's enhanced measurement already sends page_view, scroll,
 	// file_download (the CV included) and outbound clicks, so the page no
@@ -784,9 +899,9 @@
 			});
 		}
 
-		function open(key, trigger) {
-			var modal = doc.getElementById('modal-' + key);
+		function open(modal, trigger) {
 			if (!modal) { return; }
+			if (openModal) { close(false); }
 
 			lastTrigger = trigger || null;
 			openModal = modal;
@@ -801,25 +916,35 @@
 			// Focus the dialog itself rather than its first control, so the
 			// title is announced and nothing starts out visually highlighted.
 			modal.focus();
-
-			track('select_content', { content_type: 'project', item_id: key });
 		}
 
 		function close(returnFocus) {
 			if (!openModal) { return; }
-			openModal.hidden = true;
+			var closing = openModal;
+			closing.hidden = true;
 			openModal = null;
 			body.classList.remove('modal-open');
 			body.style.paddingRight = '';
-			if (returnFocus !== false && lastTrigger) { lastTrigger.focus(); }
+			// A dialog opened from its own link (/#privacy) gives the address
+			// back without the fragment.
+			if (closing.id && window.location.hash === '#' + closing.id && window.history && window.history.replaceState) {
+				window.history.replaceState(null, '', window.location.pathname + window.location.search);
+			}
+			// The control that opened the dialog may be gone by now: the
+			// consent notice hides once a choice is made in the privacy note.
+			if (returnFocus !== false && lastTrigger && lastTrigger.getClientRects().length) { lastTrigger.focus(); }
 			lastTrigger = null;
 		}
 
-		dialogs = { close: close };
+		dialogs = { open: open, close: close };
 
 		each(doc.querySelectorAll('[data-project-modal]'), function (button) {
 			button.addEventListener('click', function () {
-				open(button.getAttribute('data-project-modal'), button);
+				var key = button.getAttribute('data-project-modal');
+				var modal = doc.getElementById('modal-' + key);
+				if (!modal) { return; }
+				open(modal, button);
+				track('select_content', { content_type: 'project', item_id: key });
 			});
 		});
 
@@ -851,6 +976,85 @@
 				first.focus();
 			}
 		});
+	}
+
+	// ------------------------------------------------------------------
+	// Consent notice and privacy note
+	//
+	// The notice (#consent) waits in the bottom corner until the visitor
+	// picks Allow or Decline; it never blocks the page, and it is not shown
+	// again once a choice is stored. The privacy note (#privacy) is a dialog
+	// like the project ones, opened from the notice and from the foot of
+	// Contact, or straight away by /#privacy. Its own Allow and Decline
+	// buttons change the choice later.
+	// ------------------------------------------------------------------
+	function initConsent() {
+		var notice = doc.getElementById('consent');
+		var note = doc.getElementById('privacy');
+		var spaceObserver = null;
+
+		function render() {
+			var choice = analytics.choice();
+			var text = choice === 'granted' ? T.consentGranted
+				: choice === 'denied' ? T.consentDenied : T.consentUnset;
+			each(doc.querySelectorAll('[data-consent][aria-pressed]'), function (button) {
+				button.setAttribute('aria-pressed', String(button.getAttribute('data-consent') === choice));
+			});
+			each(doc.querySelectorAll('[data-consent-state]'), function (line) {
+				if (line.textContent !== text) { line.textContent = text; }
+			});
+		}
+
+		// While the notice is up, the back-to-top button sits above it:
+		// --consent-space in css/style.css, kept to the notice's height by
+		// a ResizeObserver, which reports after layout instead of forcing it.
+		function showNotice() {
+			notice.hidden = false;
+			if (!('ResizeObserver' in window)) { return; }
+			spaceObserver = new ResizeObserver(function (entries) {
+				var size = entries[0].borderBoxSize;
+				var height = size ? (size[0] || size).blockSize : notice.offsetHeight;
+				root.style.setProperty('--consent-space', Math.ceil(height + 12) + 'px');
+			});
+			spaceObserver.observe(notice);
+		}
+
+		function hideNotice() {
+			if (!notice || notice.hidden) { return; }
+			notice.hidden = true;
+			if (spaceObserver) { spaceObserver.disconnect(); spaceObserver = null; }
+			root.style.removeProperty('--consent-space');
+		}
+
+		each(doc.querySelectorAll('[data-consent]'), function (button) {
+			button.addEventListener('click', function () {
+				analytics.choose(button.getAttribute('data-consent'));
+				render();
+				hideNotice();
+			});
+		});
+
+		render();
+		if (notice && !analytics.choice()) { showNotice(); }
+
+		if (!note) { return; }
+
+		// The "Privacy note" links. A modified click is left to the browser:
+		// the new tab opens on /#privacy, which opens the note below.
+		doc.addEventListener('click', function (e) {
+			if (e.defaultPrevented || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) { return; }
+			var link = e.target.closest ? e.target.closest('a[href="#privacy"]') : null;
+			if (!link) { return; }
+			e.preventDefault();
+			menu.close(false);
+			dialogs.open(note, link);
+		});
+
+		function fromAddress() {
+			if (window.location.hash === '#privacy') { dialogs.open(note, null); }
+		}
+		window.addEventListener('hashchange', fromAddress);
+		fromAddress();
 	}
 
 	// ------------------------------------------------------------------
@@ -917,6 +1121,7 @@
 
 	function init() {
 		body = doc.body;
+		run('analytics loader', initGtag);
 		run('menu', initMenu);
 		run('sidebar', initSidebar);
 		run('reveal', initReveal);
@@ -924,6 +1129,7 @@
 		run('ambient motion', initAmbientMotion);
 		run('lazy backgrounds', initLazyBackgrounds);
 		run('dialogs', initDialogs);
+		run('consent', initConsent);
 		run('section links', initSectionLinks);
 		run('section tracking', initSectionTracking);
 		run('scroll effects', initScrollEffects);

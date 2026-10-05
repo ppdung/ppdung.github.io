@@ -2,14 +2,18 @@
 <html lang="vi">
 	<head>
 	<meta charset="utf-8">
-	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-0586HR4EGC"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-		gtag('config', 'G-0586HR4EGC');
-	</script>
+	<!-- Content Security Policy. GitHub Pages cannot send headers, so this is
+	     a meta tag, which cannot carry frame-ancestors or violation reports.
+	     Scripts run only from this site (js/site.js) and Google Analytics,
+	     which js/site.js loads once the page is idle; styles come only from
+	     this site. Nothing inline runs, so neither needs 'unsafe-inline'
+	     (the JSON-LD blocks below are data, not scripts). The contact form
+	     may post only to its own Formspree form, frames only to YouTube's
+	     privacy-enhanced player, and i.ytimg.com is for video thumbnails.
+	     Anything new the page loads must be added here, on both pages: see
+	     README.md, "Privacy, analytics and the Content Security Policy". -->
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' https://i.ytimg.com https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src https://formspree.io/f/mdaanwpo https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; form-action https://formspree.io/f/mdaanwpo; base-uri 'none'; object-src 'none'">
+	<meta name="referrer" content="strict-origin-when-cross-origin">
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Phạm Phước Dũng — Lập trình viên C++ / Qt, TP. Hồ Chí Minh</title>
@@ -131,7 +135,7 @@
 		"url": "https://ppdung.github.io/vi/",
 		"inLanguage": "vi",
 		"dateCreated": "2026-08-31",
-		"dateModified": "2026-10-05",
+		"dateModified": "2026-10-06",
 		"mainEntity": { "@id": "https://ppdung.github.io/#person" },
 		"significantLink": [
 			"https://ppdung.github.io/CV_PhamPhuocDung.pdf",
@@ -158,13 +162,28 @@
 	<link rel="stylesheet" href="../css/bootstrap.css">
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="../css/style.css">
-	<!-- Every behaviour on the page, shared by both languages. Deferred: it
-	     downloads alongside the CSS and runs once the document is parsed. -->
+	<!-- Every behaviour on the page, shared by both languages, including
+	     Google Analytics: js/site.js sets the consent defaults, then loads
+	     gtag.js once the page is idle or first used. Deferred: it downloads
+	     alongside the CSS and runs once the document is parsed. -->
 	<script defer src="../js/site.js"></script>
 
 	</head>
 	<body>
 	<a href="#colorlib-main" class="skip-link">Bỏ qua, tới nội dung chính</a>
+	<!-- Analytics consent notice. js/site.js shows it until a choice is made
+	     and remembers the choice in this browser. Without JavaScript it stays
+	     hidden, and Google Analytics never loads either. A div with a region
+	     role rather than a <section>, which the theme pads on phones. -->
+	<div class="consent" id="consent" role="region" aria-labelledby="consent-title" hidden>
+		<p class="consent__title" id="consent-title">Cookie thống kê</p>
+		<p class="consent__text">Trang này thống kê lượt truy cập bằng Google Analytics. Cookie của công cụ này chỉ được lưu khi bạn cho phép.</p>
+		<div class="consent__actions">
+			<button type="button" class="consent-btn" data-consent="granted">Cho phép</button>
+			<button type="button" class="consent-btn" data-consent="denied">Từ chối</button>
+			<a href="#privacy" class="consent__more" aria-haspopup="dialog">Quyền riêng tư</a>
+		</div>
+	</div>
 	<div class="read-progress" id="read-progress" role="presentation"></div>
 	<button type="button" class="to-top" id="to-top" aria-label="Lên đầu trang" title="Lên đầu trang">
 		<i class="icon-arrow-up" aria-hidden="true"></i>
@@ -623,7 +642,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-ordereat" src="https://www.youtube.com/embed/MYV4o1dTdbk?si=jKQjP-pE1AQBAaWa" title="Video demo OrderEAT, hệ thống gọi món trên máy tính bảng" loading="lazy" allowfullscreen></iframe>
+									<iframe id="video-ordereat" src="https://www.youtube-nocookie.com/embed/MYV4o1dTdbk?si=jKQjP-pE1AQBAaWa" title="Video demo OrderEAT, hệ thống gọi món trên máy tính bảng" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>OrderEAT &ndash; Hệ thống gọi món trên máy tính bảng</h3>
@@ -647,7 +666,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-qualcomm" src="https://www.youtube.com/embed/srL3h80J9yY" title="Video demo robot di động tại Qualcomm Vietnam Innovation Challenge" loading="lazy" allowfullscreen></iframe>
+									<iframe id="video-qualcomm" src="https://www.youtube-nocookie.com/embed/srL3h80J9yY" title="Video demo robot di động tại Qualcomm Vietnam Innovation Challenge" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>Qualcomm Vietnam Innovation Challenge 2022</h3>
@@ -670,7 +689,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-manipulator" src="https://www.youtube.com/embed/6zFjGb3t2Cc" title="Video demo robot di động tích hợp cánh tay, gắp và đặt vật" loading="lazy" allowfullscreen></iframe>
+									<iframe id="video-manipulator" src="https://www.youtube-nocookie.com/embed/6zFjGb3t2Cc" title="Video demo robot di động tích hợp cánh tay, gắp và đặt vật" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>Robot di động tích hợp cánh tay</h3>
@@ -694,7 +713,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-scara" src="https://www.youtube.com/embed/NhR2n_e45Ps" title="Video demo robot SCARA teaching-less dùng thị giác máy tính" loading="lazy" allowfullscreen></iframe>
+									<iframe id="video-scara" src="https://www.youtube-nocookie.com/embed/NhR2n_e45Ps" title="Video demo robot SCARA teaching-less dùng thị giác máy tính" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>Robot SCARA teaching-less</h3>
@@ -963,8 +982,7 @@
 									<form id="contact-form" action="https://formspree.io/f/mdaanwpo" method="POST">
 										<!-- Honeypot: hidden from people, irresistible to bots. Formspree
 										     silently drops any submission that fills _gotcha in. -->
-										<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true"
-										       style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+										<input type="text" name="_gotcha" class="form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
 										<div class="form-group">
 											<label for="contact-name" class="sr-only">Họ và tên</label>
 											<input type="text" id="contact-name" name="name" class="form-control" placeholder="Họ và tên" autocomplete="name" required>
@@ -984,7 +1002,7 @@
 										<div class="form-group">
 											<button type="submit" class="btn btn-primary btn-send-message" id="submit-btn">
 												<span class="btn-text">Gửi tin nhắn</span>
-												<span class="btn-loading" style="display: none;">
+												<span class="btn-loading">
 													<i class="icon-spinner6" aria-hidden="true"></i> Đang gửi...
 												</span>
 											</button>
@@ -996,7 +1014,7 @@
 							</div>
 						</div>
 					</div>
-					<p class="site-updated">Cập nhật lần cuối: <time datetime="2026-10">tháng 10/2026</time></p>
+					<p class="site-updated"><span>Cập nhật lần cuối: <time datetime="2026-10">tháng 10/2026</time></span> <a href="#privacy" class="site-updated__privacy" aria-haspopup="dialog">Quyền riêng tư</a></p>
 				</div>
 			</section>
 
@@ -1508,6 +1526,54 @@
 			<footer class="project-modal__footer">
 				<a href="#contact" data-modal-goto="contact"><i class="icon-paperplane" aria-hidden="true"></i> Liên hệ về công việc này</a>
 			</footer>
+		</div>
+	</div>
+
+	<!-- Privacy note. Opened from the foot of Contact and from the consent
+	     notice; both are links to #privacy, so /vi/#privacy opens it too.
+	     Same classes and behaviour as the project dialogs above, with divs for
+	     its blocks (the theme pads every <section> by 40px on phones). The
+	     "Your choice" line is rewritten by js/site.js (STRINGS). -->
+	<div class="project-modal project-modal--narrow" id="privacy" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="privacy-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Đóng ghi chú quyền riêng tư">&times;</button>
+			<header class="project-modal__header">
+				<h2 id="privacy-title">Quyền riêng tư</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<div class="project-modal__section">
+					<h3>Thống kê truy cập</h3>
+					<p>Google Analytics 4 thống kê lượt truy cập trang này: các mục được xem và trang được cuộn tới đâu, những gì được nhấn (CV, chi tiết dự án, video, liên kết liên hệ và liên kết ra ngoài), biểu mẫu liên hệ có gửi được hay không (không gồm nội dung tin nhắn), cùng trình duyệt, loại thiết bị và vị trí gần đúng của mỗi lượt truy cập. Các tính năng quảng cáo của công cụ này luôn tắt.</p>
+					<p>Nếu bạn cho phép, nó lưu thêm hai cookie, <code>_ga</code> và <code>_ga_0586HR4EGC</code>, để nhận ra trình duyệt quay lại trong tối đa 13 tháng kể từ lần truy cập gần nhất. Khi bạn chưa chọn, nó chạy mà không dùng cookie, nên không thể nối lượt truy cập này với lượt sau. Nếu bạn từ chối, Google Analytics sẽ tắt trên trình duyệt này và các cookie của nó sẽ bị xoá.</p>
+				</div>
+
+				<div class="project-modal__section">
+					<h3>Biểu mẫu liên hệ</h3>
+					<p>Tin nhắn gửi qua biểu mẫu liên hệ (tên, email, tiêu đề và nội dung) đến tay tôi qua Formspree, một dịch vụ biểu mẫu đặt tại Hoa Kỳ. Nếu muốn xoá tin nhắn đã gửi, hoặc muốn liên hệ mà không qua Formspree, bạn hãy email cho tôi qua <a href="mailto:dung.phamphuoc308@gmail.com">dung.phamphuoc308@gmail.com</a>.</p>
+				</div>
+
+				<div class="project-modal__section">
+					<h3>Video</h3>
+					<p>Video dự án được nhúng từ youtube-nocookie.com, chế độ bảo mật nâng cao của YouTube: YouTube không lưu cookie nào cho tới khi bạn phát video. Từ lúc đó, chính sách quyền riêng tư của Google được áp dụng.</p>
+				</div>
+
+				<div class="project-modal__section">
+					<h3>Lưu trữ trang</h3>
+					<p>Trang được lưu trữ trên GitHub Pages. GitHub ghi lại địa chỉ IP của mọi người truy cập vì mục đích bảo mật, như <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection" target="_blank" rel="noopener">tài liệu của GitHub</a> giải thích.</p>
+				</div>
+
+				<div class="project-modal__section">
+					<h3>Lựa chọn của bạn</h3>
+					<p data-consent-state role="status">Bạn chưa chọn, nên Google Analytics đang chạy mà không dùng cookie.</p>
+					<div class="consent__actions privacy-choice">
+						<button type="button" class="consent-btn" data-consent="granted" aria-pressed="false">Cho phép</button>
+						<button type="button" class="consent-btn" data-consent="denied" aria-pressed="false">Từ chối</button>
+					</div>
+					<p>Lựa chọn này chỉ được lưu trong trình duyệt của bạn (local storage), cùng với trạng thái thu gọn của thanh bên. Bạn có thể đổi lại bất cứ lúc nào tại đây; ghi chú này luôn có liên kết ở cuối trang.</p>
+				</div>
+			</div>
 		</div>
 	</div>
 

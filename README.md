@@ -15,10 +15,11 @@ paired with the other through `hreflang`.
 ```
 index.html            English page: content, meta tags, JSON-LD
 vi/index.html         Vietnamese page: the same structure, translated
-404.html              Not-found page (self-contained, root-absolute paths)
+404.html              Not-found page (root-absolute paths; styles in css/404.css)
 css/
   style.css           The theme. Hand-edited; this is the source of truth.
   fonts.css           Inter + JetBrains Mono @font-face rules (also used by 404.html)
+  404.css             The not-found page's own styles (a file, so its CSP needs no inline CSS)
   icons.css           Subsetted icomoon + devicon glyph definitions
   bootstrap.css       Vendored Bootstrap 3.3.5, trimmed to the rules the pages use
 js/
@@ -113,15 +114,85 @@ wording for that language.
   `pdftotext -enc UTF-8` that the text is unchanged. Use only keywords that
   appear in the CV itself.
 
-## Analytics
+## Privacy, analytics and the Content Security Policy
 
-Google Analytics 4 (`G-0586HR4EGC`) with enhanced measurement on, which already
-records page views, scrolls, outbound clicks and file downloads. `js/site.js`
-adds only what enhanced measurement cannot see: `cv_download`
+**Google Analytics 4** (`G-0586HR4EGC`) has enhanced measurement on, which
+already records page views, scrolls, outbound clicks and file downloads.
+`js/site.js` adds only what enhanced measurement cannot see: `cv_download`
 (`link_location`), `contact_click` (`method`), `select_content` (project
 dialogs and videos), `section_view` (`section_name`), `generate_lead` and
 `form_submit_error` for the contact form. Every call goes through `track()`,
-which does nothing if gtag has not loaded.
+which does nothing if the analytics setup did not run.
+
+There is no GA snippet in the HTML. `js/site.js` (`initGtag`) does it all:
+
+- **Consent Mode v2.** `ad_storage`, `ad_user_data` and `ad_personalization`
+  are always denied, and Google signals and ad personalisation are off in the
+  config. `analytics_storage` is denied until the visitor clicks Allow.
+- **Consent notice.** A small card in the bottom corner (`#consent`) asks once.
+  The answer is kept in `localStorage` (`analyticsConsent`: `granted` or
+  `denied`), so it holds for both languages.
+  - Undecided: GA4 sends cookieless pings, so visits are counted but returning
+    browsers are not recognised.
+  - Allow: the `_ga` cookies are set, for 13 months (`cookie_expires`).
+  - Decline: gtag.js is never loaded, the `ga-disable-G-0586HR4EGC` flag is
+    set, and any `_ga` cookies are deleted.
+- **Late loading.** gtag.js (about 175 KB) loads once the page has loaded and
+  gone idle, or on the first tap, key or scroll. Events from before then wait
+  in `dataLayer`.
+- **The trade-off.** A site this size is far below GA4's thresholds for
+  modelling cookieless traffic, so returning-visitor and session figures, and
+  most CV-download and lead attribution, will cover only visitors who click
+  Allow. Visitors who leave within a second or so of the page loading, without
+  touching it, are not counted.
+- **Search Console.** If ownership was verified with the Google Analytics
+  method, that check needs the tag in `<head>`, which is gone. Switch to the
+  HTML-file method (a `google*.html` file at the root) before it lapses.
+- **Lab runs.** Lighthouse and local testing send hits from `localhost`. Add a
+  hostname filter in GA, or block `*google-analytics.com/g/collect*` while
+  testing.
+
+**The privacy note** (`#privacy`, a dialog linked from the consent notice and
+from the foot of Contact; `/#privacy` opens it) says what is collected and
+where it goes: GA4, Formspree for the contact form, YouTube's privacy-enhanced
+embeds, and GitHub Pages' IP logging. It must match what the site does. A new
+third-party service, a new analytics event that collects something new, or a
+change to the cookies means updating it on both pages.
+
+**Content Security Policy.** GitHub Pages cannot send headers, so each page
+carries the policy in a `<meta http-equiv="Content-Security-Policy">` right
+after `<meta charset>`. It is the same on `index.html` and `vi/index.html`:
+
+| Directive | Allows | For |
+|---|---|---|
+| `default-src` | `'self'` | everything not listed (the manifest, for one) |
+| `script-src` | `'self'`, `www.googletagmanager.com` | `js/site.js`, gtag.js |
+| `style-src` | `'self'` | the stylesheets in `css/` |
+| `img-src` | `'self'`, `i.ytimg.com`, `*.google-analytics.com`, `*.googletagmanager.com` | site images, video thumbnails, GA |
+| `font-src` | `'self'` | `fonts/` |
+| `connect-src` | `formspree.io/f/mdaanwpo`, `*.google-analytics.com`, `*.analytics.google.com`, `*.googletagmanager.com` | the contact form's fetch, GA hits |
+| `frame-src` | `www.youtube-nocookie.com` | the project videos |
+| `form-action` | `formspree.io/f/mdaanwpo` | the form without JavaScript |
+| `base-uri`, `object-src` | `'none'` | |
+
+- **Nothing inline.** No inline `<script>`, `<style>`, `style="..."` attribute
+  or `on...=` handler runs. Styling goes in `css/`, behaviour in
+  `js/site.js`. Setting `element.style.x` from script is fine; that is not
+  inline CSS. The JSON-LD blocks are data, not scripts, and are not affected.
+- **Adding something.** Anything new the pages load from another site (an
+  image host, a font, an embed, an API) must be added to the policy on both
+  pages, or the browser refuses it. A refusal shows in the DevTools console as
+  "Refused to ..." or "violates the following Content Security Policy
+  directive".
+- **Limits.** A meta policy cannot set `frame-ancestors` or violation
+  reporting. The allowed hosts (Google Tag Manager above all) stay fully
+  trusted. The pages have no place where visitor input becomes HTML, so this
+  is hardening rather than a fix for a known hole.
+- **404.html** has its own, stricter policy (its own styles, fonts and icon
+  only), which is why its CSS is in `css/404.css` rather than inline.
+
+Both pages also send `strict-origin-when-cross-origin` as their referrer
+policy, so other sites see only `https://ppdung.github.io` and not the path.
 
 ## Running it locally
 
@@ -160,5 +231,7 @@ its fingerprint in `.gitleaksignore`, with a comment saying why.
 Bootstrap's CSS and the fonts are vendored and marked `linguist-vendored` in
 `.gitattributes`. Inter and JetBrains Mono are served from this site under the
 SIL Open Font License (`fonts/*/OFL.txt`), so the pages make no requests to
-Google Fonts. There is no third-party JavaScript apart from Google Analytics.
-The contact form posts to Formspree; the project videos are YouTube embeds.
+Google Fonts. There is no third-party JavaScript apart from Google Analytics,
+which loads only as described above. The contact form posts to Formspree;
+the project videos are YouTube embeds in privacy-enhanced mode
+(youtube-nocookie.com).

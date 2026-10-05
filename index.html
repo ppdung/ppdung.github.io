@@ -2,14 +2,18 @@
 <html lang="en">
 	<head>
 	<meta charset="utf-8">
-	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-0586HR4EGC"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-		gtag('config', 'G-0586HR4EGC');
-	</script>
+	<!-- Content Security Policy. GitHub Pages cannot send headers, so this is
+	     a meta tag, which cannot carry frame-ancestors or violation reports.
+	     Scripts run only from this site (js/site.js) and Google Analytics,
+	     which js/site.js loads once the page is idle; styles come only from
+	     this site. Nothing inline runs, so neither needs 'unsafe-inline'
+	     (the JSON-LD blocks below are data, not scripts). The contact form
+	     may post only to its own Formspree form, frames only to YouTube's
+	     privacy-enhanced player, and i.ytimg.com is for video thumbnails.
+	     Anything new the page loads must be added here, on both pages: see
+	     README.md, "Privacy, analytics and the Content Security Policy". -->
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' https://i.ytimg.com https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self'; connect-src https://formspree.io/f/mdaanwpo https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; frame-src https://www.youtube-nocookie.com; form-action https://formspree.io/f/mdaanwpo; base-uri 'none'; object-src 'none'">
+	<meta name="referrer" content="strict-origin-when-cross-origin">
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Pham Phuoc Dung — C++ / Qt Developer, Ho Chi Minh City</title>
@@ -130,7 +134,7 @@
 		"url": "https://ppdung.github.io/",
 		"inLanguage": "en",
 		"dateCreated": "2023-04-17",
-		"dateModified": "2026-10-05",
+		"dateModified": "2026-10-06",
 		"mainEntity": { "@id": "https://ppdung.github.io/#person" },
 		"significantLink": [
 			"https://ppdung.github.io/CV_PhamPhuocDung.pdf",
@@ -157,13 +161,28 @@
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
-	<!-- Every behaviour on the page, shared by both languages. Deferred: it
-	     downloads alongside the CSS and runs once the document is parsed. -->
+	<!-- Every behaviour on the page, shared by both languages, including
+	     Google Analytics: js/site.js sets the consent defaults, then loads
+	     gtag.js once the page is idle or first used. Deferred: it downloads
+	     alongside the CSS and runs once the document is parsed. -->
 	<script defer src="js/site.js"></script>
 
 	</head>
 	<body>
 	<a href="#colorlib-main" class="skip-link">Skip to main content</a>
+	<!-- Analytics consent notice. js/site.js shows it until a choice is made
+	     and remembers the choice in this browser. Without JavaScript it stays
+	     hidden, and Google Analytics never loads either. A div with a region
+	     role rather than a <section>, which the theme pads on phones. -->
+	<div class="consent" id="consent" role="region" aria-labelledby="consent-title" hidden>
+		<p class="consent__title" id="consent-title">Analytics cookies</p>
+		<p class="consent__text">This site counts visits with Google Analytics. Its cookies are set only if you allow them.</p>
+		<div class="consent__actions">
+			<button type="button" class="consent-btn" data-consent="granted">Allow</button>
+			<button type="button" class="consent-btn" data-consent="denied">Decline</button>
+			<a href="#privacy" class="consent__more" aria-haspopup="dialog">Privacy note</a>
+		</div>
+	</div>
 	<div class="read-progress" id="read-progress" role="presentation"></div>
 	<button type="button" class="to-top" id="to-top" aria-label="Back to top" title="Back to top">
 		<i class="icon-arrow-up" aria-hidden="true"></i>
@@ -622,7 +641,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-ordereat" src="https://www.youtube.com/embed/MYV4o1dTdbk?si=jKQjP-pE1AQBAaWa" title="OrderEAT tablet ordering system demo" loading="lazy" allowfullscreen></iframe>
+									<iframe id="video-ordereat" src="https://www.youtube-nocookie.com/embed/MYV4o1dTdbk?si=jKQjP-pE1AQBAaWa" title="OrderEAT tablet ordering system demo" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>OrderEAT - Tablet Ordering System</h3>
@@ -646,7 +665,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-qualcomm" src="https://www.youtube.com/embed/srL3h80J9yY" title="Qualcomm Vietnam Innovation Challenge mobile robot demo" loading="lazy" allowfullscreen></iframe>
+									<iframe id="video-qualcomm" src="https://www.youtube-nocookie.com/embed/srL3h80J9yY" title="Qualcomm Vietnam Innovation Challenge mobile robot demo" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>Qualcomm Vietnam Innovation Challenge 2022</h3>
@@ -669,7 +688,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-manipulator" src="https://www.youtube.com/embed/6zFjGb3t2Cc" title="Mobile manipulator robot pick-and-place demo" loading="lazy" allowfullscreen></iframe>
+									<iframe id="video-manipulator" src="https://www.youtube-nocookie.com/embed/6zFjGb3t2Cc" title="Mobile manipulator robot pick-and-place demo" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>Mobile Manipulator Robot</h3>
@@ -693,7 +712,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-scara" src="https://www.youtube.com/embed/NhR2n_e45Ps" title="Teaching-less SCARA robot computer vision demo" loading="lazy" allowfullscreen></iframe>
+									<iframe id="video-scara" src="https://www.youtube-nocookie.com/embed/NhR2n_e45Ps" title="Teaching-less SCARA robot computer vision demo" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>Teaching-less SCARA Robot</h3>
@@ -962,8 +981,7 @@
 									<form id="contact-form" action="https://formspree.io/f/mdaanwpo" method="POST">
 										<!-- Honeypot: hidden from people, irresistible to bots. Formspree
 										     silently drops any submission that fills _gotcha in. -->
-										<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true"
-										       style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+										<input type="text" name="_gotcha" class="form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
 										<div class="form-group">
 											<label for="contact-name" class="sr-only">Name</label>
 											<input type="text" id="contact-name" name="name" class="form-control" placeholder="Name" autocomplete="name" required>
@@ -983,7 +1001,7 @@
 										<div class="form-group">
 											<button type="submit" class="btn btn-primary btn-send-message" id="submit-btn">
 												<span class="btn-text">Send Message</span>
-												<span class="btn-loading" style="display: none;">
+												<span class="btn-loading">
 													<i class="icon-spinner6" aria-hidden="true"></i> Sending...
 												</span>
 											</button>
@@ -995,7 +1013,7 @@
 							</div>
 						</div>
 					</div>
-					<p class="site-updated">Last updated: <time datetime="2026-10">October 2026</time></p>
+					<p class="site-updated"><span>Last updated: <time datetime="2026-10">October 2026</time></span> <a href="#privacy" class="site-updated__privacy" aria-haspopup="dialog">Privacy note</a></p>
 				</div>
 			</section>
 
@@ -1507,6 +1525,54 @@
 			<footer class="project-modal__footer">
 				<a href="#contact" data-modal-goto="contact"><i class="icon-paperplane" aria-hidden="true"></i> Get in touch about this work</a>
 			</footer>
+		</div>
+	</div>
+
+	<!-- Privacy note. Opened from the foot of Contact and from the consent
+	     notice; both are links to #privacy, so /#privacy opens it too.
+	     Same classes and behaviour as the project dialogs above, with divs for
+	     its blocks (the theme pads every <section> by 40px on phones). The
+	     "Your choice" line is rewritten by js/site.js (STRINGS). -->
+	<div class="project-modal project-modal--narrow" id="privacy" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="privacy-title" hidden>
+		<div class="project-modal__backdrop" data-modal-close></div>
+		<div class="project-modal__dialog">
+			<button type="button" class="project-modal__close" data-modal-close aria-label="Close privacy note">&times;</button>
+			<header class="project-modal__header">
+				<h2 id="privacy-title">Privacy note</h2>
+			</header>
+
+			<div class="project-modal__body">
+				<div class="project-modal__section">
+					<h3>Visit statistics</h3>
+					<p>Google Analytics 4 counts visits to this site: the sections viewed and how far the page is scrolled, what is clicked (the CV, project details, videos, contact and outbound links), whether the contact form was sent (not what it said), and each visit&rsquo;s browser, device type and approximate location. Its advertising features are always off.</p>
+					<p>If you allow it, it also sets two cookies, <code>_ga</code> and <code>_ga_0586HR4EGC</code>, which let it recognise a returning browser for up to 13 months after its last visit. Until you choose, it runs without cookies, so one visit cannot be linked to the next. If you decline, Google Analytics is switched off in this browser and its cookies are removed.</p>
+				</div>
+
+				<div class="project-modal__section">
+					<h3>Contact form</h3>
+					<p>A message sent with the contact form (your name, email, subject and message) reaches me through Formspree, a form service based in the United States. To have a message you sent deleted, or to write to me without Formspree, email <a href="mailto:dung.phamphuoc308@gmail.com">dung.phamphuoc308@gmail.com</a>.</p>
+				</div>
+
+				<div class="project-modal__section">
+					<h3>Videos</h3>
+					<p>The project videos are embedded from youtube-nocookie.com, YouTube&rsquo;s privacy-enhanced mode, which sets no YouTube cookies until you play a video. From then on, Google&rsquo;s privacy policy applies.</p>
+				</div>
+
+				<div class="project-modal__section">
+					<h3>Hosting</h3>
+					<p>The site is hosted on GitHub Pages. GitHub logs the IP address of every visitor for security purposes, as <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection" target="_blank" rel="noopener">its documentation</a> explains.</p>
+				</div>
+
+				<div class="project-modal__section">
+					<h3>Your choice</h3>
+					<p data-consent-state role="status">You have not chosen yet, so Google Analytics runs without cookies.</p>
+					<div class="consent__actions privacy-choice">
+						<button type="button" class="consent-btn" data-consent="granted" aria-pressed="false">Allow</button>
+						<button type="button" class="consent-btn" data-consent="denied" aria-pressed="false">Decline</button>
+					</div>
+					<p>The choice is kept in this browser only (local storage), as is whether the sidebar is collapsed. You can change it here at any time; this note is linked at the foot of the page.</p>
+				</div>
+			</div>
 		</div>
 	</div>
 
