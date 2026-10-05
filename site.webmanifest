@@ -1,0 +1,23 @@
+{
+	"name": "Pham Phuoc Dung — C++ / Qt Developer",
+	"short_name": "Pham Phuoc Dung",
+	"description": "Portfolio of Pham Phuoc Dung, C++/Qt/QML software engineer in Ho Chi Minh City.",
+	"lang": "en",
+	"start_url": "/",
+	"scope": "/",
+	"display": "browser",
+	"background_color": "#0d1117",
+	"theme_color": "#0d1117",
+	"icons": [
+		{
+			"src": "apple-touch-icon.png",
+			"sizes": "180x180",
+			"type": "image/png"
+		},
+		{
+			"src": "favicon.ico",
+			"sizes": "16x16 32x32 48x48",
+			"type": "image/x-icon"
+		}
+	]
+}

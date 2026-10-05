@@ -5,5 +5,4 @@
 # here, not the libraries this template shipped with. Without this the repo of
 # a C++ developer gets labelled by whatever vendored stylesheet is largest.
 css/bootstrap.css      linguist-vendored
-css/owl.*              linguist-vendored
 fonts/**               linguist-vendored

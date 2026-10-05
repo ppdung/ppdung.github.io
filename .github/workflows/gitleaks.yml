@@ -1,0 +1,44 @@
+# Secret scan: runs gitleaks over the whole git history on every push and
+# pull request, so a token committed by mistake fails the check within a
+# minute instead of sitting in the public history for months.
+#
+# GitHub's own push protection does not cover every token type (Telegram bot
+# tokens, for one), which is why this runs gitleaks itself. History is never
+# rewritten; known, already-revoked findings are listed in .gitleaksignore.
+name: Secret scan
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GITLEAKS_VERSION: 8.30.1
+      # From gitleaks_8.30.1_checksums.txt on the release page.
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+    steps:
+      - name: Check out the full history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install gitleaks
+        run: |
+          cd "$RUNNER_TEMP"
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum --check --strict
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks version
+
+      - name: Scan every commit
+        run: |
+          "$RUNNER_TEMP/gitleaks" git --redact --verbose --no-banner --exit-code 1 .

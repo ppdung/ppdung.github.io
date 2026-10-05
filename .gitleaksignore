@@ -1,0 +1,7 @@
+# gitleaks: findings that are known and safe to keep in history.
+#
+# The Telegram bot token committed in d380fb9 (2026-01-11) and removed in
+# 315398b (2026-08-03) was revoked: the Bot API answers getMe with 401.
+# History is deliberately not rewritten, so the scan is told to skip this one
+# finding. Anything new still fails the build.
+d380fb9097d876592d6e0ad3f3be7459270c48b1:index.html:telegram-bot-api-token:957

@@ -19,4 +19,10 @@
     <xhtml:link rel="alternate" hreflang="vi" href="https://ppdung.github.io/vi/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://ppdung.github.io/"/>
   </url>
+  <url>
+    <loc>https://ppdung.github.io/CV_PhamPhuocDung.pdf</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>

@@ -29,8 +29,11 @@
 	<!-- Facebook and Twitter integration -->
 	<meta property="og:type" content="profile"/>
 	<meta property="og:title" content="Pham Phuoc Dung | C++ Qt Developer"/>
-	<meta property="og:image" content="https://ppdung.github.io/images/about.jpg"/>
-	<meta property="og:image:alt" content="Portrait of Pham Phuoc Dung"/>
+	<meta property="og:image" content="https://ppdung.github.io/images/og-cover.jpg"/>
+	<meta property="og:image:type" content="image/jpeg"/>
+	<meta property="og:image:width" content="1200"/>
+	<meta property="og:image:height" content="630"/>
+	<meta property="og:image:alt" content="Portrait of Pham Phuoc Dung beside his name, the title C++ / Qt Developer and the line: Lead developer of DeepKDS, a kitchen display system used in 5,000+ Korean stores (per SMARTCAST)."/>
 	<meta property="og:url" content="https://ppdung.github.io/"/>
 	<meta property="og:site_name" content="Pham Phuoc Dung Portfolio"/>
 	<meta property="og:locale" content="en_US"/>
@@ -38,11 +41,14 @@
 	<meta property="og:description" content="Software Engineer with 5+ years building cross-platform C++/Qt/QML applications for point-of-sale, kitchen automation and robotics."/>
 	<meta name="twitter:title" content="Pham Phuoc Dung | C++ Qt Developer" />
 	<meta name="twitter:description" content="Software Engineer with 5+ years building cross-platform C++/Qt/QML applications for point-of-sale, kitchen automation and robotics." />
-	<meta name="twitter:image" content="https://ppdung.github.io/images/about.jpg" />
+	<meta name="twitter:image" content="https://ppdung.github.io/images/og-cover.jpg" />
+	<meta name="twitter:image:alt" content="Portrait of Pham Phuoc Dung beside his name, the title C++ / Qt Developer and the line: Lead developer of DeepKDS, a kitchen display system used in 5,000+ Korean stores (per SMARTCAST)." />
 	<meta name="twitter:url" content="https://ppdung.github.io/" />
 	<meta name="twitter:card" content="summary_large_image" />
 
 	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="apple-touch-icon" href="apple-touch-icon.png">
+	<link rel="manifest" href="site.webmanifest">
 
 	<!-- Structured data: tells search engines who this page is about -->
 	<script type="application/ld+json">
@@ -51,7 +57,7 @@
 		"@type": "Person",
 		"@id": "https://ppdung.github.io/#person",
 		"name": "Pham Phuoc Dung",
-		"alternateName": ["Phạm Phước Dũng", "Danny"],
+		"alternateName": ["Phạm Phước Dũng", "Dũng Phạm Phước", "Dung Pham Phuoc", "Danny"],
 		"url": "https://ppdung.github.io/",
 		"image": "https://ppdung.github.io/images/about.jpg",
 		"jobTitle": "Middle Software Engineer",
@@ -66,6 +72,7 @@
 		"worksFor": {
 			"@type": "Organization",
 			"name": "SMARTCAST Korea",
+			"alternateName": "Smart Cast Co., Ltd.",
 			"url": "https://smartcast.co.kr"
 		},
 		"alumniOf": {
@@ -107,7 +114,9 @@
 		},
 		"sameAs": [
 			"https://github.com/ppdung",
-			"https://www.linkedin.com/in/ppdung/"
+			"https://www.linkedin.com/in/ppdung/",
+			"https://www.youtube.com/@dungphamphuoc26",
+			"https://www.facebook.com/PhuocDung.P/"
 		]
 	}
 	</script>
@@ -120,6 +129,7 @@
 		"name": "Pham Phuoc Dung — C++ / Qt Developer Portfolio",
 		"url": "https://ppdung.github.io/",
 		"inLanguage": "en",
+		"dateCreated": "2023-04-17",
 		"dateModified": "2026-10-05",
 		"mainEntity": { "@id": "https://ppdung.github.io/#person" },
 		"significantLink": [
@@ -164,7 +174,7 @@
 
 		<div class="container-wrap">
 		<button type="button" class="js-colorlib-nav-toggle colorlib-nav-toggle" aria-expanded="false" aria-controls="colorlib-aside" aria-label="Navigation menu"><i aria-hidden="true"></i></button>
-		<aside id="colorlib-aside" role="complementary" class="border">
+		<aside id="colorlib-aside" class="border">
 			<!-- Drag Handle for resizing -->
 			<div class="sidebar-drag-handle"></div>
 			<div class="text-center">
@@ -177,7 +187,7 @@
 				<span class="location">Ho Chi Minh City, Vietnam</span>
 				<span class="availability-note">Open to opportunities</span>
 			</div>
-			<nav id="colorlib-main-menu" role="navigation" class="navbar">
+			<nav id="colorlib-main-menu" class="navbar">
 				<div id="navbar" class="collapse">
 					<ul>
 						<li class="active"><a href="./" data-nav-section="home">Home</a></li>
@@ -477,12 +487,12 @@
 					            </div>
 					         </article>
 
-					         <article class="timeline-entry begin animate-box" data-animate-effect="fadeInUp">
+					         <div class="timeline-entry begin animate-box" data-animate-effect="fadeInUp" aria-hidden="true">
 					            <div class="timeline-entry-inner">
 					               <div class="timeline-icon color-none">
 					               </div>
 					            </div>
-					         </article>
+					         </div>
 					      </div>
 					   </div>
 				   </div>
@@ -612,7 +622,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-ordereat" src="https://www.youtube.com/embed/MYV4o1dTdbk?si=jKQjP-pE1AQBAaWa" title="OrderEAT tablet ordering system demo" loading="lazy" frameborder="0" allowfullscreen></iframe>
+									<iframe id="video-ordereat" src="https://www.youtube.com/embed/MYV4o1dTdbk?si=jKQjP-pE1AQBAaWa" title="OrderEAT tablet ordering system demo" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>OrderEAT - Tablet Ordering System</h3>
@@ -636,7 +646,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-qualcomm" src="https://www.youtube.com/embed/srL3h80J9yY" title="Qualcomm Vietnam Innovation Challenge mobile robot demo" loading="lazy" frameborder="0" allowfullscreen></iframe>
+									<iframe id="video-qualcomm" src="https://www.youtube.com/embed/srL3h80J9yY" title="Qualcomm Vietnam Innovation Challenge mobile robot demo" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>Qualcomm Vietnam Innovation Challenge 2022</h3>
@@ -659,7 +669,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-manipulator" src="https://www.youtube.com/embed/6zFjGb3t2Cc" title="Mobile manipulator robot pick-and-place demo" loading="lazy" frameborder="0" allowfullscreen></iframe>
+									<iframe id="video-manipulator" src="https://www.youtube.com/embed/6zFjGb3t2Cc" title="Mobile manipulator robot pick-and-place demo" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>Mobile Manipulator Robot</h3>
@@ -683,7 +693,7 @@
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
 								<div class="project-video">
-									<iframe id="video-scara" src="https://www.youtube.com/embed/NhR2n_e45Ps" title="Teaching-less SCARA robot computer vision demo" loading="lazy" frameborder="0" allowfullscreen></iframe>
+									<iframe id="video-scara" src="https://www.youtube.com/embed/NhR2n_e45Ps" title="Teaching-less SCARA robot computer vision demo" loading="lazy" allowfullscreen></iframe>
 								</div>
 								<div class="project-info">
 									<h3>Teaching-less SCARA Robot</h3>
