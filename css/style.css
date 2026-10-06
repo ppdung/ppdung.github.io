@@ -4554,3 +4554,29 @@ button:focus-visible,
   border-color: var(--accent-primary) !important;
   color: var(--accent-primary);
 }
+
+/* Zalo contact tile: the subsetted icon font has no Zalo glyph, so the word
+   itself is the mark, centred in the same tile the other contact icons use. */
+.colorlib-contact .contact-zalo .colorlib-icon .zalo-mark {
+  display: table-cell;
+  vertical-align: middle;
+  height: 100px;
+  color: var(--accent-primary);
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+@media screen and (max-width: 1200px) {
+  .colorlib-contact .contact-zalo .colorlib-icon .zalo-mark {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .colorlib-contact .contact-zalo .colorlib-icon .zalo-mark {
+    height: 56px;
+    font-size: 14px;
+  }
+}

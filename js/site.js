@@ -941,13 +941,13 @@
 			});
 		});
 
-		// Email and phone taps. A tap is intent, not a delivered message, so it
+		// Email, phone and Zalo taps. A tap is intent, not a delivered message, so it
 		// is its own event rather than generate_lead. Delegated, so the address
 		// in the form's error message counts too.
 		doc.addEventListener('click', function (e) {
-			var a = e.target.closest ? e.target.closest('a[href^="mailto:"], a[href^="tel:"]') : null;
+			var a = e.target.closest ? e.target.closest('a[href^="mailto:"], a[href^="tel:"], a[href^="https://zalo.me/"]') : null;
 			if (!a) { return; }
-			track('contact_click', { method: a.protocol === 'tel:' ? 'phone' : 'email' });
+			track('contact_click', { method: a.protocol === 'tel:' ? 'phone' : (a.protocol === 'mailto:' ? 'email' : 'zalo') });
 		});
 	}
 
