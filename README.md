@@ -18,6 +18,7 @@ vi/index.html         Vietnamese page: the same structure, translated
 404.html              Not-found page (root-absolute paths; styles in css/404.css)
 css/
   style.css           The theme. Hand-edited; this is the source of truth.
+  print.css           Print and Save as PDF: the page as a short CV (media="print")
   fonts.css           Inter + JetBrains Mono @font-face rules (also used by 404.html)
   404.css             The not-found page's own styles (a file, so its CSP needs no inline CSS)
   noscript.css        Loaded only with JavaScript off (<noscript> in each head): the master's-panel photo
@@ -51,7 +52,8 @@ CV_PhamPhuocDung.pdf  The CV linked from both pages
 
 `index.html` and `vi/index.html` are independent files with the same
 structure. Every change to one needs the same change in the other, in natural
-wording for that language.
+wording for that language. That includes the print-only blocks (see "Print
+and Save as PDF" below).
 
 - **Content.** Sections, ids, classes and `data-*` hooks are identical in both
   files; only the text differs. Section ids (`about`, `experience`,
@@ -195,6 +197,46 @@ before relying on them.
 - **The CV links.** Each "Download CV" link has the `download` attribute;
   "View CV in browser" (hero) and "View in browser" (Contact) have none and
   open the PDF in a new tab, in the browser's own viewer.
+- **Print and Save as PDF.** Recruiters print the page or save it as a PDF
+  to attach to an applicant record. `css/print.css`, linked with
+  `media="print"` so a visit never waits for it, holds every print rule and
+  turns the page into a short CV:
+  - On paper: a header (name, "Danny", the heading's role line and a
+    contact line), About with its focus areas as one line, Experience with
+    every bullet (the folded ones too), each project's title and summary,
+    Tech Stack as one line of keywords per group, Education, Languages, and
+    a footer line pointing to the site, its case studies and the CV PDF,
+    above "Last updated".
+  - Off paper: the sidebar, the hero's decoration, typing line, tagline,
+    links, availability line and buttons, the consent notice, videos and
+    photos, the project stats, notes, links and tags, the timeline glyphs,
+    the skill cards, the contact form and the dialogs.
+  - Three blocks exist only on paper. They carry the `hidden` attribute, so
+    they never show on screen or to screen readers: `.print-contact` (in the
+    hero), `.print-languages` (between Education and Contact) and
+    `.print-footer` (above "Last updated"), in both files. They repeat the
+    email, phone, LinkedIn, IELTS/TOEIC and CV address, so change them
+    with those.
+  - Every rule is `!important` inside `@layer print`. Important declarations
+    in a cascade layer outrank the theme's unlayered `!important` ones
+    whatever their specificity, so a print rule never has to out-specify
+    the theme (`#colorlib-hero .hero-name` printed near-white before). The
+    text is dark on white with "Background graphics" ticked or not, and
+    `color-scheme: light` keeps Chrome from framing each page in black.
+  - Links print as their text. An http(s) link in the body adds its address
+    in angle brackets; `mailto:`, `tel:` and in-page links add nothing, and
+    the header and footer show their addresses as the link text. Links stay
+    clickable in a saved PDF.
+  - Page breaks: headings, each job's title and project line stay with what
+    follows them; a bullet, project, degree or the Tech Stack list is never
+    split; nothing keeps a screen height, so no page comes out empty.
+  - Measured with Chrome's `Page.printToPDF` (A4 and Letter, the stylesheet's
+    14 mm / 15 mm margins, background graphics on and off) on 2026-10-06:
+    5 pages for both `/` and `/vi/`, the first job on page 1. Before, it was
+    22 pages, page 1 blank and the first job on page 6. After a change,
+    check Chrome's print preview at A4 and Letter for both pages, with and
+    without background graphics; a new screen element that should not
+    print needs a line in the "Off paper" list of `css/print.css`.
 - **The menu button** draws its bars as SVG strokes in `currentColor`. Bars
   painted as backgrounds nearly vanished when a browser forced its own dark
   mode over this already dark page (Chromium's force-dark, behind Samsung

@@ -176,6 +176,10 @@
 	<link rel="stylesheet" href="../css/bootstrap.css">
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="../css/style.css">
+	<!-- Print and Save as PDF: a short CV (header, About, Experience, Projects,
+	     Tech Stack, Education, Languages). media="print", so a visit never
+	     waits for it. The .print-only blocks below are hidden except on paper. -->
+	<link rel="stylesheet" href="../css/print.css" media="print">
 	<!-- Without JavaScript: the master's-panel photo, which js/site.js
 	     otherwise sets once the panel is near. A stylesheet rather than an
 	     inline <style>, which the Content Security Policy would refuse. -->
@@ -290,6 +294,7 @@
 												<span class="hero-typed" aria-hidden="true" data-roles="Lập trình viên C++|Lập trình viên Qt/QML|Kỹ sư Robotics">Lập trình viên C++</span>
 											</span>
 										</h2>
+										<p class="print-only print-contact" hidden>TP. Hồ Chí Minh, Việt Nam &middot; <a href="mailto:dung.phamphuoc308@gmail.com">dung.phamphuoc308@gmail.com</a> &middot; <a href="tel:+84932813052">+84 932 813 052</a> &middot; <a href="https://www.linkedin.com/in/ppdung/">linkedin.com/in/ppdung</a> &middot; <a href="https://ppdung.github.io/vi/">ppdung.github.io/vi/</a></p>
 										<p class="hero-tagline">Hơn 5 năm làm phần mềm C++/Qt thực sự ra được sản phẩm &mdash; nay là DeepKDS thế hệ thứ hai, thuộc dòng màn hình bếp đang được dùng tại <strong>hơn 5.000 cửa hàng ở Hàn Quốc</strong> (theo SMARTCAST), và trước đó là robot tự hành.</p>
 										<p class="hero-meta">
 											<span class="hero-meta__item"><i class="icon-map" aria-hidden="true"></i> TP. Hồ Chí Minh, Việt Nam</span>
@@ -974,6 +979,12 @@
 				</div>
 			</section>
 
+			<!-- Print only (css/print.css): the CV's Languages block. -->
+			<div class="print-only print-languages" hidden>
+				<h2>Ngoại ngữ</h2>
+				<p>Tiếng Anh: IELTS 6.5, TOEIC 850; dùng trong công việc với đội ngũ Hàn Quốc của SMARTCAST từ năm 2023</p>
+			</div>
+
 			<section id="contact" class="colorlib-contact" data-section="contact">
 				<div class="colorlib-narrow-content">
 					<div class="row">
@@ -1067,6 +1078,7 @@
 							</div>
 						</div>
 					</div>
+					<p class="print-only print-footer" hidden>Bản in từ <a href="https://ppdung.github.io/vi/">https://ppdung.github.io/vi/</a>; trên trang, mỗi dự án đều có bài mô tả chi tiết (nút &ldquo;Chi tiết dự án&rdquo;). CV (PDF): <a href="https://ppdung.github.io/CV_PhamPhuocDung.pdf">ppdung.github.io/CV_PhamPhuocDung.pdf</a></p>
 					<p class="site-updated"><span>Cập nhật lần cuối: <time datetime="2026-10">tháng 10/2026</time></span> <a href="#privacy" class="site-updated__privacy" aria-haspopup="dialog">Quyền riêng tư</a></p>
 				</div>
 			</section>

@@ -175,6 +175,10 @@
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
+	<!-- Print and Save as PDF: a short CV (header, About, Experience, Projects,
+	     Tech Stack, Education, Languages). media="print", so a visit never
+	     waits for it. The .print-only blocks below are hidden except on paper. -->
+	<link rel="stylesheet" href="css/print.css" media="print">
 	<!-- Without JavaScript: the master's-panel photo, which js/site.js
 	     otherwise sets once the panel is near. A stylesheet rather than an
 	     inline <style>, which the Content Security Policy would refuse. -->
@@ -289,6 +293,7 @@
 												<span class="hero-typed" aria-hidden="true" data-roles="C++ Developer|Qt/QML Developer|Robotics Engineer">C++ Developer</span>
 											</span>
 										</h2>
+										<p class="print-only print-contact" hidden>Ho Chi Minh City, Vietnam &middot; <a href="mailto:dung.phamphuoc308@gmail.com">dung.phamphuoc308@gmail.com</a> &middot; <a href="tel:+84932813052">+84 932 813 052</a> &middot; <a href="https://www.linkedin.com/in/ppdung/">linkedin.com/in/ppdung</a> &middot; <a href="https://ppdung.github.io/">ppdung.github.io</a></p>
 										<p class="hero-tagline">5+ years building C++/Qt software that ships &mdash; now the second-generation DeepKDS, from a kitchen display line used in <strong>5,000+ Korean stores</strong> (per SMARTCAST), and autonomous robots before that.</p>
 										<p class="hero-meta">
 											<span class="hero-meta__item"><i class="icon-map" aria-hidden="true"></i> Ho Chi Minh City, Vietnam</span>
@@ -973,6 +978,12 @@
 				</div>
 			</section>
 
+			<!-- Print only (css/print.css): the CV's Languages block. -->
+			<div class="print-only print-languages" hidden>
+				<h2>Languages</h2>
+				<p>Vietnamese (native) &middot; English: IELTS 6.5, TOEIC 850; used at work with SMARTCAST&rsquo;s Korean team since 2023</p>
+			</div>
+
 			<section id="contact" class="colorlib-contact" data-section="contact">
 				<div class="colorlib-narrow-content">
 					<div class="row">
@@ -1066,6 +1077,7 @@
 							</div>
 						</div>
 					</div>
+					<p class="print-only print-footer" hidden>Printed from <a href="https://ppdung.github.io/">https://ppdung.github.io/</a>, where each project has a case study online (Project details). CV (PDF): <a href="https://ppdung.github.io/CV_PhamPhuocDung.pdf">ppdung.github.io/CV_PhamPhuocDung.pdf</a></p>
 					<p class="site-updated"><span>Last updated: <time datetime="2026-10">October 2026</time></span> <a href="#privacy" class="site-updated__privacy" aria-haspopup="dialog">Privacy note</a></p>
 				</div>
 			</section>

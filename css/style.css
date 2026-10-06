@@ -2106,14 +2106,6 @@ section[data-section] {
   }
 }
 
-@media print {
-  .stack-chips li,
-  .stack-evidence li {
-    border-color: #ccc !important;
-    background: #fff !important;
-  }
-}
-
 /* Education Section - Panel/Accordion */
 .panel-heading .panel-toggle {
   background-color: var(--accent-primary);
@@ -3220,92 +3212,8 @@ textarea:focus-visible,
   }
 }
 
-/* ============================================
-   Print: recruiters do print these
-   ============================================ */
-@media print {
-  @page { margin: 14mm; }
-
-  body {
-    background: #fff !important;
-    color: #000 !important;
-    font-size: 11pt;
-  }
-
-  /* chrome that means nothing on paper. The nav needs the same specificity
-     the screen rule uses (#colorlib-aside > nav#colorlib-main-menu), since
-     that one is !important too. */
-  #colorlib-aside > nav#colorlib-main-menu,
-  #colorlib-aside #colorlib-main-menu .collapse,
-  .particles-container,
-  .grid-background,
-  .sidebar-toggle,
-  .sidebar-drag-handle,
-  .colorlib-nav-toggle,
-  .to-top,
-  .read-progress,
-  .skip-link,
-  .hero-buttons,
-  .hero-tech-icons,
-  #contact-form,
-  .project-placeholder,
-  .project-video,
-  .bullets-toggle,
-  .colorlib-contact .contact-cv,
-  #colorlib-aside .colorlib-footer a[download],
-  .consent,
-  .site-updated__privacy {
-    display: none !important;
-  }
-
-  /* the sidebar floats next to main on screen; stack it on paper */
-  #colorlib-aside,
-  #colorlib-main {
-    position: static !important;
-    width: 100% !important;
-    float: none !important;
-    padding: 0 !important;
-  }
-
-  /* everything is revealed on scroll, which never happens when printing */
-  .animate-box,
-  .panel-collapse {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-    height: auto !important;
-    display: block !important;
-    visibility: visible !important;
-  }
-
-  .hero-typed::after {
-    display: none !important;
-  }
-
-  .timeline-label ul li.is-collapsed { display: list-item !important; }
-
-  section,
-  .project-card,
-  .timeline-entry,
-  .panel {
-    page-break-inside: avoid;
-    background: #fff !important;
-    border-color: #ccc !important;
-  }
-
-  h1, h2, h3, h4,
-  .timeline-label h3,
-  .project-info h3 { color: #000 !important; }
-
-  p, li, span { color: #222 !important; }
-
-  /* a printed page cannot be clicked, so spell the destination out */
-  a[href^="http"]:after {
-    content: " (" attr(href) ")";
-    font-size: 9pt;
-    color: #555;
-  }
-}
+/* Print and Save as PDF: css/print.css, linked with media="print" after
+   this file. Every print rule lives there. */
 
 /* ============================================
    Availability signal
@@ -3473,15 +3381,6 @@ a.hero-meta__item:focus-visible {
   font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 10.5px;
   letter-spacing: 0.3px;
-}
-
-@media print {
-  .hero-availability {
-    border-color: #999 !important;
-    background: none !important;
-    color: #000 !important;
-  }
-  .hero-availability .status-dot { display: none !important; }
 }
 
 /* ==========================================================================
@@ -3994,13 +3893,6 @@ body.modal-open {
   }
 }
 
-@media print {
-  .project-modal,
-  .project-details-btn {
-    display: none !important;
-  }
-}
-
 /* ==========================================================================
    Analytics consent notice and privacy note
 
@@ -4326,13 +4218,6 @@ body.offcanvas .consent {
   }
 }
 
-@media print {
-  .panel--master .panel-body::before,
-  .panel--master .panel-body::after {
-    display: none !important;
-  }
-}
-
 /* ==========================================================================
    Project card imagery
    A lazily loaded <picture> (see "Photographs") cropped to a 200px band.
@@ -4365,14 +4250,6 @@ body.offcanvas .consent {
   font-family: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   font-size: 11px;
   letter-spacing: 0.04em;
-}
-
-/* Print kept these as empty bands, since print drops backgrounds; the
-   photos stay off paper as the videos and icon placeholders do. */
-@media print {
-  .project-image img {
-    display: none !important;
-  }
 }
 
 /* ==========================================================================

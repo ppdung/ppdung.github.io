@@ -1,0 +1,629 @@
+/* ==========================================================================
+   Print and "Save as PDF": a short CV, not a picture of the dark screen.
+
+   Linked with media="print" after style.css on / and /vi/, so a visit never
+   waits for it. Recruiters print the page or save it as a PDF to attach to
+   an applicant record; before this file that gave 22 pages, the first one
+   blank, with the name in light grey (near-white with "Background
+   graphics" ticked) and a dark frame round every page.
+
+   What reaches paper:
+   - a CV header: the name, "Danny", the role line (the heading's own text,
+     not the typing animation) and a print-only contact line (.print-contact:
+     location, email, phone, LinkedIn, the portfolio address);
+   - About, with its focus areas as one line of text;
+   - Experience with every contribution bullet, the folded ones included;
+   - each project's title and one-paragraph summary;
+   - Tech Stack as plain keyword lines (the skill cards stay off);
+   - Education, a print-only Languages block (.print-languages), and a
+     footer line (.print-footer) pointing to the site and its case studies.
+   Everything else (sidebar, hero decoration and buttons, the availability
+   line, consent notice, videos and photos, timeline glyphs, the contact
+   form, the dialogs) stays off paper.
+
+   Why a layer: the screen theme sets many colours, sizes and positions with
+   !important, often behind an id (#colorlib-hero .hero-name). Important
+   declarations inside a cascade layer outrank important declarations
+   outside any layer, whatever their specificity, so every rule here is
+   !important inside @layer print and needs no specificity contest. That
+   includes Bootstrap's own print reset (bootstrap.css), which still
+   supplies transparent backgrounds and black text for anything not named
+   here.
+
+   Page breaks: a heading never ends a page (break-after: avoid on headings,
+   each job's title and project line, and each section's heading row), a
+   bullet, project or degree is never split, and nothing has a fixed height
+   that could push an empty page out.
+
+   Links: mailto:, tel: and in-page links print as their text. An http(s)
+   link in the body prints its address after the text, in angle brackets
+   (as RFC 3986, appendix C, suggests for addresses in running text), since
+   paper cannot be clicked; the header and footer links already show theirs.
+   ========================================================================== */
+
+@page {
+  margin: 14mm 15mm;
+}
+
+@layer print {
+  :root {
+    color-scheme: light !important;
+  }
+
+  /* Also while a dialog or the phone menu is open (body.modal-open,
+     body.offcanvas lock the page's scrolling). */
+  html,
+  body {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+
+  body {
+    color: #111 !important;
+    font-family: 'Inter', 'Inter Fallback', Arial, sans-serif !important;
+    font-size: 9.5pt !important;
+    line-height: 1.42 !important;
+  }
+
+  /* Dark text on white everywhere, background graphics on or off. */
+  #colorlib-page *,
+  #colorlib-page *::before,
+  #colorlib-page *::after {
+    color: #111 !important;
+    -webkit-text-fill-color: currentColor !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    animation: none !important;
+    transition: none !important;
+    font-family: inherit !important;
+    letter-spacing: normal !important;
+  }
+
+  /* ---------------------------------------------------------------------
+     Off paper
+     --------------------------------------------------------------------- */
+  .skip-link,
+  .consent,
+  .read-progress,
+  .to-top,
+  .project-modal,
+  .sidebar-toggle,
+  .colorlib-nav-toggle,
+  #colorlib-aside,
+  #colorlib-hero .particles-container,
+  #colorlib-hero .grid-background,
+  #colorlib-hero .hero-overlay,
+  #colorlib-hero .hero-greeting,
+  #colorlib-hero .hero-typed-box,
+  #colorlib-hero .hero-typed,
+  #colorlib-hero .hero-tagline,
+  #colorlib-hero .hero-meta,
+  #colorlib-hero .hero-availability,
+  #colorlib-hero .hero-buttons,
+  #colorlib-hero .hero-tech-icons,
+  .heading-meta,
+  #colorlib-main #about .colorlib-heading,
+  .about-highlights i,
+  .timeline-icon,
+  .timeline-centered .timeline-entry.begin,
+  .bullets-toggle,
+  .project-image,
+  .project-placeholder,
+  .project-video,
+  .project-stats,
+  .project-note,
+  .project-links,
+  .project-tags,
+  .tech-category,
+  .stack-evidence,
+  #contact .colorlib-narrow-content > .row,
+  .site-updated__privacy {
+    display: none !important;
+  }
+
+  /* Print-only blocks carry the hidden attribute, so they never show on
+     screen, to screen readers, or without this file. */
+  .print-only[hidden] {
+    display: block !important;
+  }
+
+  /* ---------------------------------------------------------------------
+     One plain column: no sidebar offset, no full-screen hero, no grid
+     gutters, no reveal-on-scroll state
+     --------------------------------------------------------------------- */
+  #colorlib-page,
+  .container-wrap,
+  #colorlib-main,
+  #colorlib-main section,
+  #colorlib-main .colorlib-narrow-content,
+  #colorlib-main .container-fluid,
+  #colorlib-main .row,
+  #colorlib-main [class*="col-"],
+  #colorlib-hero .hero-content,
+  #colorlib-hero .slider-text-inner,
+  #colorlib-hero .hero-desc {
+    position: static !important;
+    float: none !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    border: 0 !important;
+    overflow: visible !important;
+    text-align: left !important;
+  }
+
+  #colorlib-main section,
+  #colorlib-main .colorlib-narrow-content,
+  #colorlib-main .row,
+  #colorlib-main [class*="col-"],
+  #colorlib-hero .hero-content,
+  #colorlib-hero .slider-text-inner,
+  #colorlib-hero .hero-desc {
+    display: block !important;
+  }
+
+  #colorlib-main section,
+  .print-languages {
+    margin: 0 0 11pt !important;
+  }
+
+  .animate-box {
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  /* Decoration drawn by pseudo-elements. The hero's glow is twice the page
+     wide; left in, Chrome shrank every page to fit it. */
+  #colorlib-main::before,
+  #colorlib-main::after,
+  #colorlib-main section::before,
+  #colorlib-main section::after,
+  .row::before,
+  .row::after,
+  .container-fluid::before,
+  .container-fluid::after {
+    display: none !important;
+  }
+
+  /* ---------------------------------------------------------------------
+     Header: name, Danny, role, contact line
+     --------------------------------------------------------------------- */
+  #colorlib-main #colorlib-hero {
+    margin: 0 0 11pt !important;
+    padding: 0 0 7pt !important;
+    border-bottom: 1.2pt solid #111 !important;
+  }
+
+  #colorlib-hero .hero-name {
+    position: static !important;
+    left: auto !important;
+    transform: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 21pt !important;
+    font-weight: 700 !important;
+    line-height: 1.15 !important;
+    text-align: left !important;
+    white-space: normal !important;
+    overflow: visible !important;
+  }
+
+  #colorlib-hero .hero-aka {
+    margin: 1pt 0 0 !important;
+    font-size: 9.5pt !important;
+    color: #444 !important;
+    text-align: left !important;
+  }
+
+  #colorlib-hero .hero-aka strong {
+    color: #111 !important;
+  }
+
+  #colorlib-hero .hero-typing {
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 4pt 0 0 !important;
+    padding: 0 !important;
+    font-size: 12pt !important;
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    text-align: left !important;
+    overflow: visible !important;
+  }
+
+  /* The heading's one-line description, otherwise read only by screen
+     readers, is the printed role. */
+  #colorlib-hero .hero-typing .sr-only {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+    white-space: normal !important;
+  }
+
+  #colorlib-hero .print-contact {
+    margin: 4pt 0 0 !important;
+    font-size: 9.5pt !important;
+    line-height: 1.5 !important;
+  }
+
+  /* ---------------------------------------------------------------------
+     Section headings
+     --------------------------------------------------------------------- */
+  #colorlib-main .colorlib-heading,
+  #about .heading-meta,
+  .print-languages h2 {
+    display: block !important;
+    position: static !important;
+    margin: 0 0 5pt !important;
+    padding: 3pt 0 2pt !important;
+    border: 0 !important;
+    border-bottom: 0.75pt solid #888 !important;
+    font-size: 11.5pt !important;
+    font-weight: 700 !important;
+    /* Room above the capitals for Vietnamese stacked marks (VẤN, VỀ): at
+       1.3 with no padding, the top of the Ấ that opened a page printed on
+       the foot of the page before. */
+    line-height: 1.5 !important;
+    text-transform: uppercase !important;
+    overflow: visible !important;
+    break-after: avoid !important;
+  }
+
+  #colorlib-main .colorlib-heading::before,
+  #colorlib-main .colorlib-heading::after {
+    display: none !important;
+  }
+
+  /* Each heading sits in its own row, the content in the next one. */
+  #colorlib-main .colorlib-narrow-content > .row:first-child {
+    break-after: avoid !important;
+  }
+
+  /* ---------------------------------------------------------------------
+     Running text
+     --------------------------------------------------------------------- */
+  #colorlib-main p,
+  #colorlib-main li {
+    margin: 0 0 3pt !important;
+    font-size: 9.5pt !important;
+    line-height: 1.42 !important;
+    orphans: 2 !important;
+    widows: 2 !important;
+  }
+
+  #colorlib-main strong,
+  #colorlib-main b {
+    font-weight: 700 !important;
+  }
+
+  #colorlib-main a {
+    border: 0 !important;
+    text-decoration: none !important;
+  }
+
+  /* Bootstrap's print rule appends every href; only http(s) links in the
+     body get theirs, and the header and footer already show it as text. */
+  #colorlib-page a::after {
+    content: none !important;
+  }
+
+  #colorlib-main a[href^="http"]::after {
+    content: " <" attr(href) ">" !important;
+    display: inline !important;
+    position: static !important;
+    font-size: 8pt !important;
+    color: #444 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  #colorlib-main .print-contact a::after,
+  #colorlib-main .print-footer a::after {
+    content: none !important;
+  }
+
+  /* About: the focus areas as one line */
+  #about .about-intro {
+    font-size: 10pt !important;
+  }
+
+  #about .about-highlights {
+    display: block !important;
+    margin: 3pt 0 0 !important;
+    padding: 0 !important;
+    font-size: 9pt !important;
+  }
+
+  #about .highlight-item,
+  #about .highlight-item span {
+    display: inline !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    font-size: 9pt !important;
+    font-weight: 400 !important;
+  }
+
+  /* Separators go after each item, so the markup's own white space follows
+     them ("C++," rather than "C++ ,"). */
+  #about .highlight-item:not(:last-child)::after {
+    content: " \00B7" !important;
+    display: inline !important;
+    position: static !important;
+  }
+
+  /* ---------------------------------------------------------------------
+     Experience: every bullet, no glyphs or connector
+     --------------------------------------------------------------------- */
+  .timeline-centered,
+  .timeline-centered .timeline-entry,
+  .timeline-centered .timeline-entry .timeline-entry-inner,
+  .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label {
+    display: block !important;
+    position: static !important;
+    float: none !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    break-inside: auto !important;
+  }
+
+  .timeline-centered::before,
+  .timeline-centered::after,
+  .timeline-centered .timeline-entry::before,
+  .timeline-centered .timeline-entry::after,
+  .timeline-centered .timeline-entry .timeline-entry-inner::before,
+  .timeline-centered .timeline-entry .timeline-entry-inner::after,
+  .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label::before,
+  .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label::after {
+    display: none !important;
+  }
+
+  .timeline-centered .timeline-entry {
+    margin: 0 0 8pt !important;
+  }
+
+  /* A job's title, its dates and its project line stay together, and with
+     the first bullet. */
+  #experience .timeline-label h3 {
+    margin: 0 0 2pt !important;
+    padding: 0 !important;
+    font-size: 10.5pt !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    text-transform: none !important;
+    overflow: visible !important;
+    break-after: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  #experience .timeline-label h3 span {
+    display: block !important;
+    margin: 1pt 0 0 !important;
+    font-size: 9pt !important;
+    font-weight: 400 !important;
+    color: #444 !important;
+  }
+
+  #experience .timeline-label .timeline-project {
+    margin: 0 0 2pt !important;
+    padding: 0 !important;
+    border: 0 !important;
+    break-after: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  #experience .timeline-label ul {
+    margin: 0 !important;
+    padding: 0 0 0 12pt !important;
+    list-style: disc outside !important;
+  }
+
+  #experience .timeline-label ul li,
+  #experience .timeline-label ul li.is-collapsed {
+    display: list-item !important;
+    list-style: disc outside !important;
+    margin: 0 0 1.5pt !important;
+    padding: 0 !important;
+    break-inside: avoid !important;
+  }
+
+  #experience .timeline-label ul li::before {
+    display: none !important;
+  }
+
+  /* ---------------------------------------------------------------------
+     Projects: title and summary
+     --------------------------------------------------------------------- */
+  #colorlib-main .projects-grid > [class*="col-"] {
+    margin: 0 0 6pt !important;
+  }
+
+  #colorlib-main .project-card,
+  #colorlib-main .project-info {
+    display: block !important;
+    position: static !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    transform: none !important;
+    overflow: visible !important;
+    break-inside: avoid !important;
+  }
+
+  #colorlib-main .project-info h3 {
+    margin: 0 0 1pt !important;
+    padding: 0 !important;
+    font-size: 10.5pt !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    text-transform: none !important;
+    break-after: avoid !important;
+  }
+
+  /* ---------------------------------------------------------------------
+     Tech Stack: one line of keywords per group
+     --------------------------------------------------------------------- */
+  /* Five short lines: kept on one page. */
+  #tech-stack .stack-groups {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    break-inside: avoid !important;
+  }
+
+  #tech-stack .stack-group {
+    display: block !important;
+    margin: 0 0 2pt !important;
+    padding: 0 !important;
+    border: 0 !important;
+    break-inside: avoid !important;
+  }
+
+  #tech-stack .stack-group dt,
+  #tech-stack .stack-group dd,
+  #tech-stack .stack-chips,
+  #tech-stack .stack-chips li {
+    display: inline !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    font-size: 9.5pt !important;
+    line-height: 1.42 !important;
+    text-transform: none !important;
+  }
+
+  #tech-stack .stack-group dt {
+    font-weight: 700 !important;
+  }
+
+  #tech-stack .stack-group dt::after {
+    content: ": " !important;
+  }
+
+  #tech-stack .stack-chips li {
+    font-weight: 400 !important;
+  }
+
+  #tech-stack .stack-chips li::before {
+    content: none !important;
+  }
+
+  #tech-stack .stack-chips li:not(:last-child)::after {
+    content: "," !important;
+    display: inline !important;
+    position: static !important;
+  }
+
+  /* ---------------------------------------------------------------------
+     Education: every panel open, the toggle printed as a heading
+     --------------------------------------------------------------------- */
+  #education .fancy-collapse-panel,
+  #education .panel-group,
+  #education .panel,
+  #education .panel-heading,
+  #education .panel-body {
+    display: block !important;
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  #education .panel {
+    margin: 0 0 6pt !important;
+    break-inside: avoid !important;
+  }
+
+  #education .panel-heading,
+  #education .panel-title {
+    margin: 0 0 1pt !important;
+    padding: 0 !important;
+    break-after: avoid !important;
+  }
+
+  #education .panel-toggle {
+    display: block !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    font-size: 10.5pt !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    text-align: left !important;
+    text-transform: none !important;
+    white-space: normal !important;
+  }
+
+  #education .panel-toggle::before,
+  #education .panel-toggle::after,
+  #education .panel-body::before,
+  #education .panel-body::after {
+    display: none !important;
+  }
+
+  #education .panel-collapse {
+    display: block !important;
+    height: auto !important;
+    visibility: visible !important;
+  }
+
+  #education .panel-body ul {
+    margin: 0 !important;
+    padding: 0 0 0 12pt !important;
+    list-style: disc outside !important;
+  }
+
+  #education .panel-body li {
+    display: list-item !important;
+    list-style: disc outside !important;
+    margin: 0 0 1.5pt !important;
+    break-inside: avoid !important;
+  }
+
+  /* ---------------------------------------------------------------------
+     Languages and footer (print-only), and the last-updated line
+     --------------------------------------------------------------------- */
+  .print-languages {
+    break-inside: avoid !important;
+  }
+
+  #colorlib-main .print-footer {
+    margin: 4pt 0 0 !important;
+    padding: 5pt 0 0 !important;
+    border-top: 0.75pt solid #888 !important;
+    font-size: 8.5pt !important;
+    break-inside: avoid !important;
+  }
+
+  #colorlib-main .site-updated {
+    display: block !important;
+    margin: 1pt 0 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    font-size: 8.5pt !important;
+    text-align: left !important;
+  }
+}
