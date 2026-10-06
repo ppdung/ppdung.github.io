@@ -993,9 +993,10 @@
 	// through the dialog's own controls and wrap at either end, so the trap
 	// holds in Safari too, whose default Tab skips links: the old trap
 	// waited for focus to reach the last link, which there it never did.
-	// Focus goes first to the dialog's text, a focusable scroll region, so
-	// the arrow keys, Page Down and Space scroll it at once (the dialog
-	// itself used to take focus, and they did nothing). Escape, the close
+	// Focus goes first to the dialog's title, and the arrow keys, Page Down
+	// and Space scroll the text from there at once (the dialog itself used
+	// to take focus, and they did nothing); the text, a focusable scroll
+	// region, is the next stop for Tab. Escape, the close
 	// button and the backdrop close it, with a short fade that mirrors the
 	// opening one, and focus goes back to the button that opened it.
 	//
@@ -1114,12 +1115,45 @@
 			return forward ? items[0] : items[n - 1];
 		}
 
+		function titleOf(modal) {
+			var id = modal.getAttribute('aria-labelledby');
+			return (id && doc.getElementById(id)) || modal.querySelector('h2');
+		}
+
+		// Focus starts on the dialog's title (tabindex=-1, never ringed).
+		// It used to start on the text, the scroll region, and focus set by
+		// script there -- a cold /#project- link, a card button pressed from
+		// the keyboard -- drew the keyboard ring round the whole text. The
+		// keys that scroll the text work from the title too (scrollText,
+		// below), and Tab goes on to the text, which then shows its ring.
 		function focusInto(modal) {
 			var text = modal.querySelector('.project-modal__body');
 			if (text) { text.scrollTop = 0; }
-			var target = text || modal;
+			var target = titleOf(modal) || text || modal;
+			if (!target.hasAttribute('tabindex')) { target.setAttribute('tabindex', '-1'); }
 			try { target.focus({ preventScroll: true }); } catch (e) { target.focus(); }
 			if (doc.activeElement !== target) { modal.focus(); }
+		}
+
+		// Arrow keys, Page Up/Down, Space, Home and End pressed while focus
+		// is on the title or the dialog box itself, which cannot scroll,
+		// scroll the text as they would with focus on it.
+		function scrollText(e) {
+			if (e.altKey || e.ctrlKey || e.metaKey) { return false; }
+			var active = doc.activeElement;
+			if (active !== openModal && active !== titleOf(openModal) &&
+				!(active && active.classList && active.classList.contains('project-modal__dialog'))) { return false; }
+			var text = openModal.querySelector('.project-modal__body');
+			if (!text) { return false; }
+			var page = Math.max(40, text.clientHeight - 40);
+			var key = e.key === 'Spacebar' ? ' ' : e.key;
+			var by = { ArrowDown: 40, Down: 40, ArrowUp: -40, Up: -40, PageDown: page, PageUp: -page, ' ': e.shiftKey ? -page : page }[key];
+			if (key === 'Home') { text.scrollTop = 0; }
+			else if (key === 'End') { text.scrollTop = text.scrollHeight; }
+			else if (by) { text.scrollTop += by; }
+			else { return false; }
+			e.preventDefault();
+			return true;
 		}
 
 		// Back to the button that opened the dialog. After Previous / Next,
@@ -1339,6 +1373,8 @@
 				requestClose();
 				return;
 			}
+
+			if (scrollText(e)) { return; }
 
 			if (e.key !== 'Tab' || e.altKey || e.ctrlKey || e.metaKey) { return; }
 			e.preventDefault();

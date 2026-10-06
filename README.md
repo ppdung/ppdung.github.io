@@ -111,8 +111,20 @@ JSON-LD), in both languages:
 - **Employer:** headings keep the public brand "SMARTCAST Korea"; the
   registered name ㈜스마트캐스트 and the head office in Goyang, Gyeonggi-do
   (Seoul Capital Area) are what the locations, About and `worksFor` state.
-- **Name:** "Danny" (from the CV header) is shown under the name, with a
-  note of which part is the family name.
+- **Smart Pharmacy (2024)** was a freelance project for an unnamed client,
+  not SMARTCAST work. It is labelled as freelance on its card and in its
+  dialog eyebrow ("Freelance project", "Dự án tự do") and on its Tech Stack
+  line, it is not in the SMARTCAST timeline entries, and its card follows
+  the SMARTCAST cards. Describe it on its own terms; its architecture
+  reflects his kiosk design experience (a state machine and a pluggable
+  payment layer). Facts: 20 states, 565 files, ~121,000 lines, four PG
+  vendors plus KOCES, eight VANs, three languages, the cash unit, Windows
+  and Android. The CV PDF still lists this work as an "Externally, ..."
+  line inside its SMARTCAST section; the next export should give it an
+  entry of its own.
+- **Name:** "Danny" (from the CV header) is shown under the name: on `/`
+  with a note of which part is the family name ("family name: Pham"), on
+  `/vi/` as "Tên tiếng Anh: Danny".
 - **Hero role line:** the heading's text is a one-line description; the
   rotating roles are in the `data-roles` attribute of `.hero-typed`, not a
   hidden list, which text extractors read as job titles he has held.
@@ -138,8 +150,16 @@ before relying on them.
   before vietnamese, so a Vietnamese letter never pulls in the 83 KB latin-ext
   file. Replacing them with another version means retuning the
   `Inter Fallback` and `JetBrains Mono Fallback` metrics in the same file:
-  local system fonts scaled to the same letter width, so text wraps the same
-  before and after the real font arrives.
+  local system fonts scaled to about the same letter width, so most text
+  wraps the same before and after the real font arrives. Not all: on the
+  English page the fallback is about 2% narrower than Inter, so a line that
+  ends near the edge can re-wrap when Inter comes in. The hero tagline, the
+  largest text on the first screen, is balanced from 769px
+  (`text-wrap: balance`), which makes it break at the same words with either
+  face. On phones it is not balanced (there, balancing made the layout
+  shift worse at 412, 430 and 768px), so some phone widths still re-wrap it
+  when Inter arrives, as before. Check a change to the tagline with fonts
+  held back, at desktop and phone widths, in both languages.
 - **`css/bootstrap.css` is trimmed.** Only rules that apply somewhere on `/`
   or `/vi/` are left (found with Chrome's CSS rule-usage tracking over every
   width, menu, dialog, panel, form state, print and reduced motion). Markup
@@ -171,8 +191,12 @@ before relying on them.
   - While a dialog is open the rest of the page is `inert`, and Tab and
     Shift+Tab step through the dialog's own controls and wrap (handled in
     script, so it holds in Safari, whose default Tab skips links). Focus
-    starts on the text, `.project-modal__body`, a named region with
-    `tabindex="0"`, so the arrow keys, Page Down and Space scroll it. Closing
+    starts on the dialog's title (`tabindex="-1"`, never drawn with a ring),
+    and the arrow keys, Page Up/Down, Space, Home and End pressed there
+    scroll the text. The text, `.project-modal__body`, is a named region
+    with `tabindex="0"` and the next stop for Tab, where it shows the
+    keyboard ring. Focus used to start on the text itself, and on a cold
+    `/#project-` link that drew the ring round the whole text. Closing
     fades out over 160 ms, or at once under reduced motion.
   - A new project needs only the card button and the dialog markup, in both
     files. In a lab run, opening, switching and closing dialogs sent GA4 no
@@ -196,7 +220,10 @@ before relying on them.
   page, or old shares keep the cached image.
 - **The CV links.** Each "Download CV" link has the `download` attribute;
   "View CV in browser" (hero) and "View in browser" (Contact) have none and
-  open the PDF in a new tab, in the browser's own viewer.
+  open the PDF in a new tab, in the browser's own viewer. In the hero it is
+  a one-line text link centred under the two buttons at every width (it
+  never wraps); beside them, from 769px, it had only the grid's narrow outer
+  column and broke onto two or three lines.
 - **Print and Save as PDF.** Recruiters print the page or save it as a PDF
   to attach to an applicant record. `css/print.css`, linked with
   `media="print"` so a visit never waits for it, holds every print rule and
@@ -272,7 +299,13 @@ There is no GA snippet in the HTML. `js/site.js` (`initGtag`) does it all:
   from 769px, a bar along the bottom on phones. It is kept low enough to
   stay below the hero's Download CV and Contact Me buttons at 390x844,
   820x1180, 1366x657 and 1440x900, in both languages; recheck that if its
-  text or the hero's gets longer. On short phones the hero is taller than
+  text or the hero's gets longer. From 769px the "View CV in browser" link
+  and the tech icons clear it too on screens 657px tall or more (checked
+  at 992x700, 1024x768, 1280x680, 1280x720, 1366x657, 1440x700 and
+  1536x730): the hero's gaps shrink on screens 780px tall or less, and at
+  700px or less the content sits 16px above the middle. On a 1024x600
+  netbook the strip still covers part of the icons (and, in Vietnamese,
+  of the link) until a choice is made. On short phones the hero is taller than
   the screen, and a short-screen rule in `css/style.css` tightens its gaps:
   at 375x667 the buttons clear the bar in English (10px of Liên hệ is
   covered in Vietnamese), but at 320x640 the bar still covers Contact Me

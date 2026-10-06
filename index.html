@@ -487,7 +487,6 @@
 										<li>Developed new features for OrderEAT based on requirements from the Korean team leader, using Qt/QML for efficient implementation.</li>
 										<li>Managed task requirements through Notion, incorporated designs from Figma, and coordinated source code control via remote GitHub repositories.</li>
 										<li>Demonstrated adaptability and cultural fluency through two on-site assignments in Korea totaling four months, collaborating effectively with local teams.</li>
-										<li>Built the control software for Smart Pharmacy, SMARTCAST's unattended pharmacy vending kiosk, on the kiosk platform I had written for OrderEAT: communication protocols with embedded devices such as the serial cash unit, AWS integration for real-time sales updates, and Korean credit card payment processing.</li>
 									</ul>
 					               </div>
 					            </div>
@@ -644,29 +643,6 @@
 							</div>
 						</div>
 
-						<!-- Project: Smart Pharmacy Kiosk -->
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
-							<div class="project-card">
-								<div class="project-placeholder">
-									<i class="icon-cog" aria-hidden="true"></i>
-									<span class="placeholder-label">2024</span>
-								</div>
-								<div class="project-info">
-									<h3>Smart Pharmacy - Self-service Kiosk</h3>
-									<p>Unattended kiosk that lets a pharmacy sell over the counter without staff at the till. Runs a twenty-state order machine on Windows and Android, settles through four wired PG vendors and eight VANs, drives a cash unit that takes notes and pays change back over serial, and pushes each order to the pharmacist's display.</p>
-									<div class="project-links">
-										<button type="button" class="project-details-btn" data-project-modal="pharmacy" aria-haspopup="dialog" aria-label="Project details: Smart Pharmacy"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
-									</div>
-									<div class="project-tags">
-										<span class="tag">C++/Qt/QML</span>
-										<span class="tag">Embedded</span>
-										<span class="tag">Payments</span>
-										<span class="tag">Android</span>
-									</div>
-								</div>
-							</div>
-						</div>
-
 						<!-- Project 1: OrderEAT -->
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
@@ -693,6 +669,29 @@
 										<span class="tag">AWS</span>
 										<span class="tag">Android</span>
 										<span class="tag">Payments</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Project: Smart Pharmacy Kiosk -->
+						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
+							<div class="project-card">
+								<div class="project-placeholder">
+									<i class="icon-cog" aria-hidden="true"></i>
+									<span class="placeholder-label">2024</span>
+								</div>
+								<div class="project-info">
+									<h3>Smart Pharmacy - Self-service Kiosk</h3>
+									<p><strong>Freelance project.</strong> An unattended kiosk that lets a pharmacy sell over the counter without staff at the till. It runs on Windows and Android with twenty sale states, takes cards through whichever of four PG vendors or eight VANs the pharmacy already has, makes change from a serial-driven cash unit, and sends every sale to the pharmacist&rsquo;s screen.</p>
+									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="pharmacy" aria-haspopup="dialog" aria-label="Project details: Smart Pharmacy"><i class="icon-flow-children" aria-hidden="true"></i> Project details</button>
+									</div>
+									<div class="project-tags">
+										<span class="tag">C++/Qt/QML</span>
+										<span class="tag">Embedded</span>
+										<span class="tag">Payments</span>
+										<span class="tag">Android</span>
 									</div>
 								</div>
 							</div>
@@ -874,7 +873,7 @@
 								<li>
 									<i class="devicon-cplusplus-plain" aria-hidden="true"></i>
 									<h4>C/C++</h4>
-									<p><strong>DeepKDS, DeepDID:</strong> C++17. <strong>Smart Pharmacy:</strong> C++11 and QML, ~121,000 lines, State and Factory patterns. <strong>Smartcast Agent:</strong> C++/MFC, sole maintainer of an inherited codebase since 2024.</p>
+									<p><strong>DeepKDS, DeepDID:</strong> C++17. <strong>Smartcast Agent:</strong> C++/MFC, sole maintainer of an inherited codebase since 2024. <strong>Smart Pharmacy (freelance):</strong> C++11 and QML, ~121,000 lines, State and Factory patterns.</p>
 								</li>
 								<li>
 									<i class="devicon-qt-original" aria-hidden="true"></i>
@@ -1240,17 +1239,17 @@
 		<div class="project-modal__dialog">
 			<button type="button" class="project-modal__close" data-modal-close aria-label="Close project details">&times;</button>
 			<header class="project-modal__header">
-				<p class="project-modal__eyebrow">SMARTCAST Korea &middot; Unattended retail</p>
+				<p class="project-modal__eyebrow">Freelance project &middot; Unattended retail</p>
 				<h2 id="modal-pharmacy-title">Smart Pharmacy &mdash; Self-service Kiosk</h2>
 			</header>
 
 			<div class="project-modal__body" tabindex="0" role="region" aria-label="Project details">
 				<dl class="project-facts">
-					<div><dt>My role</dt><dd>Built the product on a kiosk platform I had written for a previous product</dd></div>
+					<div><dt>My role</dt><dd>Built the kiosk&rsquo;s control software</dd></div>
 					<div><dt>Period</dt><dd>2024</dd></div>
-					<div><dt>Platforms</dt><dd>Windows (MinGW 32-bit) and Android (min SDK 21, target 30)</dd></div>
-					<div><dt>Core stack</dt><dd>C++11, Qt 5.15.2 / QML, SQLite</dd></div>
-					<div><dt>Size</dt><dd>565 first-party C++/QML source files, ~121,000 lines</dd></div>
+					<div><dt>Platforms</dt><dd>Windows, as a 32-bit MinGW build, and Android from API level 21, targeting API 30</dd></div>
+					<div><dt>Core stack</dt><dd>Qt 5.15.2 and QML over C++11, with SQLite</dd></div>
+					<div><dt>Size</dt><dd>~121,000 lines in 565 C++ and QML source files, third-party code excluded</dd></div>
 				</dl>
 
 				<section class="project-modal__section">
@@ -1261,17 +1260,17 @@
 				<section class="project-modal__section">
 					<h3>What I built</h3>
 					<ul class="project-detail-list">
-						<li><strong>Reused the platform rather than the product.</strong> The kiosk shell, payment stack and state-machine framework came from the tablet ordering system I had built before. Retail-pharmacy sale flow, back-end integration and interface are this product's own, which is why a second unattended product could ship in a fraction of the time the first one took.</li>
-						<li><strong>The sale as a state machine.</strong> Twenty named states behind one interface (the State pattern), including standby, splash, category and item select, option select, a four-step order confirmation, payment-type select, credit processing, split payment, success, failure, cancellation, refund, admin and environment check. Unattended means no one is there to nudge a stuck screen, so every step is somewhere the machine can be, not a branch inside a function.</li>
-						<li><strong>Card payment across the Korean market.</strong> Credit payment behind an abstract base class and the Factory pattern, covering four PG vendors (KICC, KIS, NICE, SMARTRO), with a fifth (KOCES) implemented against the same base, and a second layer of the same shape for eight VANs (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). A pharmacy keeps whichever provider it already has.</li>
-						<li><strong>Cash, including change.</strong> A note and coin unit driven over serial with its own state machine &mdash; idle, init, deposit, withdraw, flush, return, and separate abort-return and error-return paths &mdash; plus a bill dispenser for change. A machine holding a customer's banknote with nobody nearby has to know exactly which state it is in and how to give the money back.</li>
-						<li><strong>Everything else people tap.</strong> Mobile wallets and QR schemes, app card, and the T-money transit card through its vendor SDK.</li>
+						<li><strong>Design experience, applied fresh.</strong> It follows a kiosk architecture I had designed before &mdash; a state machine for the sale and a pluggable payment layer &mdash; here shaped around a pharmacy&rsquo;s own sale flow, back-end integration and interface.</li>
+						<li><strong>Twenty states for one sale.</strong> The sale is modelled with the State pattern as twenty named states. Among them: standby and splash; category, item and option select; an order confirmation in four steps; payment-type select, split payment and credit processing; success, failure, cancellation and refund; plus an admin state and an environment-check state. Unattended means no one is there to nudge a stuck screen, so every step is somewhere the machine can be, not a branch inside a function.</li>
+						<li><strong>Whichever card provider the pharmacy already uses.</strong> Card payment is coded against one abstract interface, and a factory chooses the concrete provider class. Four PG vendors are connected &mdash; KICC, KIS, NICE and SMARTRO &mdash; and KOCES has its own implementation of the interface as well. Eight VANs go through a second layer built on the same principle: FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN and KSNET.</li>
+						<li><strong>Cash, including change.</strong> The note-and-coin unit talks over a serial port and is tracked by a state machine of its own &mdash; idle, init, deposit, withdraw, flush, return, with separate paths for handing money back after an abort or an error &mdash; and a bill dispenser pays out change. With a customer&rsquo;s note inside and nobody near, the software has to know at every moment which state the unit is in and how to return the money.</li>
+						<li><strong>Other ways to pay.</strong> Customers can also use a mobile wallet, a QR payment, an app card or a T-money transit card, the last handled by the vendor&rsquo;s SDK.</li>
 						<li><strong>Handoff to the pharmacist.</strong> Completed sales are pushed to a kitchen-display-style screen behind the counter with the order, payment and call-number data, so staff see what the machine sold without watching it.</li>
-						<li><strong>Store-driven configuration.</strong> Each device pulls its own environment, product catalog and images from the back-end, with sold-out toggling, display ordering and order-history sync, so a pharmacy is set up from the server rather than at the machine.</li>
-						<li><strong>Updating itself, and being made to.</strong> The Android build downloads and installs its own replacement, with a forced-update path for when a version must not stay in the field.</li>
+						<li><strong>Set up from the server.</strong> Each kiosk downloads its own environment, product catalog and images from the back-end and keeps its order history in sync with it. Marking a product sold out, or changing the order products appear in, happens on the server rather than at the machine. Sales reach AWS in real time.</li>
+						<li><strong>Updates, optional and forced.</strong> On Android the kiosk fetches a newer build and installs it by itself, and a forced-update path covers a version that must not stay in the field.</li>
 						<li><strong>Three languages.</strong> Korean, English and Japanese throughout the customer-facing flow and the admin screens.</li>
-						<li><strong>Field diagnostics.</strong> Per-day rotating log files tagged with the device and pharmacy identity, so a report from one machine can be traced without physical access.</li>
-						<li><strong>An HTTP server inside the kiosk.</strong> The machine listens rather than only polls: an embedded HTTP daemon accepts pushed JSON from the store agent, so sold-out changes, receipt-store settings and payment results reach the screen the moment they happen instead of on the next poll.</li>
+						<li><strong>Logs that name the machine.</strong> Per-day rotating log files tagged with the device and pharmacy identity, so a report from one machine can be traced without physical access.</li>
+						<li><strong>An HTTP server inside the kiosk.</strong> The machine listens rather than only polls: an embedded HTTP daemon accepts JSON pushed from a store-side service, so sold-out changes, receipt-store settings and payment results reach the screen the moment they happen instead of on the next poll.</li>
 						<li><strong>Two toolchains from one tree.</strong> One qmake project produces both builds &mdash; Qt 5.15.2 MinGW 32-bit for the Windows cabinet and Clang multi-ABI for the Android board &mdash; with the platform-specific pieces (serial cash unit on Windows, JNI payment apps on Android) selected at build time rather than forked.</li>
 					</ul>
 				</section>
@@ -1279,10 +1278,10 @@
 				<section class="project-modal__section">
 					<h3>Stack</h3>
 					<div class="project-tags">
-						<span class="tag">C++11</span><span class="tag">Qt 5.15</span><span class="tag">QML</span>
-						<span class="tag">SQLite</span><span class="tag">Windows</span><span class="tag">Android</span>
-						<span class="tag">Serial devices</span><span class="tag">Payment VAN/PG</span>
+						<span class="tag">Qt 5.15</span><span class="tag">QML</span><span class="tag">C++11</span>
 						<span class="tag">State machine</span><span class="tag">MVVM</span>
+						<span class="tag">Serial devices</span><span class="tag">Payment VAN/PG</span>
+						<span class="tag">SQLite</span><span class="tag">Windows</span><span class="tag">Android</span>
 					</div>
 				</section>
 			</div>

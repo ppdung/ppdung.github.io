@@ -488,7 +488,6 @@
 										<li>Phát triển tính năng mới cho OrderEAT theo yêu cầu từ trưởng nhóm phía Hàn Quốc, hiện thực bằng Qt/QML.</li>
 										<li>Quản lý yêu cầu công việc trên Notion, làm việc với thiết kế từ Figma, và quản lý mã nguồn qua repository GitHub từ xa.</li>
 										<li>Thể hiện khả năng thích nghi và hoà nhập văn hoá qua hai đợt làm việc trực tiếp tại Hàn Quốc, tổng cộng bốn tháng, phối hợp hiệu quả với đội ngũ bản địa.</li>
-										<li>Xây phần mềm điều khiển cho Smart Pharmacy &mdash; kiosk bán thuốc tự động không người trực của SMARTCAST &mdash; trên nền tảng kiosk tôi đã viết cho OrderEAT: giao thức truyền thông với thiết bị nhúng như bộ nhận tiền mặt qua cổng serial, tích hợp AWS để cập nhật doanh số thời gian thực, và xử lý thanh toán thẻ tín dụng Hàn Quốc.</li>
 									</ul>
 					               </div>
 					            </div>
@@ -645,29 +644,6 @@
 							</div>
 						</div>
 
-						<!-- Project: Smart Pharmacy Kiosk -->
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
-							<div class="project-card">
-								<div class="project-placeholder">
-									<i class="icon-cog" aria-hidden="true"></i>
-									<span class="placeholder-label">2024</span>
-								</div>
-								<div class="project-info">
-									<h3>Smart Pharmacy &ndash; Kiosk bán thuốc tự động</h3>
-									<p>Kiosk không người trực, giúp nhà thuốc bán hàng không kê đơn mà không cần nhân viên đứng quầy. Chạy máy trạng thái 20 bước trên Windows và Android, thanh toán qua bốn nhà cung cấp PG và tám VAN, điều khiển bộ nhận tiền mặt biết thu tiền và trả tiền thối qua cổng serial, và đẩy từng đơn sang màn hình của dược sĩ.</p>
-									<div class="project-links">
-										<button type="button" class="project-details-btn" data-project-modal="pharmacy" aria-haspopup="dialog" aria-label="Chi tiết dự án: Smart Pharmacy"><i class="icon-flow-children" aria-hidden="true"></i> Chi tiết dự án</button>
-									</div>
-									<div class="project-tags">
-										<span class="tag">C++/Qt/QML</span>
-										<span class="tag">Embedded</span>
-										<span class="tag">Payments</span>
-										<span class="tag">Android</span>
-									</div>
-								</div>
-							</div>
-						</div>
-
 						<!-- Project 1: OrderEAT -->
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
 							<div class="project-card">
@@ -694,6 +670,29 @@
 										<span class="tag">AWS</span>
 										<span class="tag">Android</span>
 										<span class="tag">Payments</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Project: Smart Pharmacy Kiosk -->
+						<div class="col-md-6 animate-box" data-animate-effect="fadeInUp">
+							<div class="project-card">
+								<div class="project-placeholder">
+									<i class="icon-cog" aria-hidden="true"></i>
+									<span class="placeholder-label">2024</span>
+								</div>
+								<div class="project-info">
+									<h3>Smart Pharmacy &ndash; Kiosk bán thuốc tự động</h3>
+									<p><strong>Dự án tự do.</strong> Kiosk không người trực, giúp nhà thuốc bán thuốc không kê đơn mà không cần nhân viên đứng quầy. Phần mềm chạy trên Windows và Android với hai mươi trạng thái bán hàng, nhận thẻ qua đúng nhà cung cấp mà nhà thuốc đang dùng (bốn PG, tám VAN), trả tiền thối bằng bộ tiền mặt nối cổng serial, và chuyển từng đơn đã bán sang màn hình của dược sĩ.</p>
+									<div class="project-links">
+										<button type="button" class="project-details-btn" data-project-modal="pharmacy" aria-haspopup="dialog" aria-label="Chi tiết dự án: Smart Pharmacy"><i class="icon-flow-children" aria-hidden="true"></i> Chi tiết dự án</button>
+									</div>
+									<div class="project-tags">
+										<span class="tag">C++/Qt/QML</span>
+										<span class="tag">Embedded</span>
+										<span class="tag">Payments</span>
+										<span class="tag">Android</span>
 									</div>
 								</div>
 							</div>
@@ -875,7 +874,7 @@
 								<li>
 									<i class="devicon-cplusplus-plain" aria-hidden="true"></i>
 									<h4>C/C++</h4>
-									<p><strong>DeepKDS, DeepDID:</strong> C++17. <strong>Smart Pharmacy:</strong> C++11 và QML, khoảng 121.000 dòng, dùng State pattern và Factory pattern. <strong>Smartcast Agent:</strong> C++/MFC, codebase tiếp nhận lại, tôi là người duy nhất bảo trì từ năm 2024.</p>
+									<p><strong>DeepKDS, DeepDID:</strong> C++17. <strong>Smartcast Agent:</strong> C++/MFC, codebase tiếp nhận lại, tôi là người duy nhất bảo trì từ năm 2024. <strong>Smart Pharmacy (dự án tự do):</strong> C++11 và QML, khoảng 121.000 dòng, dùng State pattern và Factory pattern.</p>
 								</li>
 								<li>
 									<i class="devicon-qt-original" aria-hidden="true"></i>
@@ -1241,17 +1240,17 @@
 		<div class="project-modal__dialog">
 			<button type="button" class="project-modal__close" data-modal-close aria-label="Đóng chi tiết dự án">&times;</button>
 			<header class="project-modal__header">
-				<p class="project-modal__eyebrow">SMARTCAST Korea &middot; Bán lẻ không người trực</p>
+				<p class="project-modal__eyebrow">Dự án tự do &middot; Bán lẻ không người trực</p>
 				<h2 id="modal-pharmacy-title">Smart Pharmacy &mdash; Kiosk bán thuốc tự động</h2>
 			</header>
 
 			<div class="project-modal__body" tabindex="0" role="region" aria-label="Chi tiết dự án">
 				<dl class="project-facts">
-					<div><dt>Vai trò</dt><dd>Xây sản phẩm trên nền tảng kiosk mà tôi đã viết cho một sản phẩm trước đó</dd></div>
+					<div><dt>Vai trò</dt><dd>Xây phần mềm điều khiển kiosk</dd></div>
 					<div><dt>Thời gian</dt><dd>2024</dd></div>
-					<div><dt>Nền tảng</dt><dd>Windows (MinGW 32-bit) và Android (min SDK 21, target 30)</dd></div>
-					<div><dt>Công nghệ chính</dt><dd>C++11, Qt 5.15.2 / QML, SQLite</dd></div>
-					<div><dt>Quy mô</dt><dd>565 file mã nguồn C++/QML tự viết, ~121.000 dòng</dd></div>
+					<div><dt>Nền tảng</dt><dd>Windows (bản build MinGW 32-bit) và Android từ API level 21, target API 30</dd></div>
+					<div><dt>Công nghệ chính</dt><dd>Qt 5.15.2 và QML trên nền C++11, kèm SQLite</dd></div>
+					<div><dt>Quy mô</dt><dd>~121.000 dòng trong 565 file mã nguồn C++ và QML, không tính mã của bên thứ ba</dd></div>
 				</dl>
 
 				<section class="project-modal__section">
@@ -1262,17 +1261,17 @@
 				<section class="project-modal__section">
 					<h3>Tôi đã xây gì</h3>
 					<ul class="project-detail-list">
-						<li><strong>Tái sử dụng nền tảng chứ không phải sản phẩm.</strong> Phần khung kiosk, ngăn xếp thanh toán và framework máy trạng thái lấy từ hệ thống gọi món trên máy tính bảng tôi đã xây trước đó. Luồng bán hàng nhà thuốc, tích hợp back-end và giao diện là của riêng sản phẩm này &mdash; đó là lý do sản phẩm không người trực thứ hai ra được trong khoảng thời gian ngắn hơn hẳn sản phẩm đầu.</li>
-						<li><strong>Giao dịch bán hàng là một máy trạng thái.</strong> Hai mươi trạng thái có tên sau một interface duy nhất (State pattern), trong đó có chờ, màn hình mở đầu, chọn nhóm và chọn món, chọn tuỳ chọn, xác nhận đơn bốn bước, chọn hình thức thanh toán, xử lý thẻ, chia hoá đơn, thành công, thất bại, huỷ, hoàn tiền, quản trị và kiểm tra môi trường. Không người trực nghĩa là không ai ở đó để gỡ một màn hình bị treo, nên mỗi bước là một chỗ máy có thể đang đứng, chứ không phải một nhánh if bên trong hàm.</li>
-						<li><strong>Thanh toán thẻ cho cả thị trường Hàn Quốc.</strong> Thanh toán thẻ nằm sau một lớp cơ sở trừu tượng và Factory pattern, phủ bốn nhà cung cấp PG (KICC, KIS, NICE, SMARTRO), cùng nhà cung cấp thứ năm (KOCES) đã hiện thực trên cùng lớp cơ sở, và một tầng thứ hai cùng kiểu cho tám VAN (FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN, KSNET). Nhà thuốc giữ nguyên nhà cung cấp họ đang dùng.</li>
-						<li><strong>Tiền mặt, kể cả tiền thối.</strong> Bộ nhận tiền giấy và tiền xu điều khiển qua cổng serial với máy trạng thái riêng &mdash; nghỉ, khởi tạo, nhận tiền, rút, xả, trả lại, cùng hai nhánh riêng cho huỷ-trả và lỗi-trả &mdash; kèm bộ nhả tiền để trả tiền thối. Một cái máy đang giữ tờ tiền của khách mà không có ai bên cạnh thì phải biết chính xác nó đang ở trạng thái nào và trả tiền lại bằng cách nào.</li>
-						<li><strong>Những cách thanh toán còn lại.</strong> Ví điện tử và các phương thức QR, thẻ trong ứng dụng, và thẻ giao thông T-money thông qua SDK của nhà cung cấp.</li>
+						<li><strong>Kinh nghiệm thiết kế, vận dụng vào bài toán mới.</strong> Phần mềm theo một kiến trúc kiosk tôi từng thiết kế &mdash; một máy trạng thái cho giao dịch bán và một tầng thanh toán cắm-thay-được &mdash; ở đây được dựng quanh luồng bán hàng, tích hợp back-end và giao diện riêng của nhà thuốc.</li>
+						<li><strong>Hai mươi trạng thái cho một lần bán.</strong> Giao dịch được mô hình hoá bằng State pattern thành hai mươi trạng thái, mỗi trạng thái mang một tên riêng. Trong đó có: chờ và màn hình chào; chọn nhóm hàng, chọn sản phẩm, chọn tuỳ chọn; xác nhận đơn qua bốn bước; chọn cách trả tiền, chia nhỏ thanh toán và xử lý thẻ; thành công, thất bại, huỷ và hoàn tiền; cùng một trạng thái quản trị và một trạng thái kiểm tra môi trường. Không người trực nghĩa là không ai ở đó để gỡ một màn hình bị treo, nên mỗi bước là một chỗ máy có thể đang đứng, chứ không phải một nhánh if bên trong hàm.</li>
+						<li><strong>Nhà thuốc giữ nguyên nhà cung cấp thẻ đang dùng.</strong> Mã thanh toán thẻ được viết trên một interface trừu tượng duy nhất, và một factory chọn lớp cụ thể ứng với từng nhà cung cấp. Bốn PG đã được kết nối &mdash; KICC, KIS, NICE và SMARTRO &mdash; còn KOCES cũng có phần hiện thực riêng cho interface này. Tám VAN đi qua một tầng thứ hai dựng theo cùng nguyên tắc: FDIK, JTNET, KCP, KFTCONE, KICC, KIS, KOVAN và KSNET.</li>
+						<li><strong>Tiền mặt, kể cả tiền thối.</strong> Bộ tiền mặt nhận cả tiền giấy lẫn tiền xu, giao tiếp qua cổng serial và có máy trạng thái của riêng nó &mdash; nghỉ, khởi tạo, nạp tiền, rút, xả, trả lại, cùng hai đường riêng để nhả lại tiền khi giao dịch bị huỷ hoặc gặp lỗi &mdash; còn một bộ nhả tiền lo phần tiền thối. Khi tờ tiền của khách đang nằm trong máy mà xung quanh không có ai, phần mềm phải luôn biết bộ tiền mặt đang ở trạng thái nào và trả tiền lại bằng cách nào.</li>
+						<li><strong>Các cách trả tiền khác.</strong> Khách còn có thể trả bằng ví di động, mã QR, thẻ trong ứng dụng hoặc thẻ giao thông T-money; riêng T-money đi qua SDK của bên cung cấp.</li>
 						<li><strong>Bàn giao cho dược sĩ.</strong> Đơn hoàn tất được đẩy sang màn hình kiểu màn hình bếp đặt sau quầy, kèm dữ liệu đơn hàng, thanh toán và số gọi &mdash; để nhân viên biết máy đã bán gì mà không phải đứng canh.</li>
-						<li><strong>Cấu hình theo từng cửa hàng.</strong> Mỗi thiết bị tự tải cấu hình môi trường, danh mục sản phẩm và hình ảnh từ back-end, kèm bật/tắt hết hàng, sắp xếp thứ tự hiển thị và đồng bộ lịch sử đơn &mdash; nên một nhà thuốc được thiết lập từ máy chủ chứ không phải đứng thao tác tại máy.</li>
-						<li><strong>Tự cập nhật, và bị buộc cập nhật.</strong> Bản Android tự tải và cài bản thay thế cho chính nó, kèm nhánh cập nhật bắt buộc cho những phiên bản không được phép ở lại ngoài hiện trường.</li>
+						<li><strong>Thiết lập từ máy chủ.</strong> Mỗi kiosk tự tải về cấu hình môi trường, danh mục sản phẩm và hình ảnh từ back-end, đồng thời đồng bộ lịch sử đơn hàng. Đánh dấu một sản phẩm đã hết hay đổi thứ tự sản phẩm trên màn hình đều được làm trên máy chủ, không phải tại máy. Doanh số được đẩy lên AWS theo thời gian thực.</li>
+						<li><strong>Cập nhật thường và cập nhật bắt buộc.</strong> Trên Android, kiosk tự lấy bản build mới hơn về và tự cài đặt, còn nhánh cập nhật bắt buộc dành cho những phiên bản không được phép ở lại ngoài hiện trường.</li>
 						<li><strong>Ba ngôn ngữ.</strong> Tiếng Hàn, tiếng Anh và tiếng Nhật xuyên suốt luồng hướng tới khách hàng lẫn màn hình quản trị.</li>
-						<li><strong>Chẩn đoán ngoài hiện trường.</strong> File log xoay vòng theo ngày, gắn định danh thiết bị và nhà thuốc, để một báo cáo từ một máy cụ thể truy được mà không cần tới tận nơi.</li>
-						<li><strong>Một HTTP server chạy ngay trong kiosk.</strong> Máy lắng nghe chứ không chỉ hỏi vòng: một daemon HTTP nhúng nhận JSON đẩy từ agent của cửa hàng, nên thay đổi hết hàng, cấu hình in hoá đơn và kết quả thanh toán lên màn hình ngay lúc xảy ra thay vì đợi lần hỏi kế tiếp.</li>
+						<li><strong>Log chỉ rõ từng máy.</strong> File log xoay vòng theo ngày, gắn định danh thiết bị và nhà thuốc, để một báo cáo từ một máy cụ thể truy được mà không cần tới tận nơi.</li>
+						<li><strong>Một HTTP server chạy ngay trong kiosk.</strong> Máy lắng nghe chứ không chỉ hỏi vòng: một daemon HTTP nhúng nhận JSON được đẩy tới từ một dịch vụ phía cửa hàng, nên thay đổi hết hàng, cấu hình in hoá đơn và kết quả thanh toán lên màn hình ngay lúc xảy ra thay vì đợi lần hỏi kế tiếp.</li>
 						<li><strong>Hai toolchain từ một cây mã nguồn.</strong> Một project qmake sinh ra cả hai bản dựng &mdash; Qt 5.15.2 MinGW 32-bit cho tủ Windows và Clang multi-ABI cho bo mạch Android &mdash; với các phần riêng theo nền tảng (bộ tiền mặt qua serial trên Windows, app thanh toán qua JNI trên Android) được chọn lúc biên dịch thay vì tách nhánh.</li>
 					</ul>
 				</section>
@@ -1280,10 +1279,10 @@
 				<section class="project-modal__section">
 					<h3>Công nghệ</h3>
 					<div class="project-tags">
-						<span class="tag">C++11</span><span class="tag">Qt 5.15</span><span class="tag">QML</span>
-						<span class="tag">SQLite</span><span class="tag">Windows</span><span class="tag">Android</span>
-						<span class="tag">Serial devices</span><span class="tag">Payment VAN/PG</span>
+						<span class="tag">Qt 5.15</span><span class="tag">QML</span><span class="tag">C++11</span>
 						<span class="tag">State machine</span><span class="tag">MVVM</span>
+						<span class="tag">Serial devices</span><span class="tag">Payment VAN/PG</span>
+						<span class="tag">SQLite</span><span class="tag">Windows</span><span class="tag">Android</span>
 					</div>
 				</section>
 			</div>
